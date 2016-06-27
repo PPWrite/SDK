@@ -1,2 +1,0 @@
-# SDK
-PPWrite SDK
