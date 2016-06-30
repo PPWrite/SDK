@@ -27,4 +27,17 @@ public class RobotPenApplication extends PenApplication{
     public static RobotPenApplication getInstance() {
         return instance;
     }
+    
+    //引入so文件
+    static{
+    	System.loadLibrary("avutil-54");
+        System.loadLibrary("swresample-1");
+        System.loadLibrary("swscale-3");
+        System.loadLibrary("postproc-53");
+        System.loadLibrary("avcodec-56");
+        System.loadLibrary("avformat-56");
+        System.loadLibrary("avfilter-5");
+        System.loadLibrary("RecordImageUtil");
+        //System.loadLibrary("avdevice-56");
+    }
 }
