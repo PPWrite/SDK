@@ -1,12 +1,14 @@
 package cn.robotpen.demo;
 
+import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 import java.util.Random;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,8 +24,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -32,24 +34,28 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.robotpen.model.interfaces.Listeners.OnConnectStateListener;
-import cn.robotpen.model.interfaces.Listeners.OnPointChangeListener;
-import cn.robotpen.model.interfaces.Listeners.OnTrailsClientChangeListener;
-import cn.robotpen.model.FrameSizeObject;
-import cn.robotpen.model.PointObject;
-import cn.robotpen.model.TrailObject;
+import cn.robotpen.core.module.ImageRecordModule;
+import cn.robotpen.core.module.ImageRecordModule.ImageRecordInterface;
 import cn.robotpen.core.module.TrailsManageModule.OnTrailsListener;
 import cn.robotpen.core.services.PenService;
 import cn.robotpen.core.services.SmartPenService;
 import cn.robotpen.core.services.UsbPenService;
-import cn.robotpen.model.symbol.BatteryState;
-import cn.robotpen.model.symbol.ConnectState;
-import cn.robotpen.model.symbol.Keys;
-import cn.robotpen.model.symbol.SceneType;
 import cn.robotpen.core.utils.SystemUtil;
 import cn.robotpen.core.views.MultipleCanvasView;
 import cn.robotpen.core.views.MultipleCanvasView.CanvasManageInterface;
 import cn.robotpen.core.views.MultipleCanvasView.PenModel;
+import cn.robotpen.model.FrameSizeObject;
+import cn.robotpen.model.PointObject;
+import cn.robotpen.model.TrailObject;
+import cn.robotpen.model.interfaces.Listeners.OnConnectStateListener;
+import cn.robotpen.model.interfaces.Listeners.OnPointChangeListener;
+import cn.robotpen.model.interfaces.Listeners.OnTrailsClientChangeListener;
+import cn.robotpen.model.symbol.BatteryState;
+import cn.robotpen.model.symbol.ConnectState;
+import cn.robotpen.model.symbol.Keys;
+import cn.robotpen.model.symbol.RecordLevel;
+import cn.robotpen.model.symbol.RecordState;
+import cn.robotpen.model.symbol.SceneType;
 
 /**
  * 笔信息显示
@@ -58,7 +64,7 @@ import cn.robotpen.core.views.MultipleCanvasView.PenModel;
  *
  * Description
  */
-public class PenInfo extends Activity implements CanvasManageInterface{
+public class PenInfo extends Activity implements CanvasManageInterface,ImageRecordInterface{
 	public static final String TAG = PenInfo.class.getSimpleName();
 	public static final int REQUEST_SETTING_SIZE = 1000;
 	
@@ -101,6 +107,7 @@ public class PenInfo extends Activity implements CanvasManageInterface{
 	private Button mStopLiveBut;
 	private Button mRecordStartBut;
 	private Button mRecordStopBut;
+	private ImageRecordModule mImageRecordModule;
 	private int butFlag = 0; //1为可暂停／停止  2为可继续／停止  
 	
 	
@@ -595,15 +602,42 @@ public class PenInfo extends Activity implements CanvasManageInterface{
 				mRecordStopBut.setClickable(true);
 				mRecordStopBut.setBackgroundColor(Color.LTGRAY);
 				
+				//获取压缩级别
+		        int level = RobotPenApplication.getInstance().getRecordLevel();
+		        //初始化录制工具
+		        mImageRecordModule = new ImageRecordModule(PenInfo.this);
+		        //存路径
+		        String path = "/storage/sdcard0/Movies/";
+		        mImageRecordModule.setSavePhotoDir(path);
+		        mImageRecordModule.setSaveVideoDir(path);
+		        mImageRecordModule.setRecordLevel(level);
+		        mImageRecordModule.initImageRecord();
+		        mImageRecordModule.setInputSize(mCanvasSizeObject.windowWidth, mCanvasSizeObject.windowHeight);
+		        
+		        //必须设置尺寸
+		        mCanvasSizeObject.setWindowZoomSize(RecordLevel.getFrameProgressive(level));//设置缩放比例才能获取到zoomWith的值
+		        
+		        boolean flag = mImageRecordModule.setRecordSize(
+                        mCanvasSizeObject.windowWidth,
+                        mCanvasSizeObject.windowHeight,
+                        mCanvasSizeObject.zoomWidth,
+                        mCanvasSizeObject.zoomHeight);
+		        
+		        //if (!flag || !mImageRecordModule.startRecord()) {
+		        	mImageRecordModule.startRecord();
+		        //}
+
+				
 			}else if(butFlag==1){//点击暂停按钮
 				butFlag = 2;//可以继续
 				((Button)v).setText("继续");
 				
+				mImageRecordModule.setIsPause(true);
 				//mRecordStopBut.setVisibility(View.INVISIBLE);
 			}else if(butFlag==2){//点击继续按钮
 				butFlag = 1;//可以暂停
 				((Button)v).setText("暂停");
-				
+				mImageRecordModule.setIsPause(false);
 				//mRecordStopBut.setVisibility(View.INVISIBLE);
 			}
 			
@@ -619,9 +653,12 @@ public class PenInfo extends Activity implements CanvasManageInterface{
 				mRecordStartBut.setText("开始录制");
 				v.setBackgroundColor(Color.GRAY);
 				mRecordStopBut.setClickable(false);
+				mImageRecordModule.endRecord();
 			}
 		};
 	
+		
+		
 	
 		@Override
 		public int getBgColor() {
@@ -652,7 +689,7 @@ public class PenInfo extends Activity implements CanvasManageInterface{
 
 		@Override
 		public int getPenColor() {
-			return 0xFFFF0000;
+			return 0xFF000000;
 		}
 
 		@Override
@@ -686,6 +723,70 @@ public class PenInfo extends Activity implements CanvasManageInterface{
 		public ScaleType getBgScaleType() {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public int fillImageBuffer(ByteBuffer buffer) {
+			// TODO Auto-generated method stub
+			 int result = 0;
+		        //如果开启了摄像头，拍照
+//		        if(mPageItem.cameraView.getVisibility() == View.VISIBLE) {
+//		            mPageItem.cameraView.takePicture();
+//		        }
+		        //启用DrawingCache并创建位图
+			 	mLineWindow.setDrawingCacheEnabled(true);
+				mLineWindow.buildDrawingCache();
+
+
+		        Bitmap imageCache = mLineWindow.getDrawingCache();
+		        if (imageCache != null) {
+		            result = imageCache.getByteCount();
+		            imageCache.copyPixelsToBuffer(buffer);
+		        }
+
+		        mLineWindow.setDrawingCacheEnabled(false);
+		        return result;
+		}
+
+		@Override
+		public void recordTimeChange(int arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void recordWarning(RecordState arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void videoCodeState(int progress) {
+			// TODO Auto-generated method stub
+			// TODO Auto-generated method stub
+			if (progress >= 100) {
+				mRecordStartBut.setText("结束");
+				// 保存
+//				final String fileName = mImageRecordModule.getVideoName();
+//				final String suffix = mImageRecordModule.getVideoSuffix();
+				 AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		            alert.setTitle("录制完成");
+		            alert.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+		                @Override
+		                public void onClick(DialogInterface dialog, int which) {
+		                        try {
+		                            Field field = dialog.getClass().getSuperclass().getDeclaredField("mShowing");
+		                            field.setAccessible(true);
+		                            field.set(dialog, true);
+		                        } catch (Exception e) {
+		                            e.printStackTrace();
+		                        }
+		                }
+		            });
+		            alert.show();
+
+			}
+			
 		}
 }
 	 
