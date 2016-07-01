@@ -454,7 +454,7 @@ public class PenInfo extends Activity implements CanvasManageInterface{
 
     private OnTrailsClientChangeListener onTrailsClientChangeListener = new OnTrailsClientChangeListener() {
         @Override
-        public void trailChange(TrailObject trail) {
+        public void receiveTrail(TrailObject trail) {
             //TrailObject转换为PointObject
             PointObject point = new PointObject(trail);
 
@@ -470,12 +470,12 @@ public class PenInfo extends Activity implements CanvasManageInterface{
         }
 
         @Override
-        public void clearScreen(int page) {
+        public void cmdClearScreen(int page) {
         	mPenCanvasView.cleanAll();
         }
 
         @Override
-        public void pushAudio(byte[] data) {
+        public void receiveAudio(byte[] data) {
 
         }
     };
