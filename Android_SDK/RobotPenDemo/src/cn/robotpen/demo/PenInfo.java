@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -98,6 +99,11 @@ public class PenInfo extends Activity implements CanvasManageInterface{
 	private Button mStartP2PBut;
 	private Button mStartGroupBut;
 	private Button mStopLiveBut;
+	private Button mRecordStartBut;
+	private Button mRecordStopBut;
+	private int butFlag = 0; //1为可暂停／停止  2为可继续／停止  
+	
+	
 	
 	/**虚拟用户ID**/
 	private String mUserId;
@@ -192,6 +198,13 @@ public class PenInfo extends Activity implements CanvasManageInterface{
 		
 		mStopLiveBut = (Button) findViewById(R.id.stopLiveBut);
 		mStopLiveBut.setOnClickListener(stopLive_click);
+		
+		mRecordStartBut = (Button) findViewById(R.id.recordStartBut);
+		mRecordStartBut.setOnClickListener(recordStart_click);
+		mRecordStopBut = (Button) findViewById(R.id.recordStopBut);
+		mRecordStopBut.setOnClickListener(recordStop_click);
+		
+		
 
 		//添加笔跟随图标
 		mPenView = new PenView(this);
@@ -565,70 +578,114 @@ public class PenInfo extends Activity implements CanvasManageInterface{
 		}
 	};
 
-
-	@Override
-	public int getBgColor() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getBgResId() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String getCurrUserId() {
-		return mUserId;
-	}
-
-	@Override
-	public FrameSizeObject getFrameSize() {
-		return mCanvasSizeObject;
-	}
-
-	@Override
-	public boolean getIsRubber() {
-		return false;
-	}
-
-	@Override
-	public int getPenColor() {
-		return 0xFF000000;
-	}
-
-	@Override
-	public PenModel getPenModel() {
-		return PenModel.WaterPen;
-	}
-
-	@Override
-	public float getPenWeight() {
-		return 2;
-	}
-
-	@Override
-	public OnTrailsListener getTrailsListener() {
-		return mPenService;
-	}
-
-	@Override
-	public void penRouteStatus(boolean arg0) {
-		// TODO Auto-generated method stub
+	/*
+	 * (non-Javadoc)
+	 * @see cn.robotpen.core.views.MultipleCanvasView.CanvasManageInterface#getBgBitmap()
+	 * 录制功能演示
+	 */
+	private OnClickListener recordStart_click = new OnClickListener() {
 		
-	}
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			if(butFlag==0){ //点击开始录制按钮
+				butFlag = 1;//可以暂停
+				((Button)v).setText("暂停");
+				
+				mRecordStopBut.setClickable(true);
+				mRecordStopBut.setBackgroundColor(Color.LTGRAY);
+				
+			}else if(butFlag==1){//点击暂停按钮
+				butFlag = 2;//可以继续
+				((Button)v).setText("继续");
+				
+				//mRecordStopBut.setVisibility(View.INVISIBLE);
+			}else if(butFlag==2){//点击继续按钮
+				butFlag = 1;//可以暂停
+				((Button)v).setText("暂停");
+				
+				//mRecordStopBut.setVisibility(View.INVISIBLE);
+			}
+			
+		}
+	};
+	
+	private OnClickListener recordStop_click = new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				butFlag = 0;//可以暂停
+				mRecordStartBut.setText("开始录制");
+				v.setBackgroundColor(Color.GRAY);
+				mRecordStopBut.setClickable(false);
+			}
+		};
+	
+	
+		@Override
+		public int getBgColor() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 
-	@Override
-	public Bitmap getBgBitmap() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		@Override
+		public int getBgResId() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 
-	@Override
-	public ScaleType getBgScaleType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		@Override
+		public String getCurrUserId() {
+			return mUserId;
+		}
+
+		@Override
+		public FrameSizeObject getFrameSize() {
+			return mCanvasSizeObject;
+		}
+
+		@Override
+		public boolean getIsRubber() {
+			return false;
+		}
+
+		@Override
+		public int getPenColor() {
+			return 0xFF000000;
+		}
+
+		@Override
+		public PenModel getPenModel() {
+			return PenModel.WaterPen;
+		}
+
+		@Override
+		public float getPenWeight() {
+			return 2;
+		}
+
+		@Override
+		public OnTrailsListener getTrailsListener() {
+			return mPenService;
+		}
+
+		@Override
+		public void penRouteStatus(boolean arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Bitmap getBgBitmap() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public ScaleType getBgScaleType() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 }
 	 
