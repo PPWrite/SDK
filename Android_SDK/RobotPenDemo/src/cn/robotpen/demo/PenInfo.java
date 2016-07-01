@@ -652,7 +652,7 @@ public class PenInfo extends Activity implements CanvasManageInterface{
 
 		@Override
 		public int getPenColor() {
-			return 0xFF000000;
+			return 0xFFFF9900;
 		}
 
 		@Override
