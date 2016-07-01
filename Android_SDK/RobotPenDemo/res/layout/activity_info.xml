@@ -284,6 +284,24 @@
 			        android:layout_height="wrap_content"
 			        android:layout_marginTop="10dp"
 			        android:text="Stop Live" />
+		        
+		          <Button
+		        	android:id="@+id/recordStartBut"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="10dp"
+			        android:text="开始录制" />
+		          
+		            <Button
+		        	android:id="@+id/recordStopBut"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="10dp"
+			        android:clickable="false"
+			        android:background="@android:color/darker_gray"
+			        android:text="停止录制" />
+		        
+		        
 	            
 	        </LinearLayout>
 	    </RelativeLayout>

@@ -27,7 +27,6 @@ public class RobotPenApplication extends PenApplication{
     public static RobotPenApplication getInstance() {
         return instance;
     }
-    
     //引入so文件
     static{
     	System.loadLibrary("avutil-54");
@@ -38,6 +37,6 @@ public class RobotPenApplication extends PenApplication{
         System.loadLibrary("avformat-56");
         System.loadLibrary("avfilter-5");
         System.loadLibrary("RecordImageUtil");
-        //System.loadLibrary("avdevice-56");
+        System.loadLibrary("avdevice-56");
     }
 }
