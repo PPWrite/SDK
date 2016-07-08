@@ -414,7 +414,6 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 					if(mPenService != null && groupIdText.getText().length() > 0){
 						String groupId = groupIdText.getText().toString();
 						if(groupId != null && !groupId.isEmpty()){
-							mPenService.setLiveTargetId(null);
 							//设置组ID，需要在startLive之前设置
 							mPenService.setLiveGroupId(groupId);
 							mPenService.startLive();
@@ -449,7 +448,6 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 						if(targetId != null && !targetId.isEmpty()){
 							//设置目标ID，需要在startLive之前设置
 							mPenService.setLiveTargetId(targetId);
-							mPenService.setLiveGroupId(null);
 							mPenService.startLive();
 							//设置轨迹接收监听,要在startLive之后设置
 					        mPenService.setOnTrailsClientChangeListener(onTrailsClientChangeListener);
