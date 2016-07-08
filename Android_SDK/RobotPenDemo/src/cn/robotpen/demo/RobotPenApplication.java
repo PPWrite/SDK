@@ -36,7 +36,8 @@ public class RobotPenApplication extends PenApplication{
         System.loadLibrary("avcodec-56");
         System.loadLibrary("avformat-56");
         System.loadLibrary("avfilter-5");
-        System.loadLibrary("RecordImageUtil");
         System.loadLibrary("avdevice-56");
+        System.loadLibrary("RecordImageUtil");
+        
     }
 }
