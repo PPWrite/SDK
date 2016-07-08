@@ -1,8 +1,12 @@
 package cn.robotpen.demo;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.util.Random;
+
+import com.alibaba.rocketmq.common.protocol.header.filtersrv.RegisterFilterServerResponseHeader;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -10,6 +14,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,7 +22,9 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -110,6 +117,11 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 	private ImageRecordModule mImageRecordModule;
 	private int butFlag = 0; //1为可暂停／停止  2为可继续／停止  
 	
+	//更换面板背景
+	private Button changeBgBut;
+	private Bitmap bg;//接收选择的背景图片
+	private Button changeBgScaleTypeBut;
+	private ScaleType scaleType;
 	
 	
 	/**虚拟用户ID**/
@@ -210,8 +222,11 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 		mRecordStartBut.setOnClickListener(recordStart_click);
 		mRecordStopBut = (Button) findViewById(R.id.recordStopBut);
 		mRecordStopBut.setOnClickListener(recordStop_click);
-		
-		
+		//
+		changeBgBut = (Button) findViewById(R.id.changeBgBut);
+		changeBgBut.setOnClickListener(bgChange_click);
+		changeBgScaleTypeBut = (Button) findViewById(R.id.changeBgScaleTypeBut);
+		changeBgScaleTypeBut.setOnClickListener(bgScaleType_click);
 
 		//添加笔跟随图标
 		mPenView = new PenView(this);
@@ -270,11 +285,26 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	
     	if(resultCode == RESULT_OK){
     		if(requestCode == REQUEST_SETTING_SIZE){
     			Log.v(TAG, "onActivityResult:"+REQUEST_SETTING_SIZE);
-    			
     			initPage();
+    		}
+    		if(requestCode == 0){
+    			ContentResolver resolver = getContentResolver(); 
+    			Uri bgUri = data.getData();
+    			try {
+					bg =  MediaStore.Images.Media.getBitmap(resolver, bgUri);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} //显得到bitmap图片 
+    			//刷新页面
+    			mPenCanvasView.refresh();
     		}
     	}
 	}
@@ -654,10 +684,57 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 				mImageRecordModule.endRecord();
 			}
 		};
-	
 		
+		private final String IMAGE_TYPE = "image/*"; 
+		private final int IMAGE_CODE = 0; 
+		/**
+		 * 更换背景
+		 * **/
+		private OnClickListener bgChange_click = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT); 
+				getAlbum.setType(IMAGE_TYPE); 
+				startActivityForResult(getAlbum, IMAGE_CODE); 
+				
+			}
+		};
+		/**
+		 * 缩放背景
+		 * **/
+		private OnClickListener bgScaleType_click = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final String[] items = {"居中","平铺"};  
+                new AlertDialog.Builder(PenInfo.this)  
+                        .setTitle("请点击选择")  
+                        .setItems(items, new DialogInterface.OnClickListener() {
+
+							@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							switch (which) {
+							case 0:
+								scaleType = ScaleType.CENTER;
+								//刷新画布
+				    			mPenCanvasView.refresh();
+								break;
+							case 1:
+								scaleType = ScaleType.FIT_XY;
+								//刷新画布
+				    			mPenCanvasView.refresh();
+								break;
+							default:
+								//刷新画布
+				    			mPenCanvasView.refresh();
+							}
+						}
+					}).show();
+            
+			}
+		};
 		
-	
 		@Override
 		public int getBgColor() {
 			// TODO Auto-generated method stub
@@ -714,13 +791,13 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 		@Override
 		public Bitmap getBgBitmap() {
 			// TODO Auto-generated method stub
-			return null;
+			return bg;
 		}
 
 		@Override
 		public ScaleType getBgScaleType() {
 			// TODO Auto-generated method stub
-			return null;
+			return scaleType;
 		}
 
 		@Override
@@ -765,8 +842,6 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 			if (progress >= 100) {
 				mRecordStartBut.setText("结束");
 				// 保存
-//				final String fileName = mImageRecordModule.getVideoName();
-//				final String suffix = mImageRecordModule.getVideoSuffix();
 				 AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		            alert.setTitle("录制完成");
 		            alert.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
