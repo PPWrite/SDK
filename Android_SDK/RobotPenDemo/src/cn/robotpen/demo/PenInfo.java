@@ -839,7 +839,7 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 		public void videoCodeState(int progress) {
 			// TODO Auto-generated method stub
 			// TODO Auto-generated method stub
-			if (progress >= 100) {
+			if (progress > 100) { //progress=100 表示正在压制  progress>100 表示录制成功
 				mRecordStartBut.setText("结束");
 				// 保存
 				 AlertDialog.Builder alert = new AlertDialog.Builder(this);
