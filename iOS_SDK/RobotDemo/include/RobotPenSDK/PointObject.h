@@ -13,6 +13,7 @@
 
 @property (nonatomic,assign) short originalX;
 @property (nonatomic,assign) short originalY;
+@property (nonatomic,assign) float Pressure;
 @property (nonatomic,assign) short width;
 @property (nonatomic,assign) short height;
 @property (nonatomic,assign) BOOL isRoute;          //是否是笔迹
@@ -30,7 +31,7 @@
 /**
  获取showWidth等比缩放后的x值
  **/
--(short)getSceneX:(int)showWidth;
+-(float)getSceneX:(int)showWidth;
 
 /**
  获取场景y值
@@ -39,6 +40,6 @@
 /**
  获取showHeight等比缩放后的y值
  **/
--(short)getSceneY:(int)showHeight;
+-(float)getSceneY:(int)showHeight;
 
 @end

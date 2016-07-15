@@ -139,7 +139,7 @@
         penPoint.y = [point getSceneY:self.drawView.frame.size.height];
     }
     
-    [self.drawView drawChirographyWithPoint:penPoint isRoute:point.isRoute];
+    [self.drawView drawChirographyWithPoint:penPoint isRoute:point.isRoute Pressure:point.Pressure];
 }
 /**
  *  ScanDeviceDelegate 发现设备

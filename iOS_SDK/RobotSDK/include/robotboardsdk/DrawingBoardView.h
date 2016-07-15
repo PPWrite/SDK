@@ -47,10 +47,11 @@
 
 @property (nonatomic, weak) id<imageMovingDelegate> backgroundImageMoveDelegate;
 
-- (void)drawChirographyWithPoint:(CGPoint)penPoint isRoute:(BOOL)isRoute;
+- (void)drawChirographyWithPoint:(CGPoint)penPoint isRoute:(BOOL)isRoute Pressure:(float)pressure;
 
 - (void)reductionNote:(NSArray *)array;
 
 - (void)clearBoard;
+
 
 @end
