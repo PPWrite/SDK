@@ -38,6 +38,7 @@ typedef void (*usbStatusCallBack)(int nDevstatus, void* context);
 class CUsbDevInterface
 {
 public:
+
     // ********************************************************
     // summary: 根据usb设备Pid打开指定的usb设备
     // fullname: _openSpecUsbDevByPid
@@ -46,7 +47,7 @@ public:
     // parameter: [IN] pFunc 指定返回数据的回调 默认为null
     // return: bool 设备是否打开成功
     // ********************************************************
-    virtual bool _openSpecUsbDevByPid(IN char** pAarryPid, IN usbDataCallBack pFunc = NULL) = 0;
+    virtual bool _openSpecUsbDevByPid(IN char* pAarryPid[], unsigned int nAarrySize, IN usbDataCallBack pFunc = NULL) = 0;
 
     // ********************************************************
     // summary: 根据usb设备Pid打开指定的usb设备
@@ -77,6 +78,16 @@ public:
     virtual usbStatusCallBack setDevStatusHandler(usbStatusCallBack newHandler, void* pUsbDevStatusContext = NULL) = 0;
 };
 
-extern "C" DLL_PORT_TYPE CUsbDevInterface* createObj();
-extern "C" DLL_PORT_TYPE void deleteObj(void* p);
+extern "C" DLL_PORT_TYPE CUsbDevInterface* WINAPI createObj();
+extern "C" DLL_PORT_TYPE void WINAPI deleteObj(void* p);
 
+//////////////////////////////////////////////////////////////////////////
+/*打开设备接口*/
+//////////////////////////////////////////////////////////////////////////
+extern "C" DLL_PORT_TYPE bool WINAPI _extern_openSpecUsbDevByPid(char* pAarryPid[], unsigned int nAarrySize, usbDataCallBack pFunc);
+
+//////////////////////////////////////////////////////////////////////////
+/*关闭设备接口*/
+//////////////////////////////////////////////////////////////////////////
+extern "C" DLL_PORT_TYPE bool WINAPI _extern_CloseUsbDev();
+ 
