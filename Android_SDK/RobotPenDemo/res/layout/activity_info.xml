@@ -249,17 +249,19 @@
 	        android:layout_height="fill_parent"
         	android:background="#ff666666"
 	        android:visibility="gone" >
-	        <FrameLayout 
+	        <RelativeLayout 
 	        	android:id="@+id/lineWindow"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_width="fill_parent"
+		        android:layout_height="fill_parent"
 		        android:background="#ffffffff">
+	            <!--  
 		        <cn.robotpen.core.views.MultipleCanvasView
 		            android:id="@+id/penCanvasView"
 			        android:layout_width="fill_parent"
 			        android:layout_height="fill_parent"
 			       />
-	        </FrameLayout>
+			       -->
+	        </RelativeLayout>
 	        <LinearLayout 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

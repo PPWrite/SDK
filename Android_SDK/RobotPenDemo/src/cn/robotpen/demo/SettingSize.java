@@ -71,7 +71,7 @@ public class SettingSize extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				mPenService.againFixedPoint();
+				//mPenService.againFixedPoint();
 			}
         });
         
@@ -93,13 +93,13 @@ public class SettingSize extends Activity{
 	public void onResume() {
 		super.onResume();
         mPenService.setOnPointChangeListener(onPointChangeListener);
-        mPenService.setOnFixedPointListener(onFixedPointListener);
+        //mPenService.setOnFixedPointListener(onFixedPointListener);
 	}
 	
 	@Override
 	public void onPause(){
 		mPenService.setOnPointChangeListener(null);
-        mPenService.setOnFixedPointListener(null);
+       // mPenService.setOnFixedPointListener(null);
         
 		super.onPause();
 	}
@@ -108,7 +108,7 @@ public class SettingSize extends Activity{
 	 * 返回处理
 	 */
 	private void backHandler(){
-		mPenService.applyFixedPoint();
+		//mPenService.applyFixedPoint();
 		
 		Intent intent = new Intent();
 		setResult(RESULT_OK, intent);

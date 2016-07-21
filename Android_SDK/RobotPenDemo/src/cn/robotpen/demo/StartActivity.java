@@ -1,6 +1,7 @@
 package cn.robotpen.demo;
 
 import cn.robotpen.core.services.PenService;
+import cn.robotpen.file.services.FileManageService;
 import cn.robotpen.model.symbol.Keys;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -55,13 +56,17 @@ public class StartActivity extends Activity implements OnClickListener {
 			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_ble_start), true);
 			// 绑定蓝牙笔服务
 			RobotPenApplication.getInstance().bindPenService(Keys.APP_PEN_SERVICE_NAME);
-			isPenServiceReady(Keys.APP_PEN_SERVICE_NAME);
+			//绑定文件服务
+			RobotPenApplication.getInstance().bindFileService();
+			isServiceReady(Keys.APP_PEN_SERVICE_NAME);
 			break;
 		case R.id.usbBut:
 			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
 			// 绑定USB笔服务
 			RobotPenApplication.getInstance().bindPenService(Keys.APP_USB_SERVICE_NAME);
-			isPenServiceReady(Keys.APP_USB_SERVICE_NAME);
+			//绑定文件服务
+			RobotPenApplication.getInstance().bindFileService();
+			isServiceReady(Keys.APP_USB_SERVICE_NAME);
 			break;
 		}
 	}
@@ -72,9 +77,10 @@ public class StartActivity extends Activity implements OnClickListener {
 		StartActivity.this.finish();
 	}
 
-	private void isPenServiceReady(final String svrName) {
+	private void isServiceReady(final String svrName) {
 		final PenService service = RobotPenApplication.getInstance().getPenService();
-		if (service != null) {
+		FileManageService fileService = RobotPenApplication.getInstance().getFileService();
+		if (service != null && fileService != null) {
 			mHandler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
@@ -92,7 +98,7 @@ public class StartActivity extends Activity implements OnClickListener {
 			mHandler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					isPenServiceReady(svrName);
+					isServiceReady(svrName);
 				}
 			}, 1000);
 		}

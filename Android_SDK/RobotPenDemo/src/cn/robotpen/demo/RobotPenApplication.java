@@ -1,6 +1,7 @@
 package cn.robotpen.demo;
 
 import cn.robotpen.core.PenApplication;
+import cn.robotpen.file.qiniu.QiniuConfig;
 import cn.robotpen.remote.Aliyun.AliyunConfig;
 
 /**
@@ -18,10 +19,14 @@ public class RobotPenApplication extends PenApplication{
         super.onCreate();
         instance = this;
         
-        AliyunConfig.ACCESS_KEY = "ACCESS_KEY";
-        AliyunConfig.SECRET_KEY = "SECRET_KEY";
-        AliyunConfig.TRAIL_CONSUMER_ID = "TRAIL_CONSUMER_ID";
+        QiniuConfig.ACCESS_KEY = "i2hg6Yvl2mo86rEdgdgifL8eKAjHTVeWbXp9ZAa4";
+        QiniuConfig.SECRET_KEY = "ZQ6H3fFzcRPNeLwQIkVLyZCFYxhuRW4Ct5E1Zjld";
+        QiniuConfig.ACCESS_KEY2 = "xBIt-3EKJFXbJ-5QniRlStuHbji5CCnKDZ-Zs1d7";
+        QiniuConfig.SECRET_KEY2 = "2TYWFkcC6-XuBHDTx8xio0xdVLkP2VIHVcqwAfkc";
+        QiniuConfig.VIDEO_SHARE_KEY = "8917A098-44ED-4378-B1D6-4F9BA6F59EFD";
         
+        AliyunConfig.ACCESS_KEY = "J38gvBvILH6wsgTZ";
+        AliyunConfig.SECRET_KEY = "Qkz9X8ZwtRkWAihbgTlDJ8jNb5vnKr";
     }
 
     public static RobotPenApplication getInstance() {
