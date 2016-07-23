@@ -260,7 +260,7 @@
 			        android:layout_width="fill_parent"
 			        android:layout_height="fill_parent"
 			       />
-			       -->
+			    -->
 	        </RelativeLayout>
 	        <LinearLayout 
                 android:layout_width="wrap_content"
@@ -318,8 +318,23 @@
 			        android:layout_height="wrap_content"
 			        android:layout_marginTop="10dp"
 			        android:clickable="false"
-			        android:background="@android:color/darker_gray"
 			        android:text="面板背景缩放" />
+		             
+		              <Button
+		        	android:id="@+id/saveScreenBut"
+			        android:layout_width="120dp"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="10dp"
+			        android:clickable="false"
+			        android:text="截屏" />
+		              
+		               <Button
+		        	android:id="@+id/insertPhoto"
+			        android:layout_width="120dp"
+			        android:layout_height="wrap_content"
+			        android:layout_marginTop="10dp"
+			        android:clickable="false"
+			        android:text="插入图片" />
 		             
 	            
 	        </LinearLayout>

@@ -50,11 +50,6 @@
             android:name="cn.robotpen.demo.PenInfo"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name="cn.robotpen.demo.SettingSize"
-            android:screenOrientation="portrait" >
-        </activity>
-
         <service
             android:name="cn.robotpen.core.services.SmartPenService"
             android:enabled="true" >

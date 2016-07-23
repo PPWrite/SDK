@@ -1,5 +1,7 @@
 package cn.robotpen.demo;
 
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -12,20 +14,15 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,11 +49,7 @@ import cn.robotpen.core.views.MultipleCanvasView;
 import cn.robotpen.core.views.MultipleCanvasView.CanvasManageInterface;
 import cn.robotpen.core.views.MultipleCanvasView.PenModel;
 import cn.robotpen.file.services.FileManageService;
-import cn.robotpen.model.FrameSizeObject;
-import cn.robotpen.model.PointObject;
 import cn.robotpen.model.interfaces.Listeners.OnConnectStateListener;
-import cn.robotpen.model.interfaces.Listeners.OnPointChangeListener;
-import cn.robotpen.model.symbol.BatteryState;
 import cn.robotpen.model.symbol.ConnectState;
 import cn.robotpen.model.symbol.Keys;
 import cn.robotpen.model.symbol.RecordState;
@@ -73,6 +66,8 @@ import cn.robotpen.utils.SystemUtil;
 public class PenInfo extends Activity implements CanvasManageInterface,ImageRecordInterface{
 	public static final String TAG = PenInfo.class.getSimpleName();
 	public static final int REQUEST_SETTING_SIZE = 1000;
+	 private static final int SELECT_PICTURE = 1001;
+	    private static final int SELECT_CAMERA = 1002;
 	
 	/**笔服务广播处理**/
 	private PenServiceReceiver mPenServiceReceiver;
@@ -116,14 +111,17 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 	private Button mRecordStopBut;
 	private ImageRecordModule mImageRecordModule;
 	private int butFlag = 0; //1为可暂停／停止  2为可继续／停止  
-	
+	private final String IMAGE_TYPE = "image/*"; 
+	private final int IMAGE_CODE = 0; 
+	private String path = "/storage/sdcard0/Movies/";
 	//更换面板背景
 	private Button changeBgBut;
 	private Uri bgUri;//接收选择的背景图片
 	private Button changeBgScaleTypeBut;
 	private ScaleType scaleType;
-	
-	
+	private Button saveScreenBut;
+	private Button insertPhoto;
+	private Uri mInsertPhotoUri;
 	/**虚拟用户ID**/
 	private String mUserId;
 	
@@ -187,10 +185,6 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 		mLineFrame = (RelativeLayout) findViewById(R.id.lineFrame);
 		//父节点
 		mLineWindow = (RelativeLayout) findViewById(R.id.lineWindow);
-		//创建画布
-		mPenCanvasView = new MultipleCanvasView(PenInfo.this, this);
-		mPenCanvasView.setBackgroundColor(Color.WHITE);
-		mLineWindow.addView(mPenCanvasView);
 		
 		mOriginalX = (TextView) findViewById(R.id.originalX);
 		mOriginalY = (TextView) findViewById(R.id.originalY);
@@ -223,6 +217,12 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 		changeBgBut.setOnClickListener(bgChange_click);
 		changeBgScaleTypeBut = (Button) findViewById(R.id.changeBgScaleTypeBut);
 		changeBgScaleTypeBut.setOnClickListener(bgScaleType_click);
+		
+		saveScreenBut = (Button) findViewById(R.id.saveScreenBut);
+		saveScreenBut.setOnClickListener(saveScreen_click);
+		
+		insertPhoto = (Button) findViewById(R.id.insertPhoto);
+		insertPhoto.setOnClickListener(insertPhoto_click);
 
 		//添加笔跟随图标
 		mPenView = new PenView(this);
@@ -258,18 +258,6 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 				alertError("IP address error.");
 			}
 		}
-		
-		//获取压缩级别
-        int level = RobotPenApplication.getInstance().getRecordLevel();
-        //初始化录制工具
-        mImageRecordModule = new ImageRecordModule(PenInfo.this);
-        //存路径
-        String path = "/storage/sdcard0/Movies/";
-        mImageRecordModule.setSavePhotoDir(path);
-        mImageRecordModule.setSaveVideoDir(path);
-        mImageRecordModule.setRecordLevel(level);
-        mImageRecordModule.initImageRecord();
-        mImageRecordModule.setInputSize(mPenCanvasView.getDrawAreaWidth(), mPenCanvasView.getDrawAreaHeight());
 	}
 	
 	@Override
@@ -301,9 +289,14 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
     		}
     		if(requestCode == 0){
     			bgUri = data.getData();
-    			//刷新页面
-    			mPenCanvasView.refresh();
     		}
+    		 mInsertPhotoUri = null;
+             if (requestCode == SELECT_PICTURE && data != null) {
+                 mInsertPhotoUri = data.getData();
+             } else if (requestCode == SELECT_CAMERA) {
+                 String photoPath = path + "temp00_00.jpg";
+                 mInsertPhotoUri = Uri.fromFile(new File(photoPath));
+             }
     	}
 	}
     
@@ -320,6 +313,31 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 			IntentFilter intentFilter = new IntentFilter();
 			intentFilter.addAction(Keys.ACTION_SERVICE_SEND_POINT);
 			registerReceiver(mPenServiceReceiver, intentFilter);
+		}
+		if(mPenCanvasView!=null){
+		mPenCanvasView.removeAllViews();
+		}
+		//创建画布
+		mPenCanvasView = new MultipleCanvasView(PenInfo.this, this);
+		mPenCanvasView.setBackgroundColor(Color.WHITE);
+		mLineWindow.addView(mPenCanvasView);
+		//获取压缩级别
+        int level = RobotPenApplication.getInstance().getRecordLevel();
+        //初始化录制工具
+        mImageRecordModule = new ImageRecordModule(PenInfo.this);
+        //存路径
+        mImageRecordModule.setSavePhotoDir(path);
+        mImageRecordModule.setSaveVideoDir(path);
+        mImageRecordModule.setRecordLevel(level);
+        mImageRecordModule.setInputSize(mPenCanvasView.getDrawAreaWidth(), mPenCanvasView.getDrawAreaHeight());
+        mImageRecordModule.initImageRecord();
+		if(null!=mInsertPhotoUri){
+		     mPenCanvasView.insertPhoto(mInsertPhotoUri);
+		     mInsertPhotoUri = null;
+		}
+		if(bgUri!=null){
+			mPenCanvasView.refresh();
+			bgUri=null;
 		}
 	}
 	
@@ -352,19 +370,9 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 		}else{
 			mXYBut.setEnabled(true);
 			mLineBut.setEnabled(false);
-			
 			mXYFrame.setVisibility(View.GONE);
 			mLineFrame.setVisibility(View.VISIBLE);
 		}
-
-//		Log.v(TAG, "sceneWidth:"+mCanvasSizeObject.sceneWidth+",sceneHeight:"+mCanvasSizeObject.sceneHeight);
-//		Log.v(TAG, "DisplayWidth:"+mDisplayWidth+",DisplayHeight:"+mDisplayHeight);
-//		Log.v(TAG, "windowWidth:"+mCanvasSizeObject.windowWidth+",windowHeight:"+mCanvasSizeObject.windowHeight);
-//		Log.v(TAG, "windowLeft:"+mCanvasSizeObject.windowLeft+",windowTop:"+mCanvasSizeObject.windowTop);
-//		
-//		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mCanvasSizeObject.windowWidth, mCanvasSizeObject.windowHeight);
-//		params.setMargins(mCanvasSizeObject.windowLeft, mCanvasSizeObject.windowTop, 0, 0);
-//		mLineWindow.setLayoutParams(params);
 	}
 	
 	private void alertError(String msg){
@@ -569,9 +577,6 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 				mImageRecordModule.endRecord();
 			}
 		};
-		
-		private final String IMAGE_TYPE = "image/*"; 
-		private final int IMAGE_CODE = 0; 
 		/**
 		 * 更换背景
 		 * **/
@@ -591,36 +596,56 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 		private OnClickListener bgScaleType_click = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				 mImageRecordModule.saveSnapshot();
-//				final String[] items = {"居中","平铺"};  
-//                new AlertDialog.Builder(PenInfo.this)  
-//                        .setTitle("请点击选择")  
-//                        .setItems(items, new DialogInterface.OnClickListener() {
-//
-//							@Override
-//						public void onClick(DialogInterface dialog, int which) {
-//							// TODO Auto-generated method stub
-//							switch (which) {
-//							case 0:
-//								scaleType = ScaleType.CENTER;
-//								//刷新画布
-//				    			mPenCanvasView.refresh();
-//								break;
-//							case 1:
-//								scaleType = ScaleType.FIT_XY;
-//								//刷新画布
-//				    			mPenCanvasView.refresh();
-//								break;
-//							default:
-//								//刷新画布
-//				    			mPenCanvasView.refresh();
-//							}
-//						}
-//					}).show();
+				final String[] items = {"居中","平铺"};  
+                new AlertDialog.Builder(PenInfo.this)  
+                        .setTitle("请点击选择")  
+                        .setItems(items, new DialogInterface.OnClickListener() {
+
+							@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							switch (which) {
+							case 0:
+								scaleType = ScaleType.CENTER;
+								//刷新画布
+				    			mPenCanvasView.refresh();
+								break;
+							case 1:
+								scaleType = ScaleType.FIT_XY;
+								//刷新画布
+				    			mPenCanvasView.refresh();
+								break;
+							default:
+								//刷新画布
+				    			mPenCanvasView.refresh();
+							}
+						}
+					}).show();
             
 			}
 		};
 		
+		/**
+		 * 截屏saveScreen_click
+		 * */
+		private OnClickListener saveScreen_click = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				 mImageRecordModule.saveSnapshot();
+			}
+		};
+		
+		/***
+		 * insertPhoto_click
+		 */
+		private OnClickListener insertPhoto_click = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT); 
+				getAlbum.setType(IMAGE_TYPE); 
+				startActivityForResult(getAlbum,SELECT_PICTURE); 
+			}
+		};
 		@Override
 		public int getBgColor() {
 			// TODO Auto-generated method stub
@@ -673,18 +698,6 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 		public int fillImageBuffer(ByteBuffer buffer) {
 			// TODO Auto-generated method stub
 			 int result = 0;
-//		        //启用DrawingCache并创建位图
-//			 	mLineWindow.setDrawingCacheEnabled(true);
-//				mLineWindow.buildDrawingCache();
-//
-//
-//		        Bitmap imageCache = mLineWindow.getDrawingCache();
-//		        if (imageCache != null) {
-//		            result = imageCache.getByteCount();
-//		            imageCache.copyPixelsToBuffer(buffer);
-//		        }
-//
-//		        mLineWindow.setDrawingCacheEnabled(false);
 			 mPenCanvasView.setDrawingCacheEnabled(true);
 			 mPenCanvasView.buildDrawingCache();
 	            Bitmap imageCache = mPenCanvasView.getDrawingCache();
