@@ -41,7 +41,6 @@ public class StartActivity extends Activity implements OnClickListener {
 
 		mBleBut.setOnClickListener(this);
 		mUsbBut.setOnClickListener(this);
-		// initData();
 	}
 	
 	@Override
@@ -77,6 +76,7 @@ public class StartActivity extends Activity implements OnClickListener {
 		StartActivity.this.finish();
 	}
 
+	//确定服务启动
 	private void isServiceReady(final String svrName) {
 		final PenService service = RobotPenApplication.getInstance().getPenService();
 		FileManageService fileService = RobotPenApplication.getInstance().getFileService();

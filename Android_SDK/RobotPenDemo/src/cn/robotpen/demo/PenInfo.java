@@ -127,9 +127,7 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 	
 	/** 笔画布 **/
 	private MultipleCanvasView mPenCanvasView;
-	
 
-	
 	//笔视图
 	private PenView mPenView;
 	

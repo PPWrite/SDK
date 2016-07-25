@@ -41,15 +41,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity android:name=".DemoListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
+        
         <activity
             android:name="cn.robotpen.demo.PenInfo"
             android:screenOrientation="portrait" >
         </activity>
+        
+        <!-- 注册服务 -->
         <service
             android:name="cn.robotpen.core.services.SmartPenService"
             android:enabled="true" >
