@@ -31,7 +31,7 @@ typedef struct sPenInfo
 }PEN_INFO;
 
 // 返回usb数据回调类型
-typedef void (*usbDataCallBack)(const char* pUsbData, const sPenInfo& penInfo);
+typedef void ( CALLBACK *usbDataCallBack)(const char* pUsbData, const sPenInfo& penInfo);
 // 返回usb设备的插拔状态
 typedef void (*usbStatusCallBack)(int nDevstatus, void* context);
 
