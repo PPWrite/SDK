@@ -41,9 +41,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name=".DemoListActivity"
-            android:label="@string/app_name"
+        <activity android:name="cn.robotpen.demo.usb.GetAxesActivity"
+             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         

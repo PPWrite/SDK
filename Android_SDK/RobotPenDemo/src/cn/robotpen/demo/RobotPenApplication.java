@@ -18,13 +18,8 @@ public class RobotPenApplication extends PenApplication{
     public void onCreate() {
         super.onCreate();
         instance = this;
-        
         QiniuConfig.ACCESS_KEY = "i2hg6Yvl2mo86rEdgdgifL8eKAjHTVeWbXp9ZAa4";
         QiniuConfig.SECRET_KEY = "ZQ6H3fFzcRPNeLwQIkVLyZCFYxhuRW4Ct5E1Zjld";
-        QiniuConfig.ACCESS_KEY2 = "xBIt-3EKJFXbJ-5QniRlStuHbji5CCnKDZ-Zs1d7";
-        QiniuConfig.SECRET_KEY2 = "2TYWFkcC6-XuBHDTx8xio0xdVLkP2VIHVcqwAfkc";
-        QiniuConfig.VIDEO_SHARE_KEY = "8917A098-44ED-4378-B1D6-4F9BA6F59EFD";
-        
         AliyunConfig.ACCESS_KEY = "J38gvBvILH6wsgTZ";
         AliyunConfig.SECRET_KEY = "Qkz9X8ZwtRkWAihbgTlDJ8jNb5vnKr";
     }
@@ -43,6 +38,5 @@ public class RobotPenApplication extends PenApplication{
         System.loadLibrary("avfilter-5");
         System.loadLibrary("avdevice-56");
         System.loadLibrary("RecordImageUtil");
-        
     }
 }
