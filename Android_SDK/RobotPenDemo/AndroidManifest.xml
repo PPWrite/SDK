@@ -28,13 +28,13 @@
         android:required="true" />
 
     <application
-        android:name=".RobotPenApplication"
+        android:name="cn.robotpen.demo.RobotPenApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".StartActivity"
+            android:name="cn.robotpen.demo.StartActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,7 +47,7 @@
         </activity>
         
         <activity
-            android:name=".MainActivity"
+            android:name="cn.robotpen.demo.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>

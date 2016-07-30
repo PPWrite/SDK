@@ -1,6 +1,7 @@
 package cn.robotpen.demo;
 
 import cn.robotpen.core.services.PenService;
+import cn.robotpen.demo.R;
 import cn.robotpen.file.services.FileManageService;
 import cn.robotpen.model.symbol.Keys;
 import android.app.Activity;

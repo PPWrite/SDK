@@ -1,7 +1,7 @@
 package cn.robotpen.demo;
 
 import java.util.ArrayList;
-
+import cn.robotpen.demo.R;
 import cn.robotpen.model.DeviceObject;
 
 import android.content.Context;

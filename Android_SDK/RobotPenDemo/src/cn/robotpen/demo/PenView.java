@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.view.View;
+import cn.robotpen.demo.R;
 
 public class PenView extends View{
 	public float bitmapX;

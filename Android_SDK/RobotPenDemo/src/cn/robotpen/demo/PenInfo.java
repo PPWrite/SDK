@@ -48,6 +48,7 @@ import cn.robotpen.core.services.UsbPenService;
 import cn.robotpen.core.views.MultipleCanvasView;
 import cn.robotpen.core.views.MultipleCanvasView.CanvasManageInterface;
 import cn.robotpen.core.views.MultipleCanvasView.PenModel;
+import cn.robotpen.demo.R;
 import cn.robotpen.file.services.FileManageService;
 import cn.robotpen.model.interfaces.Listeners.OnConnectStateListener;
 import cn.robotpen.model.symbol.ConnectState;

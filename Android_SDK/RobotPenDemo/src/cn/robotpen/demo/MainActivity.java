@@ -5,6 +5,7 @@ import java.util.HashMap;
 import cn.robotpen.model.interfaces.Listeners.OnScanDeviceListener;
 import cn.robotpen.model.DeviceObject;
 import cn.robotpen.core.services.PenService;
+import cn.robotpen.demo.R;
 import cn.robotpen.model.symbol.Keys;
 
 import android.app.Activity;
