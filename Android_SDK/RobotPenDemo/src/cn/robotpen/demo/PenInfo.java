@@ -662,8 +662,8 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 		}
 		//FIXME
 		@Override
-		public boolean getIsRubber() {
-			return false;
+		public float getIsRubber() {
+			return 0.0f;
 		}
 
 		@Override

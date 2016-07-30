@@ -16,6 +16,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.robotpen.demo.usb.GetAxesActivity;
+import cn.robotpen.demo.usb.NoteActivity;
 
 /**
  * 
@@ -102,6 +103,7 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 		text.setPadding(60, 0, 0, 0);
 		text.setText(name);
 		text.setOnClickListener(new View.OnClickListener() {
+			Intent intent;
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -117,13 +119,13 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 					break;
 				case 1:// USB
 					switch (c) {
-					case 0:// 笔记
-						Intent intent = new Intent(mContext, GetAxesActivity.class);
+					case 0:// 笔迹
+						 intent = new Intent(mContext, GetAxesActivity.class);
 						mContext.startActivity(intent);
 						break;
 					case 1:// 画布
-						// Intent intent1 = new Intent(mContext, Canv.class);
-						// mContext.startActivity(intent1);
+						  intent = new Intent(mContext, NoteActivity.class);
+						 mContext.startActivity(intent);
 						break;
 
 					default:

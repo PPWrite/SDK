@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RobotPenDemo</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">设置</string>
+    <string name="help">使用数码笔在左上角和右下角按下3秒以确定您的书写范围</string>
+    <string name="selectmode">选择书写纸张大小</string>
+    <string name="select_please">请选择</string>
+    <string name="battery_low">数码笔电量低，请注意充电。</string>
+    <string name="canceled">取消</string>
+    <string name="back">返回</string>
+    <string name="reset">重置</string>
+    <string name="confirm">确认</string>
+	<string name="connecting">正在连接，请稍后...</string>
+	<string name="connected">设备连接成功，开始书写笔迹.</string>
+	<string name="disconnected">设备连接断开.</string>
+    <string name="setting_size">自定义纸张大小</string>
+    <string name="setting_size_step1">请将数码笔按在纸张左上角，开始设置</string>
+    <string name="setting_size_step2">请将数码笔按在纸张右下角，完成设置</string>
+    <string name="setting_size_end">纸张大小定义完成，请点击确认按钮返回</string>
+    <string name="setting_size_small">自定义纸张尺寸太小，请扩大书写范围。</string>
+	<string name="service_ble_start">正在启动蓝牙服务，请稍后...</string>
+	<string name="service_usb_start">正在启动USB服务，请稍后...</string>
+
+</resources>
