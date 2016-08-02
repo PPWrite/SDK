@@ -56,6 +56,10 @@
             android:name="cn.robotpen.demo.PenInfo"
             android:screenOrientation="portrait" >
         </activity>
+         <activity
+            android:name="cn.robotpen.demo.NoteActivity"
+            android:screenOrientation="portrait" >
+        </activity>
         
         <!-- 注册服务 -->
         <service

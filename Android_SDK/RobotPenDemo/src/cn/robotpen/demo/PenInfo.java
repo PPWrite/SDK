@@ -306,6 +306,7 @@ public class PenInfo extends Activity implements CanvasManageInterface,ImageReco
 		if(mPenService != null){
 			//设置笔坐标监听
 			//mPenService.setOnPointChangeListener(onPointChangeListener);
+			mPenService.setOnConnectStateListener(onConnectStateListener);
 		}else{
 			//注册笔服务通过广播方式发送的笔迹坐标信息
 			mPenServiceReceiver = new PenServiceReceiver();

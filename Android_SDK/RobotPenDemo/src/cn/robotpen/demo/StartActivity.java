@@ -1,22 +1,18 @@
 package cn.robotpen.demo;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.app.ExpandableListActivity;
-import android.content.Context;
+import cn.robotpen.core.services.PenService;
+import cn.robotpen.demo.R;
+import cn.robotpen.file.services.FileManageService;
+import cn.robotpen.model.symbol.Keys;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.os.Handler;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-import cn.robotpen.demo.usb.GetAxesActivity;
-import cn.robotpen.demo.usb.NoteActivity;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Button;
 
 /**
  * 
@@ -25,172 +21,100 @@ import cn.robotpen.demo.usb.NoteActivity;
  *
  *       Description
  */
-public class StartActivity extends ExpandableListActivity {
+public class StartActivity extends Activity implements OnClickListener {
+	private Handler mHandler;
+	private Button mBleBut;
+	private Button mUsbBut;
+	private ProgressDialog mProgressDialog;
 	public static final String TAG = StartActivity.class.getSimpleName();
-	private BaseExpandableListAdapter sAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		setListAdapter(new IdeasExpandableListAdapter(StartActivity.this));
+		setContentView(R.layout.activity_start);
+
+		
+		mHandler = new Handler();
+		mBleBut = (Button) findViewById(R.id.bleBut);
+		mUsbBut = (Button) findViewById(R.id.usbBut);
+
+		mBleBut.setOnClickListener(this);
+		mUsbBut.setOnClickListener(this);
 	}
-}
-
-// private sAdapter = new BaseExpandableListAdapter();
-class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
-
-	private Context mContext = null;
-
-	private String[] group = { "蓝牙演示", "USB演示" };
-	private String[] blue = { "暂无" };
-	private String[] usb = { "> 获取笔记坐标演示", "> 单画布演示及常用功能" ,"> P2P交互功能","> 多画布功能","> 综合示例"};
-	private List<String> groupList = null;
-	private List<List<String>> itemList = null;
-
-	public IdeasExpandableListAdapter(Context context) {
-		this.mContext = context;
-		groupList = new ArrayList<String>();
-		itemList = new ArrayList<List<String>>();
-		initData();
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
 	}
 
-	private void initData() {
-		for (int i = 0; i < group.length; i++) {
-			groupList.add(group[i]);
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.bleBut:
+			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_ble_start), true);
+			// 绑定蓝牙笔服务
+			RobotPenApplication.getInstance().bindPenService(Keys.APP_PEN_SERVICE_NAME);
+			//绑定文件服务
+			RobotPenApplication.getInstance().bindFileService();
+			isServiceReady(Keys.APP_PEN_SERVICE_NAME);
+			break;
+		case R.id.usbBut:
+//			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
+//			// 绑定USB笔服务
+//			RobotPenApplication.getInstance().bindPenService(Keys.APP_USB_SERVICE_NAME);
+//			//绑定文件服务
+//			RobotPenApplication.getInstance().bindFileService();
+//			isServiceReady(Keys.APP_USB_SERVICE_NAME);
+			Intent intent = new Intent(StartActivity.this, NoteActivity.class);
+			startActivity(intent);
+			break;
 		}
-		List<String> item1 = new ArrayList<String>();
-		for (int i = 0; i < blue.length; i++) {
-			item1.add(blue[i]);
-		}
-		List<String> item2 = new ArrayList<String>();
-		for (int i = 0; i < usb.length; i++) {
-			item2.add(usb[i]);
-		}
-		itemList.add(item1);
-		itemList.add(item2);
 	}
 
-	public boolean areAllItemsEnabled() {
-		return false;
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		StartActivity.this.finish();
 	}
 
-	public Object getChild(int groupPosition, int childPosition) {
-		return itemList.get(groupPosition).get(childPosition);
-	}
-
-	public long getChildId(int groupPosition, int childPosition) {
-		return childPosition;
-	}
-
-	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView,
-			ViewGroup parent) {
-		TextView text = null;
-		if (convertView == null) {
-			text = new TextView(mContext);
-		} else {
-			text = (TextView) convertView;
-		}
-		// 获取子节点要显示的名称
-		String name = (String) itemList.get(groupPosition).get(childPosition);
-		final int g = groupPosition;
-		final int c = childPosition;
-		// 设置文本视图的相关属性
-		AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 60);
-		text.setLayoutParams(lp);
-		text.setTextSize(20);
-		text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-		text.setPadding(60, 0, 0, 0);
-		text.setText(name);
-		text.setOnClickListener(new View.OnClickListener() {
-			Intent intent;
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				switch (g) {
-				case 0:// 蓝牙
-					switch (c) {
-					case 0:
-						Toast.makeText(mContext, "正在完善中", Toast.LENGTH_SHORT).show();
-						break;
-					default:
-						break;
-					}
-					break;
-				case 1:// USB
-					switch (c) {
-					case 0:// 笔迹
-						 intent = new Intent(mContext, GetAxesActivity.class);
-						mContext.startActivity(intent);
-						break;
-					case 1:// 画布
-						  intent = new Intent(mContext, NoteActivity.class);
-						 mContext.startActivity(intent);
-						break;
-
-					default:
-						break;
-					}
-
-					break;
-				default:
-					break;
+	//确定服务启动
+	private void isServiceReady(final String svrName) {
+		final PenService service = RobotPenApplication.getInstance().getPenService();
+		FileManageService fileService = RobotPenApplication.getInstance().getFileService();
+		if (service != null && fileService != null) {
+			mHandler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					dismissProgressDialog();
+//					if (Keys.APP_PEN_SERVICE_NAME.equals(svrName)) {
+//						startActivity(new Intent(StartActivity.this, MainActivity.class));
+//					} else if (Keys.APP_USB_SERVICE_NAME.equals(svrName)) {
+//						Intent intent = new Intent(StartActivity.this, NoteActivity.class);
+//						intent.putExtra(Keys.KEY_VALUE, svrName);
+//						startActivity(intent);
+//					}
 				}
-			}
-		});
-		return text;
-	}
-
-	public int getChildrenCount(int groupPosition) {
-		return itemList.get(groupPosition).size();
-	}
-
-	public Object getGroup(int groupPosition) {
-		return groupList.get(groupPosition);
-	}
-
-	public int getGroupCount() {
-		return groupList.size();
-	}
-
-	public long getGroupId(int groupPosition) {
-		return groupPosition;
-	}
-
-	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-		TextView text = null;
-		if (convertView == null) {
-			text = new TextView(mContext);
+			}, 500);
 		} else {
-			text = (TextView) convertView;
+			mHandler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					isServiceReady(svrName);
+				}
+			}, 1000);
 		}
-		String name = (String) groupList.get(groupPosition);
-		AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 60);
-		text.setLayoutParams(lp);
-		text.setBackgroundColor(Color.GRAY);
-		text.setTextSize(24);
-		text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-		text.setPadding(60, 0, 0, 0);
-		text.setText(name);
-		return text;
 	}
 
-	public boolean isEmpty() {
-		return false;
-	}
+	/** 释放progressDialog **/
+	protected void dismissProgressDialog() {
+		if (mProgressDialog != null) {
+			if (mProgressDialog.isShowing())
+				mProgressDialog.dismiss();
 
-	public void onGroupCollapsed(int groupPosition) {
-	}
-
-	public void onGroupExpanded(int groupPosition) {
-	}
-
-	public boolean hasStableIds() {
-		return false;
-	}
-
-	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		return true;
+			mProgressDialog = null;
+		}
 	}
 
 }
