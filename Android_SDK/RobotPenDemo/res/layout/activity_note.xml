@@ -22,6 +22,55 @@
                     android:layout_height="fill_parent" />
             </RelativeLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/recordStartBut"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="开始录制" />
+
+                <Button
+                    android:id="@+id/recordStopBut"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@android:color/darker_gray"
+                    android:clickable="false"
+                    android:text="停止录制" />
+                
+                 <Button
+                    android:id="@+id/saveScreenBut"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="截屏" />
+
+                <Button
+                    android:id="@+id/changeBgBut"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="更换面板背景" />
+                <Button
+                    android:id="@+id/changeBgScaleTypeBut"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="面板背景缩放" />
+                <Button
+                    android:id="@+id/insertPhoto"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="插入图片" />
+            </LinearLayout>
         </RelativeLayout>
 
 </LinearLayout>
