@@ -43,7 +43,7 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 
 	private String[] group = { "蓝牙演示", "USB演示" };
 	private String[] blue = { "暂无" };
-	private String[] usb = { "> 获取笔记坐标演示", "> 单画布" ,"> 画布常用功能" ,"> P2P交互功能","> 多画布功能","> 综合示例"};
+	private String[] usb = { "> 获取笔记坐标演示", "> 单画布演示" ,"> 画布常用功能演示" ,"> P2P交互功能演示","> 多画布功能演示","> 综合示例演示"};
 	private List<String> groupList = null;
 	private List<List<String>> itemList = null;
 
@@ -95,11 +95,11 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 		final int g = groupPosition;
 		final int c = childPosition;
 		// 设置文本视图的相关属性
-		AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 60);
+		AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 100);
 		text.setLayoutParams(lp);
 		text.setTextSize(20);
 		text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-		text.setPadding(60, 0, 0, 0);
+		text.setPadding(100, 0, 0, 0);
 		text.setText(name);
 		text.setOnClickListener(new View.OnClickListener() {
 			Intent intent;
@@ -164,12 +164,12 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 			text = (TextView) convertView;
 		}
 		String name = (String) groupList.get(groupPosition);
-		AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 60);
+		AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 120);
 		text.setLayoutParams(lp);
 		text.setBackgroundColor(Color.GRAY);
 		text.setTextSize(24);
 		text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-		text.setPadding(60, 0, 0, 0);
+		text.setPadding(120, 0, 0, 0);
 		text.setText(name);
 		return text;
 	}

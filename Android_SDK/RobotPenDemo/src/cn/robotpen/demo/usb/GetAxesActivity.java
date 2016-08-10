@@ -2,13 +2,11 @@ package cn.robotpen.demo.usb;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -28,10 +26,8 @@ import cn.robotpen.model.interfaces.Listeners.OnPointChangeListener;
 import cn.robotpen.model.interfaces.Listeners.OnScanDeviceListener;
 import cn.robotpen.model.symbol.ConnectState;
 import cn.robotpen.model.symbol.SceneType;
-import cn.robotpen.utils.LogUtil;
 
 public class GetAxesActivity extends Activity {
-	public static final String TAG = GetAxesActivity.class.getSimpleName();
 	private String[] mItems = { "10.1寸竖屏", "10.1寸横屏" };
 	private ProgressDialog mProgressDialog;
 	private PenService mPenService;
@@ -39,7 +35,7 @@ public class GetAxesActivity extends Activity {
 	private Button deviceBut;
 	private Spinner mSceneType;
 	private TextView isRoute; // 是否写入状态
-	private TextView pressure;
+	private TextView pressure; // 压感
 	private TextView originalX;
 	private TextView originalY;
 
@@ -49,8 +45,6 @@ public class GetAxesActivity extends Activity {
 	private TextView sceneOffsetX;
 	private TextView sceneOffsetY;
 
-	// private
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -59,19 +53,17 @@ public class GetAxesActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_getaxes);
-		//启动USB服务
+		// 启动USB服务
 		RobotPenApplication.getInstance().bindPenService();
-		initUI();//初始化界面
+		initUI();// 初始化界面
 	}
-	
-	
 
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
 		mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
-		//启动笔服务
+		// 启动笔服务
 		initPenService();
 	}
 
@@ -96,11 +88,15 @@ public class GetAxesActivity extends Activity {
 			RobotPenApplication.getInstance().unBindPenService();
 		}
 	}
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 	}
 
+	/*
+	 * 界面初始化
+	 */
 	void initUI() {
 		deviceBut = (Button) findViewById(R.id.deviceBut);
 		deviceBut.setOnClickListener(buttonClick);
@@ -136,6 +132,7 @@ public class GetAxesActivity extends Activity {
 					break;
 				}
 			}
+
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				// TODO Auto-generated method stub
@@ -145,7 +142,6 @@ public class GetAxesActivity extends Activity {
 	}
 
 	/*
-	 * 
 	 * 此处一定要确保笔服务是启动的
 	 */
 	private void initPenService() {
@@ -154,13 +150,14 @@ public class GetAxesActivity extends Activity {
 			RobotPenApplication.getInstance().bindPenService();
 		isPenServiceReady();
 	}
+
 	private void isPenServiceReady() {
 		mPenService = RobotPenApplication.getInstance().getPenService();
 		if (mPenService != null) {
 			dismissProgressDialog();
-			mPenService.setSceneType(SceneType.INCH_101);//设置场景值，用于坐标转化
-			//如果要弹出确认则必须设置连接监听
-			mPenService.setOnConnectStateListener(onConnectStateListener); 
+			mPenService.setSceneType(SceneType.INCH_101);// 设置场景值，用于坐标转化
+			// 如果要弹出确认则必须设置连接监听
+			mPenService.setOnConnectStateListener(onConnectStateListener);
 			mPenService.setOnPointChangeListener(onPointChangeListener);
 		} else {
 			mHandler.postDelayed(new Runnable() {
@@ -171,6 +168,7 @@ public class GetAxesActivity extends Activity {
 			}, 500);
 		}
 	}
+
 	/*
 	 * 手动执行设备扫描
 	 */
@@ -179,43 +177,43 @@ public class GetAxesActivity extends Activity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			mProgressDialog = ProgressDialog.show(GetAxesActivity.this, "", "正在扫描设备……", true);
-			mPenService.scanDevice(onScanDeviceListener);
+			mPenService.scanDevice(null);
 		}
 	};
-	
-	//此监听是为了弹出授权
+	/*
+	 * 此处监听是为了弹出授权
+	 */
 	private OnConnectStateListener onConnectStateListener = new OnConnectStateListener() {
 		@Override
 		public void stateChange(String arg0, ConnectState arg1) {
 			// TODO Auto-generated method stub
-			if(arg1 == ConnectState.CONNECTED){
+			if (arg1 == ConnectState.CONNECTED) {
 				dismissProgressDialog();
 			}
 		}
 	};
-	//此监听是为了弹出授权
-		private OnScanDeviceListener onScanDeviceListener = new OnScanDeviceListener() {
+	/*
+	 * 手动执行设备扫描，确保设备保持连接状态
+	 */
+	private OnScanDeviceListener onScanDeviceListener = new OnScanDeviceListener() {
+		@Override
+		public void complete(HashMap<String, DeviceObject> arg0) {
+			// TODO Auto-generated method stub
 
-			@Override
-			public void complete(HashMap<String, DeviceObject> arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+		}
+		@Override
+		public void find(DeviceObject arg0) {
+			// TODO Auto-generated method stub
 
-			@Override
-			public void find(DeviceObject arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		};
+		}
+
+	};
 	/*
 	 * 通过监听方式完成业务处理 这里接收笔的信息建议通过监听，通过广播方式也是可以的，但是广播方式效率较低
 	 */
 	private OnPointChangeListener onPointChangeListener = new OnPointChangeListener() {
 		@Override
 		public void change(PointObject point) {
-			Log.d(TAG , "///" + point.originalX + point.originalY + point.pressure);
 			// TODO Auto-generated method stub
 			// 设置看坐标中的各个字段
 			originalX.setText(String.valueOf(point.originalX));

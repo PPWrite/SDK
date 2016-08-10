@@ -4,73 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-        <RelativeLayout
-            android:id="@+id/lineFrame"
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="单画布与笔交互演示" />
+
+    <RelativeLayout
+        android:id="@+id/lineWindow"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="#fffff0">
+        <cn.robotpen.core.views.MultipleCanvasView
+            android:id="@+id/penCanvasView"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="#ff666666">
-
-            <RelativeLayout
-                android:id="@+id/lineWindow"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="#ffffffff" >
-
-                <cn.robotpen.core.views.MultipleCanvasView
-                    android:id="@+id/penCanvasView"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:orientation="vertical" >
-
-                <Button
-                    android:id="@+id/recordStartBut"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="开始录制" />
-
-                <Button
-                    android:id="@+id/recordStopBut"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@android:color/darker_gray"
-                    android:clickable="false"
-                    android:text="停止录制" />
-                
-                 <Button
-                    android:id="@+id/saveScreenBut"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="截屏" />
-
-                <Button
-                    android:id="@+id/changeBgBut"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="更换面板背景" />
-                <Button
-                    android:id="@+id/changeBgScaleTypeBut"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="面板背景缩放" />
-                <Button
-                    android:id="@+id/insertPhoto"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="插入图片" />
-            </LinearLayout>
-        </RelativeLayout>
+            android:layout_height="fill_parent" />
+    </RelativeLayout>
 
 </LinearLayout>

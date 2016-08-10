@@ -1,43 +1,17 @@
 package cn.robotpen.demo.usb;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
-import java.util.Random;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.app.AlertDialog.Builder;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView.ScaleType;
-import cn.robotpen.core.module.ImageRecordModule.ImageRecordInterface;
 import cn.robotpen.core.services.PenService;
 import cn.robotpen.core.views.MultipleCanvasView;
 import cn.robotpen.core.views.MultipleCanvasView.CanvasManageInterface;
@@ -46,10 +20,12 @@ import cn.robotpen.demo.R;
 import cn.robotpen.demo.RobotPenApplication;
 import cn.robotpen.file.services.FileManageService;
 import cn.robotpen.model.DeviceObject;
+import cn.robotpen.model.interfaces.Listeners.OnConnectStateListener;
 import cn.robotpen.model.interfaces.Listeners.OnScanDeviceListener;
-import cn.robotpen.model.symbol.RecordState;
+import cn.robotpen.model.symbol.ConnectState;
+import cn.robotpen.model.symbol.SceneType;
 
-public class NoteActivity extends Activity implements CanvasManageInterface, ImageRecordInterface {
+public class NoteActivity extends Activity implements CanvasManageInterface {
 	private PenService mPenService;
 	private ProgressDialog mProgressDialog;
 	private String mUserId;
@@ -60,7 +36,6 @@ public class NoteActivity extends Activity implements CanvasManageInterface, Ima
 	private Handler mHandler = new Handler();
 
 	private ScaleType scaleType;
-	/** 笔画布 **/
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,40 +44,56 @@ public class NoteActivity extends Activity implements CanvasManageInterface, Ima
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_note);
-		// 创建画布
+		// 创建画布，创建画布是必须设置宽度和高度
 		mPenCanvasView = (MultipleCanvasView) findViewById(R.id.penCanvasView);
-		DisplayMetrics metric = new DisplayMetrics();
-	    getWindowManager().getDefaultDisplay().getMetrics(metric);
-	    mDisplayWidth = metric.widthPixels;  // 屏幕宽度（像素）
-	    mDisplayHeight = metric.heightPixels;  // 屏幕高度（像素）
-		mDrawAreaParams = new LayoutParams(mDisplayWidth, mDisplayHeight);
-		//启动USB服务
+		// 示例以根视图显示比例为例，实际代码中可以根据自己需要进行设置
+		DisplayMetrics metric = new DisplayMetrics(); //
+		getWindowManager().getDefaultDisplay().getMetrics(metric);
+		mDisplayWidth = metric.widthPixels; // 屏幕宽度（像素）
+		mDisplayHeight = metric.heightPixels; // 屏幕高度（像素）
+		mDrawAreaParams = new LayoutParams(mDisplayWidth, mDisplayHeight - 30);
+		// 启动USB服务
 		RobotPenApplication.getInstance().bindPenService();
-		
 	}
-	
+
 	@Override
-	public void onResume() {
-		super.onResume();
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
 		mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
+		// 启动笔服务
 		initPenService();
-
 	}
 
 	@Override
-	public void onPause() {
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
 		super.onPause();
-		RobotPenApplication.getInstance().unBindPenService();
-		RobotPenApplication.getInstance().unBindFileService();
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		// 断开设备
+		if (mPenService != null) {
+			RobotPenApplication.getInstance().unBindPenService();
+		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 	}
-	
+
 	/*
-	 * 一定要确保笔服务是启动的
+	 * 此处一定要确保笔服务是启动的
 	 */
 	private void initPenService() {
 		mPenService = RobotPenApplication.getInstance().getPenService();
@@ -110,16 +101,15 @@ public class NoteActivity extends Activity implements CanvasManageInterface, Ima
 			RobotPenApplication.getInstance().bindPenService();
 		isPenServiceReady();
 	}
-	
+
 	private void isPenServiceReady() {
 		mPenService = RobotPenApplication.getInstance().getPenService();
 		if (mPenService != null) {
+			// dismissProgressDialog();
+			// 如果要弹出确认则必须设置连接监听
+			mPenService.setSceneType(SceneType.INCH_101);// 设置场景值，用于坐标转化
+			mPenService.setOnConnectStateListener(onConnectStateListener);
 			mPenService.scanDevice(onScanDeviceListener);
-			dismissProgressDialog();
-			Random rd = new Random();
-	        mUserId = "u"+ String.valueOf(rd.nextInt(10000));
-			mPenService.setUserId(mUserId);
-			mPenCanvasView.refresh();
 		} else {
 			mHandler.postDelayed(new Runnable() {
 				public void run() {
@@ -129,34 +119,36 @@ public class NoteActivity extends Activity implements CanvasManageInterface, Ima
 			}, 500);
 		}
 	}
+
 	/*
-	 * 主动扫描监听
-	 * 
+	 * 此处监听是为了弹出授权
+	 */
+	private OnConnectStateListener onConnectStateListener = new OnConnectStateListener() {
+		@Override
+		public void stateChange(String arg0, ConnectState arg1) {
+			if (arg1 == ConnectState.CONNECTED) {
+				dismissProgressDialog();
+				mPenCanvasView.setPenIcon(R.drawable.ic_pen);
+				mPenCanvasView.refresh();// 通过XML创建的画布在获取到笔服务后必须重新刷新一次
+			}
+		}
+	};
+	/*
+	 * 手动执行设备扫描，确保设备保持连接状态
 	 */
 	private OnScanDeviceListener onScanDeviceListener = new OnScanDeviceListener() {
-		
-		@Override
-		public void find(DeviceObject arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		
 		@Override
 		public void complete(HashMap<String, DeviceObject> arg0) {
 			// TODO Auto-generated method stub
-			
 		}
+
+		@Override
+		public void find(DeviceObject arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
 	};
-	/**
-	 * 释放progressDialog
-	 **/
-	private void dismissProgressDialog() {
-		if (mProgressDialog != null) {
-			if (mProgressDialog.isShowing())
-				mProgressDialog.dismiss();
-			mProgressDialog = null;
-		}
-	}
 
 	@Override
 	public int getBgColor() {
@@ -172,11 +164,9 @@ public class NoteActivity extends Activity implements CanvasManageInterface, Ima
 
 	@Override
 	public String getCurrUserId() {
-		
 		return mUserId;
 	}
 
-	// FIXME
 	@Override
 	public float getIsRubber() {
 		return 0.0f;
@@ -210,58 +200,6 @@ public class NoteActivity extends Activity implements CanvasManageInterface, Ima
 	}
 
 	@Override
-	public int fillImageBuffer(ByteBuffer buffer) {
-		// TODO Auto-generated method stub
-		int result = 0;
-		// mPenCanvasView.setDrawingCacheEnabled(true);
-		// mPenCanvasView.buildDrawingCache();
-		// Bitmap imageCache = mPenCanvasView.getDrawingCache();
-		// if (imageCache != null) {
-		// result = imageCache.getByteCount();
-		// imageCache.copyPixelsToBuffer(buffer);
-		// }
-		// mPenCanvasView.setDrawingCacheEnabled(false);
-		return result;
-	}
-
-	@Override
-	public void recordTimeChange(int arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void recordWarning(RecordState arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void videoCodeState(int progress) {
-		// TODO Auto-generated method stub
-		if (progress > 100) { // progress=100 表示正在压制 progress>100 表示录制成功
-			// 保存
-			AlertDialog.Builder alert = new AlertDialog.Builder(this);
-			alert.setTitle("录制完成");
-			alert.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					try {
-						Field field = dialog.getClass().getSuperclass().getDeclaredField("mShowing");
-						field.setAccessible(true);
-						field.set(dialog, true);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			alert.show();
-
-		}
-
-	}
-
-	@Override
 	public LayoutParams getDrawAreaParams() {
 		// TODO Auto-generated method stub
 		return mDrawAreaParams;
@@ -283,5 +221,16 @@ public class NoteActivity extends Activity implements CanvasManageInterface, Ima
 	public Uri getBgPhoto() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * 释放progressDialog
+	 **/
+	private void dismissProgressDialog() {
+		if (mProgressDialog != null) {
+			if (mProgressDialog.isShowing())
+				mProgressDialog.dismiss();
+			mProgressDialog = null;
+		}
 	}
 }
