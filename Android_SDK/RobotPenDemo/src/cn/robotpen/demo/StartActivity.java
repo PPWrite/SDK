@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.robotpen.demo.usb.GetAxesActivity;
 import cn.robotpen.demo.usb.NoteActivity;
+import cn.robotpen.demo.usb.NoteWithActivity;
 
 /**
  * 
@@ -43,7 +44,8 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 
 	private String[] group = { "蓝牙演示", "USB演示" };
 	private String[] blue = { "暂无" };
-	private String[] usb = { "> 获取笔记坐标演示", "> 单画布演示" ,"> 画布常用功能演示" ,"> P2P交互功能演示","> 多画布功能演示","> 综合示例演示"};
+	private String[] usb = { "> 获取笔记坐标演示", "> 单画布演示" ,"> 画布常用功能演示" };
+	//,"> P2P交互功能演示","> 多画布功能演示","> 综合示例演示"};
 	private List<String> groupList = null;
 	private List<List<String>> itemList = null;
 
@@ -126,7 +128,10 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 						intent = new Intent(mContext, NoteActivity.class);
 						mContext.startActivity(intent);
 						break;
-
+					case 2:// 画布功能
+						intent = new Intent(mContext, NoteWithActivity.class);
+						mContext.startActivity(intent);
+						break;
 					default:
 						break;
 					}

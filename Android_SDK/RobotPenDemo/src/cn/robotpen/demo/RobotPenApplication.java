@@ -13,7 +13,6 @@ import cn.robotpen.remote.Aliyun.AliyunConfig;
  */
 public class RobotPenApplication extends PenApplication{
     private static RobotPenApplication instance = null;
-    
 	 @Override
     public void onCreate() {
         super.onCreate();

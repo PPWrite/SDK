@@ -60,15 +60,17 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
-		// 启动笔服务
-		initPenService();
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		if (mPenService == null) {
+			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
+			// 启动笔服务
+			initPenService();
+		}
 	}
 
 	@Override
@@ -105,11 +107,13 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 	private void isPenServiceReady() {
 		mPenService = RobotPenApplication.getInstance().getPenService();
 		if (mPenService != null) {
-			// dismissProgressDialog();
 			// 如果要弹出确认则必须设置连接监听
 			mPenService.setSceneType(SceneType.INCH_101);// 设置场景值，用于坐标转化
 			mPenService.setOnConnectStateListener(onConnectStateListener);
-			mPenService.scanDevice(onScanDeviceListener);
+			mPenService.scanDevice(null);
+			dismissProgressDialog(); //此处写法要求必须连接设备才可以使用画布
+			mPenCanvasView.setPenIcon(R.drawable.ic_pen);
+			mPenCanvasView.refresh();// 通过XML创建的画布在获取到笔服务后必须重新刷新一次
 		} else {
 			mHandler.postDelayed(new Runnable() {
 				public void run() {
@@ -127,9 +131,9 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 		@Override
 		public void stateChange(String arg0, ConnectState arg1) {
 			if (arg1 == ConnectState.CONNECTED) {
-				dismissProgressDialog();
-				mPenCanvasView.setPenIcon(R.drawable.ic_pen);
-				mPenCanvasView.refresh();// 通过XML创建的画布在获取到笔服务后必须重新刷新一次
+//				dismissProgressDialog(); //此处写法要求必须连接设备才可以使用画布
+//				mPenCanvasView.setPenIcon(R.drawable.ic_pen);
+//				mPenCanvasView.refresh();// 通过XML创建的画布在获取到笔服务后必须重新刷新一次
 			}
 		}
 	};

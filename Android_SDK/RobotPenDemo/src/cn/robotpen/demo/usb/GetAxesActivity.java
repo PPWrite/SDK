@@ -62,15 +62,20 @@ public class GetAxesActivity extends Activity {
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
-		// 启动笔服务
-		initPenService();
+//		mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
+//		// 启动笔服务
+//		initPenService();
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		if (mPenService == null) {
+			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
+			// 启动笔服务
+			initPenService();
+		}
 	}
 
 	@Override
@@ -83,7 +88,7 @@ public class GetAxesActivity extends Activity {
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		// 断开设备
+		// 如果有多个应用或者多个Activity使用笔服务的话，结束前必须断开设备
 		if (mPenService != null) {
 			RobotPenApplication.getInstance().unBindPenService();
 		}
@@ -177,7 +182,7 @@ public class GetAxesActivity extends Activity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			mProgressDialog = ProgressDialog.show(GetAxesActivity.this, "", "正在扫描设备……", true);
-			mPenService.scanDevice(null);
+			mPenService.scanDevice(onScanDeviceListener);
 		}
 	};
 	/*
