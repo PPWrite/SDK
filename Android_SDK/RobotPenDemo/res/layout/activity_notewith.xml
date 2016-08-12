@@ -24,10 +24,25 @@
         android:orientation="vertical" >
 
         <Button
+            android:id="@+id/changePenBut"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:clickable="false"
+            android:text="更改笔粗细" />
+          <Button
+            android:id="@+id/changePenColorBut"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:clickable="false"
+            android:text="更改笔颜色" />
+
+        <Button
             android:id="@+id/saveScreenBut"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:clickable="false"
             android:text="截屏" />
 
@@ -35,13 +50,14 @@
             android:id="@+id/recordBut"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:text="开始录制" />
-         <Button
+
+        <Button
             android:id="@+id/mRecordStopBut"
             android:layout_width="120dp"
             android:layout_height="40dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:background="@android:color/darker_gray"
             android:clickable="false"
             android:text="停止录制" />
@@ -50,25 +66,23 @@
             android:id="@+id/insertPhoto"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:clickable="false"
             android:text="插入图片" />
-        
+
         <Button
             android:id="@+id/changeBgBut"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:text="更换背景" />
 
         <Button
             android:id="@+id/changeBgScaleTypeBut"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:text="背景缩放" />
-
-        
     </LinearLayout>
 
 </RelativeLayout>

@@ -50,24 +50,27 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	private int mDisplayHeight;
 	private Handler mHandler = new Handler();
 
-	private ScaleType scaleType;
-
+	private float penWeight;
+	private Button changePenBut;
+	private int penColor;
+	private Button changePenColorBut;
 	private ImageRecordModule mImageRecordModule;
 	private Button saveScreenBut;// 截屏
-	 //录制时间显示格式
-    private SimpleDateFormat mTimeShowformat = new SimpleDateFormat("HH:mm:ss");
-    //录制时间显示日期对象
-    private Date mTimeShowDate = new Date();
-    private int butFlag = 0;//区分录制状态控制按钮操控
+	// 录制时间显示格式
+	private SimpleDateFormat mTimeShowformat = new SimpleDateFormat("HH:mm:ss");
+	// 录制时间显示日期对象
+	private Date mTimeShowDate = new Date();
+	private int butFlag = 0;// 区分录制状态控制按钮操控
 	private Button recordBut;
 	private Button mRecordStopBut;
 	private Uri mInsertPhotoUri;
 	private Button insertPhoto;
 	private Uri mBgUri;
+	private ScaleType scaleType;
 	private Button changeBgBut;
 	private Button changeBgScaleTypeBut;
-	
-	private final String IMAGE_TYPE = "image/*"; 
+
+	private final String IMAGE_TYPE = "image/*";
 	private static final int SELECT_PICTURE = 1001;
 	private static final int SELECT_BG = 1002;
 
@@ -94,12 +97,12 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 			// 启动笔服务
 			initPenService();
 		}
-		//判断是否设置了背景图片
+		// 判断是否设置了背景图片
 		if (mInsertPhotoUri != null) {
 			mPenCanvasView.insertPhoto(mInsertPhotoUri);
 			mInsertPhotoUri = null;
 		}
-		if(mBgUri!=null){
+		if (mBgUri != null) {
 			mPenCanvasView.refresh();
 		}
 	}
@@ -132,9 +135,9 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 			mPenService.setSceneType(SceneType.INCH_101);// 设置场景值，用于坐标转化
 			mPenService.setOnConnectStateListener(onConnectStateListener);
 			mPenService.scanDevice(null);
-			//初始化画布和录制对象
+			// 初始化画布和录制对象
 			initCanvas();
-			
+
 		} else {
 			mHandler.postDelayed(new Runnable() {
 				public void run() {
@@ -153,19 +156,18 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 		public void stateChange(String arg0, ConnectState arg1) {
 		}
 	};
-	
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	if(resultCode == RESULT_OK){
-    		 mInsertPhotoUri = null;
-             if (requestCode == SELECT_PICTURE && data != null) {
-                 mInsertPhotoUri = data.getData();
-             } 
-             if(requestCode == SELECT_BG && data != null){
-            	 mBgUri  = data.getData();
-             }
-    	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			mInsertPhotoUri = null;
+			if (requestCode == SELECT_PICTURE && data != null) {
+				mInsertPhotoUri = data.getData();
+			}
+			if (requestCode == SELECT_BG && data != null) {
+				mBgUri = data.getData();
+			}
+		}
 	}
 
 	/*
@@ -174,6 +176,10 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	void initUI() {
 		// 创建画布，创建画布是必须设置宽度和高度
 		mPenCanvasView = (MultipleCanvasView) findViewById(R.id.penCanvasView);
+		changePenBut = (Button) findViewById(R.id.changePenBut);
+		changePenBut.setOnClickListener(buttonClick);
+		changePenColorBut = (Button) findViewById(R.id.changePenColorBut);
+		changePenColorBut.setOnClickListener(buttonClick);
 		saveScreenBut = (Button) findViewById(R.id.saveScreenBut);
 		saveScreenBut.setOnClickListener(buttonClick);
 		recordBut = (Button) findViewById(R.id.recordBut);
@@ -187,19 +193,21 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 		changeBgScaleTypeBut = (Button) findViewById(R.id.changeBgScaleTypeBut);
 		changeBgScaleTypeBut.setOnClickListener(buttonClick);
 	}
-	
-	void initCanvas(){
+
+	void initCanvas() {
 		// 示例以根视图显示比例为例，实际代码中可以根据自己需要进行设置
 		DisplayMetrics metric = new DisplayMetrics(); //
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
-		//计算title的高度
+		// 计算title的高度
 		Rect mRect = new Rect();
 		getWindow().getDecorView().getWindowVisibleDisplayFrame(mRect);
 		int windowTop = mRect.top;
 		mDisplayWidth = metric.widthPixels; // 屏幕宽度（像素）
 		mDisplayHeight = metric.heightPixels; // 屏幕高度（像素）
-		mDrawAreaParams = new LayoutParams(mDisplayWidth-20, mDisplayHeight-windowTop-20);//如果设置尺寸有问题会造成图片压缩或者变形
+		mDrawAreaParams = new LayoutParams(mDisplayWidth - 20, mDisplayHeight - windowTop - 20);// 如果设置尺寸有问题会造成图片压缩或者变形
 		mPenCanvasView.setPenIcon(R.drawable.ic_pen);
+		penColor = 0xFF000000;// 设置笔颜色
+		penWeight = 2;
 		mPenCanvasView.refresh();// 通过XML创建的画布在获取到笔服务后必须重新刷新一次
 		mTimeShowformat.setTimeZone(TimeZone.getTimeZone("GMT0"));
 		// 先判断文件夹是否创建
@@ -222,77 +230,137 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			switch (v.getId()) {
+			case R.id.changePenBut:
+				final String[] penWeightItems = { "2个像素", "3个像素", "10个像素", "50个像素" };
+				new AlertDialog.Builder(NoteWithActivity.this).setTitle("修改笔粗细")
+						.setItems(penWeightItems, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								// TODO Auto-generated method stub
+								switch (which) {
+								case 0:
+									penWeight = 2;
+									mPenCanvasView.refresh();
+									break;
+								case 1:
+									penWeight = 3;
+									mPenCanvasView.refresh();
+									break;
+								case 2:
+									penWeight = 10;
+									mPenCanvasView.refresh();
+									break;
+								case 3:
+									penWeight = 50;
+									mPenCanvasView.refresh();
+									break;
+								default:
+									// 刷新画布
+									// mPenCanvasView.refresh();
+								}
+							}
+						}).show();
+
+				break;
+			case R.id.changePenColorBut:
+				final String[] penColorItems = { "红色", "绿色", "蓝色", "黑色" };
+				new AlertDialog.Builder(NoteWithActivity.this).setTitle("修改笔颜色")
+						.setItems(penColorItems, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								// TODO Auto-generated method stub
+								switch (which) {
+								case 0:
+									penColor = Color.RED;
+									mPenCanvasView.refresh();
+									break;
+								case 1:
+									penColor = Color.GREEN;
+									mPenCanvasView.refresh();
+									break;
+								case 2:
+									penColor = Color.BLUE;
+									mPenCanvasView.refresh();
+									break;
+								case 3:
+									penColor = Color.BLACK;
+									mPenCanvasView.refresh();
+									break;
+								default:
+									// 刷新画布
+									// mPenCanvasView.refresh();
+								}
+							}
+						}).show();
+				break;
 			case R.id.saveScreenBut: // 截屏
-				AlertDialog.Builder builder = new AlertDialog.Builder(NoteWithActivity.this); 
-				builder.setMessage("确定要截屏吗？") 
-				       .setCancelable(false) 
-				       .setPositiveButton("确定", new DialogInterface.OnClickListener() { 
-				           public void onClick(DialogInterface dialog, int id) { 
-				        	   mImageRecordModule.saveSnapshot();
-							  dialog.dismiss(); 
-				           } 
-				       }) 
-				       .setNegativeButton("取消", new DialogInterface.OnClickListener() { 
-				           public void onClick(DialogInterface dialog, int id) { 
-				                dialog.dismiss(); 
-				           } 
-				       }); 
+				AlertDialog.Builder builder = new AlertDialog.Builder(NoteWithActivity.this);
+				builder.setMessage("确定要截屏吗？").setCancelable(false)
+						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								mImageRecordModule.saveSnapshot();
+								dialog.dismiss();
+							}
+						}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.dismiss();
+							}
+						});
 				builder.create().show();
 				break;
 			case R.id.insertPhoto: // 插入图片
-				Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT); 
-				getAlbum.setType(IMAGE_TYPE); 
-				startActivityForResult(getAlbum,SELECT_PICTURE); 
+				Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
+				getAlbum.setType(IMAGE_TYPE);
+				startActivityForResult(getAlbum, SELECT_PICTURE);
 				break;
 			case R.id.changeBgBut: // 插入背景
-				Intent getAlbum_bg = new Intent(Intent.ACTION_GET_CONTENT); 
-				getAlbum_bg.setType(IMAGE_TYPE); 
-				startActivityForResult(getAlbum_bg,SELECT_BG); 
+				Intent getAlbum_bg = new Intent(Intent.ACTION_GET_CONTENT);
+				getAlbum_bg.setType(IMAGE_TYPE);
+				startActivityForResult(getAlbum_bg, SELECT_BG);
 				break;
 			case R.id.changeBgScaleTypeBut: // 缩放背景
-				final String[] items = {"居中","平铺"};  
-                new AlertDialog.Builder(NoteWithActivity.this)
-                        .setTitle("请点击选择")  
-                        .setItems(items, new DialogInterface.OnClickListener() {
+				final String[] items = { "居中", "平铺" };
+				new AlertDialog.Builder(NoteWithActivity.this).setTitle("请点击选择")
+						.setItems(items, new DialogInterface.OnClickListener() {
 							@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							switch (which) {
-							case 0:
-								scaleType = ScaleType.CENTER;
-				    			mPenCanvasView.refresh();
-								break;
-							case 1:
-								scaleType = ScaleType.FIT_XY;
-				    			mPenCanvasView.refresh();
-								break;
-							default:
-								//刷新画布
-				    			//mPenCanvasView.refresh();
+							public void onClick(DialogInterface dialog, int which) {
+								// TODO Auto-generated method stub
+								switch (which) {
+								case 0:
+									scaleType = ScaleType.CENTER;
+									mPenCanvasView.refresh();
+									break;
+								case 1:
+									scaleType = ScaleType.FIT_XY;
+									mPenCanvasView.refresh();
+									break;
+								default:
+									// 刷新画布
+									// mPenCanvasView.refresh();
+								}
 							}
-						}
-					}).show();
+						}).show();
 				break;
 			case R.id.recordBut: // 录制
-				if(butFlag==0){ //点击开始录制按钮
-					butFlag = 1;//可以暂停
-					((Button)v).setText("暂停");
+				if (butFlag == 0) { // 点击开始录制按钮
+					butFlag = 1;// 可以暂停
+					((Button) v).setText("暂停");
 					mRecordStopBut.setClickable(true);
 					mRecordStopBut.setBackgroundColor(Color.LTGRAY);
-			        mImageRecordModule.startRecord();
-				}else if(butFlag==1){//点击暂停按钮
-					butFlag = 2;//可以继续
-					((Button)v).setText("继续");
+					mImageRecordModule.startRecord();
+				} else if (butFlag == 1) {// 点击暂停按钮
+					butFlag = 2;// 可以继续
+					((Button) v).setText("继续");
 					mImageRecordModule.setIsPause(true);
-				}else if(butFlag==2){//点击继续按钮
-					butFlag = 1;//可以暂停
-					((Button)v).setText("暂停");
+				} else if (butFlag == 2) {// 点击继续按钮
+					butFlag = 1;// 可以暂停
+					((Button) v).setText("暂停");
 					mImageRecordModule.setIsPause(false);
 				}
 				break;
-				
+
 			case R.id.mRecordStopBut:
-				butFlag = 0;//可以暂停
+				butFlag = 0;// 可以暂停
 				recordBut.setText("开始录制");
 				v.setBackgroundColor(Color.GRAY);
 				mRecordStopBut.setClickable(false);
@@ -334,7 +402,7 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 
 	@Override
 	public int getPenColor() {
-		return 0xFF000000;
+		return penColor;
 	}
 
 	@Override
@@ -344,7 +412,7 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 
 	@Override
 	public float getPenWeight() {
-		return 2;
+		return penWeight;
 	}
 
 	@Override
@@ -408,8 +476,8 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	public void recordTimeChange(int arg0) {
 		// TODO Auto-generated method stub
 		mTimeShowDate.setTime(arg0 * 1000);
-        String time = mTimeShowformat.format(mTimeShowDate);
-        recordBut.setText("暂停"+time);
+		String time = mTimeShowformat.format(mTimeShowDate);
+		recordBut.setText("暂停" + time);
 
 	}
 
