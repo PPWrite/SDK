@@ -10,10 +10,7 @@
         android:layout_height="fill_parent"
         android:background="#ffffffff" >
 
-        <cn.robotpen.core.views.MultipleCanvasView
-            android:id="@+id/penCanvasView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+      
     </RelativeLayout>
 
     <LinearLayout

@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
 import cn.robotpen.core.module.ImageRecordModule;
 import cn.robotpen.core.module.ImageRecordModule.ImageRecordInterface;
 import cn.robotpen.core.services.PenService;
@@ -44,6 +45,7 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	private PenService mPenService;
 	private ProgressDialog mProgressDialog;
 	private String mUserId;
+	private RelativeLayout lineWindow;
 	private MultipleCanvasView mPenCanvasView;
 	private Handler mHandler = new Handler();
 
@@ -60,9 +62,9 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	private int butFlag = 0;// 区分录制状态控制按钮操控
 	private Button recordBut;
 	private Button mRecordStopBut;
-	private Uri mInsertPhotoUri;
+	private Uri mInsertPhotoUri = Uri.parse("");
 	private Button insertPhoto;
-	private Uri mBgUri;
+	private Uri mBgUri =  Uri.parse("");
 	private ScaleType scaleType;
 	private Button changeBgBut;
 	private Button changeBgScaleTypeBut;
@@ -82,36 +84,35 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 		initUI();
 		// 启动USB服务
 		RobotPenApplication.getInstance().bindPenService();
-		RobotPenApplication.getInstance().bindFileService();
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		super.onResume();
 		if (mPenService == null) {
 			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
 			// 启动笔服务
 			initPenService();
+		} else {
+			 // 判断是否设置了背景图片
+			 if (mInsertPhotoUri != null) {
+			 mPenCanvasView.insertPhoto(mInsertPhotoUri);
+			 mInsertPhotoUri = null;
+			 }
+			 mPenCanvasView.refresh();			
 		}
-		// 判断是否设置了背景图片
-		if (mInsertPhotoUri != null) {
-			mPenCanvasView.insertPhoto(mInsertPhotoUri);
-			mInsertPhotoUri = null;
-		}
-		if (mBgUri != null) {
-			mPenCanvasView.refresh();
-		}
+		super.onResume();
 	}
 
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
-		super.onStop();
+		
 		// 断开设备
 		if (mPenService != null) {
 			RobotPenApplication.getInstance().unBindPenService();
 		}
+		super.onStop();
 	}
 
 	/*
@@ -127,14 +128,13 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	private void isPenServiceReady() {
 		mPenService = RobotPenApplication.getInstance().getPenService();
 		if (mPenService != null) {
-			dismissProgressDialog();
 			// 如果要弹出确认则必须设置连接监听
 			mPenService.setSceneType(SceneType.INCH_101);// 设置场景值，用于坐标转化
 			mPenService.setOnConnectStateListener(onConnectStateListener);
 			mPenService.scanDevice(null);
+			dismissProgressDialog();
 			// 初始化画布和录制对象
 			initCanvas();
-
 		} else {
 			mHandler.postDelayed(new Runnable() {
 				public void run() {
@@ -171,8 +171,7 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	 * 界面初始化
 	 */
 	void initUI() {
-		// 创建画布，创建画布是必须设置宽度和高度
-		mPenCanvasView = (MultipleCanvasView) findViewById(R.id.penCanvasView);
+		lineWindow = (RelativeLayout) findViewById(R.id.lineWindow);
 		changePenBut = (Button) findViewById(R.id.changePenBut);
 		changePenBut.setOnClickListener(buttonClick);
 		changePenColorBut = (Button) findViewById(R.id.changePenColorBut);
@@ -192,16 +191,8 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	}
 
 	void initCanvas() {
-		// 示例以根视图显示比例为例，实际代码中可以根据自己需要进行设置
-//		DisplayMetrics metric = new DisplayMetrics(); //
-//		getWindowManager().getDefaultDisplay().getMetrics(metric);
-//		// 计算title的高度
-//		Rect mRect = new Rect();
-//		getWindow().getDecorView().getWindowVisibleDisplayFrame(mRect);
-//		int windowTop = mRect.top;
-//		mDisplayWidth = metric.widthPixels; // 屏幕宽度（像素）
-//		mDisplayHeight = metric.heightPixels; // 屏幕高度（像素）
-//		mDrawAreaParams = new LayoutParams(mDisplayWidth - 20, mDisplayHeight - windowTop - 20);// 如果设置尺寸有问题会造成图片压缩或者变形
+		mPenCanvasView = new MultipleCanvasView(NoteWithActivity.this, this);
+		lineWindow.addView(mPenCanvasView);
 		mPenCanvasView.setPenIcon(R.drawable.ic_pen);
 		penColor = 0xFF000000;// 设置笔颜色
 		penWeight = 2;
@@ -217,7 +208,6 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 			mImageRecordModule.setSavePhotoDir(ResUtils.getSavePath(ResUtils.DIR_NAME_PHOTO));
 			mImageRecordModule.setSaveVideoDir(ResUtils.getSavePath(ResUtils.DIR_NAME_VIDEO));
 			mImageRecordModule.setRecordLevel(level);
-			mImageRecordModule.setInputSize(mPenCanvasView.getDrawAreaWidth(), mPenCanvasView.getDrawAreaHeight());// 一定要将绘制区域的尺寸设置给录制对象
 			mImageRecordModule.initImageRecord();
 		}
 	}
@@ -306,9 +296,13 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 				builder.create().show();
 				break;
 			case R.id.insertPhoto: // 插入图片
-				Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
-				getAlbum.setType(IMAGE_TYPE);
-				startActivityForResult(getAlbum, SELECT_PICTURE);
+//				Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
+//				getAlbum.setType(IMAGE_TYPE);
+//				startActivityForResult(getAlbum, SELECT_PICTURE);
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		        intent.addCategory(Intent.CATEGORY_OPENABLE);
+		        intent.setType("image/*");
+		        startActivityForResult(Intent.createChooser(intent, "选择图片"), SELECT_PICTURE);
 				break;
 			case R.id.changeBgBut: // 插入背景
 				Intent getAlbum_bg = new Intent(Intent.ACTION_GET_CONTENT);
@@ -424,16 +418,10 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 		return scaleType;
 	}
 
-//	@Override
-//	public LayoutParams getDrawAreaParams() {
-//		// TODO Auto-generated method stub
-//		return mDrawAreaParams;
-//	}
-
 	@Override
 	public FileManageService getFileService() {
 		// TODO Auto-generated method stub
-		return RobotPenApplication.getInstance().getFileService();
+		return null;
 	}
 
 	@Override
@@ -458,14 +446,18 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	public int fillImageBuffer(ByteBuffer buffer) {
 		// TODO Auto-generated method stub
 		int result = 0;
-		mPenCanvasView.setDrawingCacheEnabled(true);
-		mPenCanvasView.buildDrawingCache();
-		Bitmap imageCache = mPenCanvasView.getDrawingCache();
-		if (imageCache != null) {
-			result = imageCache.getByteCount();
-			imageCache.copyPixelsToBuffer(buffer);
+		// 启用DrawingCache并创建位图
+		FrameLayout view = mPenCanvasView.getDrawAreaView();
+		if (view != null) {
+			view.setDrawingCacheEnabled(true);
+			view.buildDrawingCache();
+			Bitmap imageCache = view.getDrawingCache();
+			if (imageCache != null) {
+				result = imageCache.getByteCount();
+				imageCache.copyPixelsToBuffer(buffer);
+			}
+			view.setDrawingCacheEnabled(false);
 		}
-		mPenCanvasView.setDrawingCacheEnabled(false);
 		return result;
 	}
 
@@ -521,8 +513,8 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	}
 
 	@Override
-	public void onCanvasSizeChanged(int arg0, int arg1) {
+	public void onCanvasSizeChanged(int w, int h) {
 		// TODO Auto-generated method stub
-		
+		mImageRecordModule.setInputSize(w, h);
 	}
 }
