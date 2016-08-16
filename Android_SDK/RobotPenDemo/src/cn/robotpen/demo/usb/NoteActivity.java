@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
 import cn.robotpen.core.services.PenService;
 import cn.robotpen.core.views.MultipleCanvasView;
 import cn.robotpen.core.views.MultipleCanvasView.CanvasManageInterface;
@@ -29,10 +30,8 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 	private PenService mPenService;
 	private ProgressDialog mProgressDialog;
 	private String mUserId;
-	private FrameLayout.LayoutParams mDrawAreaParams;
+	private RelativeLayout lineWindow;
 	private MultipleCanvasView mPenCanvasView;
-	private int mDisplayWidth;
-	private int mDisplayHeight;
 	private Handler mHandler = new Handler();
 
 	private ScaleType scaleType;
@@ -44,14 +43,7 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_note);
-		// 创建画布，创建画布是必须设置宽度和高度
-		mPenCanvasView = (MultipleCanvasView) findViewById(R.id.penCanvasView);
-		// 示例以根视图显示比例为例，实际代码中可以根据自己需要进行设置
-		DisplayMetrics metric = new DisplayMetrics(); //
-		getWindowManager().getDefaultDisplay().getMetrics(metric);
-		mDisplayWidth = metric.widthPixels; // 屏幕宽度（像素）
-		mDisplayHeight = metric.heightPixels; // 屏幕高度（像素）
-		mDrawAreaParams = new LayoutParams(mDisplayWidth, mDisplayHeight - 30);
+		lineWindow = (RelativeLayout) findViewById(R.id.lineWindow);
 		// 启动USB服务
 		RobotPenApplication.getInstance().bindPenService();
 	}
@@ -70,6 +62,8 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
 			// 启动笔服务
 			initPenService();
+		}else{
+			mPenCanvasView.refresh();
 		}
 	}
 
@@ -112,8 +106,10 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 			mPenService.setOnConnectStateListener(onConnectStateListener);
 			mPenService.scanDevice(null);
 			dismissProgressDialog(); //此处写法要求必须连接设备才可以使用画布
+			mPenCanvasView = new MultipleCanvasView(NoteActivity.this, this);//画布只能通过new的方式创建
+			lineWindow.addView(mPenCanvasView);
 			mPenCanvasView.setPenIcon(R.drawable.ic_pen);
-			mPenCanvasView.refresh();// 通过XML创建的画布在获取到笔服务后必须重新刷新一次
+			mPenCanvasView.refresh();	
 		} else {
 			mHandler.postDelayed(new Runnable() {
 				public void run() {
@@ -136,22 +132,6 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 //				mPenCanvasView.refresh();// 通过XML创建的画布在获取到笔服务后必须重新刷新一次
 			}
 		}
-	};
-	/*
-	 * 手动执行设备扫描，确保设备保持连接状态
-	 */
-	private OnScanDeviceListener onScanDeviceListener = new OnScanDeviceListener() {
-		@Override
-		public void complete(HashMap<String, DeviceObject> arg0) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void find(DeviceObject arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
 	};
 
 	@Override
@@ -204,12 +184,6 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 	}
 
 	@Override
-	public LayoutParams getDrawAreaParams() {
-		// TODO Auto-generated method stub
-		return mDrawAreaParams;
-	}
-
-	@Override
 	public FileManageService getFileService() {
 		// TODO Auto-generated method stub
 		return null;
@@ -226,7 +200,12 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	@Override
+	public void onCanvasSizeChanged(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
 	/**
 	 * 释放progressDialog
 	 **/
@@ -237,4 +216,5 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 			mProgressDialog = null;
 		}
 	}
+	
 }

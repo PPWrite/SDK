@@ -196,15 +196,15 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 
 	void initCanvas() {
 		// 示例以根视图显示比例为例，实际代码中可以根据自己需要进行设置
-		DisplayMetrics metric = new DisplayMetrics(); //
-		getWindowManager().getDefaultDisplay().getMetrics(metric);
-		// 计算title的高度
-		Rect mRect = new Rect();
-		getWindow().getDecorView().getWindowVisibleDisplayFrame(mRect);
-		int windowTop = mRect.top;
-		mDisplayWidth = metric.widthPixels; // 屏幕宽度（像素）
-		mDisplayHeight = metric.heightPixels; // 屏幕高度（像素）
-		mDrawAreaParams = new LayoutParams(mDisplayWidth - 20, mDisplayHeight - windowTop - 20);// 如果设置尺寸有问题会造成图片压缩或者变形
+//		DisplayMetrics metric = new DisplayMetrics(); //
+//		getWindowManager().getDefaultDisplay().getMetrics(metric);
+//		// 计算title的高度
+//		Rect mRect = new Rect();
+//		getWindow().getDecorView().getWindowVisibleDisplayFrame(mRect);
+//		int windowTop = mRect.top;
+//		mDisplayWidth = metric.widthPixels; // 屏幕宽度（像素）
+//		mDisplayHeight = metric.heightPixels; // 屏幕高度（像素）
+//		mDrawAreaParams = new LayoutParams(mDisplayWidth - 20, mDisplayHeight - windowTop - 20);// 如果设置尺寸有问题会造成图片压缩或者变形
 		mPenCanvasView.setPenIcon(R.drawable.ic_pen);
 		penColor = 0xFF000000;// 设置笔颜色
 		penWeight = 2;
@@ -427,11 +427,11 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 		return scaleType;
 	}
 
-	@Override
-	public LayoutParams getDrawAreaParams() {
-		// TODO Auto-generated method stub
-		return mDrawAreaParams;
-	}
+//	@Override
+//	public LayoutParams getDrawAreaParams() {
+//		// TODO Auto-generated method stub
+//		return mDrawAreaParams;
+//	}
 
 	@Override
 	public FileManageService getFileService() {
@@ -521,5 +521,11 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 				mProgressDialog.dismiss();
 			mProgressDialog = null;
 		}
+	}
+
+	@Override
+	public void onCanvasSizeChanged(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }
