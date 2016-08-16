@@ -63,7 +63,7 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 			// 启动笔服务
 			initPenService();
 		}else{
-			mPenCanvasView.refresh();
+			mPenCanvasView.refresh();//重新回到界面时必须刷新一次画布
 		}
 	}
 

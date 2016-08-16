@@ -44,10 +44,7 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	private PenService mPenService;
 	private ProgressDialog mProgressDialog;
 	private String mUserId;
-	private FrameLayout.LayoutParams mDrawAreaParams;
 	private MultipleCanvasView mPenCanvasView;
-	private int mDisplayWidth;
-	private int mDisplayHeight;
 	private Handler mHandler = new Handler();
 
 	private float penWeight;
