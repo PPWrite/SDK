@@ -29,7 +29,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.Holo.Dialog.NoActionBar" >
         <activity
             android:name="cn.robotpen.demo.StartActivity"
             android:label="@string/app_name" >
@@ -50,6 +50,11 @@
          <activity android:name="cn.robotpen.demo.usb.NoteWithActivity"
              android:label="@string/app_name"
             android:screenOrientation="portrait" >
+        </activity>
+        <!-- 横屏 -->
+        <activity android:name="cn.robotpen.demo.usb.GeneralNoteActivity"
+             android:label="@string/app_name"
+            android:screenOrientation="landscape" >
         </activity>
         
         <!-- 注册服务 -->

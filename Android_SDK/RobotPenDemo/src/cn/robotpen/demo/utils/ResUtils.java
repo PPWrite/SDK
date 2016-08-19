@@ -1,8 +1,10 @@
-package cn.robotpen.demo;
+package cn.robotpen.demo.utils;
 
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+
+import cn.robotpen.demo.R;
 
 /**
  * 资源管理工具

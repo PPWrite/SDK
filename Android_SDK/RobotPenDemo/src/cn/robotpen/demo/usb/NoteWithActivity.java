@@ -13,17 +13,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import cn.robotpen.core.module.ImageRecordModule;
@@ -33,8 +29,8 @@ import cn.robotpen.core.views.MultipleCanvasView;
 import cn.robotpen.core.views.MultipleCanvasView.CanvasManageInterface;
 import cn.robotpen.core.views.MultipleCanvasView.PenModel;
 import cn.robotpen.demo.R;
-import cn.robotpen.demo.ResUtils;
 import cn.robotpen.demo.RobotPenApplication;
+import cn.robotpen.demo.utils.ResUtils;
 import cn.robotpen.file.services.FileManageService;
 import cn.robotpen.model.interfaces.Listeners.OnConnectStateListener;
 import cn.robotpen.model.symbol.ConnectState;
@@ -62,9 +58,9 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	private int butFlag = 0;// 区分录制状态控制按钮操控
 	private Button recordBut;
 	private Button mRecordStopBut;
-	private Uri mInsertPhotoUri = Uri.parse("");
+	private Uri mInsertPhotoUri;
 	private Button insertPhoto;
-	private Uri mBgUri =  Uri.parse("");
+	private Uri mBgUri;
 	private ScaleType scaleType;
 	private Button changeBgBut;
 	private Button changeBgScaleTypeBut;
@@ -227,19 +223,15 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 								switch (which) {
 								case 0:
 									penWeight = 2;
-									mPenCanvasView.refresh();
 									break;
 								case 1:
 									penWeight = 3;
-									mPenCanvasView.refresh();
 									break;
 								case 2:
 									penWeight = 10;
-									mPenCanvasView.refresh();
 									break;
 								case 3:
 									penWeight = 50;
-									mPenCanvasView.refresh();
 									break;
 								default:
 									// 刷新画布
@@ -259,19 +251,15 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 								switch (which) {
 								case 0:
 									penColor = Color.RED;
-									mPenCanvasView.refresh();
 									break;
 								case 1:
 									penColor = Color.GREEN;
-									mPenCanvasView.refresh();
 									break;
 								case 2:
 									penColor = Color.BLUE;
-									mPenCanvasView.refresh();
 									break;
 								case 3:
 									penColor = Color.BLACK;
-									mPenCanvasView.refresh();
 									break;
 								default:
 									// 刷新画布
@@ -447,7 +435,7 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 		// TODO Auto-generated method stub
 		int result = 0;
 		// 启用DrawingCache并创建位图
-		FrameLayout view = mPenCanvasView.getDrawAreaView();
+		View view =  mPenCanvasView.getDrawAreaView();
 		if (view != null) {
 			view.setDrawingCacheEnabled(true);
 			view.buildDrawingCache();
