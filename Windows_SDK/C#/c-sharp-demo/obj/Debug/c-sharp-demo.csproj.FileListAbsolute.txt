@@ -6,3 +6,13 @@ D:\c-sharp-demo\c-sharp-demo\obj\Debug\c_sharp_demo.Properties.Resources.resourc
 D:\c-sharp-demo\c-sharp-demo\obj\Debug\c-sharp-demo.csproj.GenerateResource.Cache
 D:\c-sharp-demo\c-sharp-demo\obj\Debug\c-sharp-demo.exe
 D:\c-sharp-demo\c-sharp-demo\obj\Debug\c-sharp-demo.pdb
+F:\work\Windows_SDK\C#\c-sharp-demo\bin\Debug\c-sharp-demo.exe.config
+F:\work\Windows_SDK\C#\c-sharp-demo\bin\Debug\c-sharp-demo.exe
+F:\work\Windows_SDK\C#\c-sharp-demo\bin\Debug\c-sharp-demo.pdb
+F:\work\Windows_SDK\C#\c-sharp-demo\obj\Debug\ResolveAssemblyReference.cache
+F:\work\Windows_SDK\C#\c-sharp-demo\obj\Debug\c_sharp_demo.Form1.resources
+F:\work\Windows_SDK\C#\c-sharp-demo\obj\Debug\c_sharp_demo.Properties.Resources.resources
+F:\work\Windows_SDK\C#\c-sharp-demo\obj\Debug\GenerateResource.read.1.tlog
+F:\work\Windows_SDK\C#\c-sharp-demo\obj\Debug\GenerateResource.write.1.tlog
+F:\work\Windows_SDK\C#\c-sharp-demo\obj\Debug\c-sharp-demo.exe
+F:\work\Windows_SDK\C#\c-sharp-demo\obj\Debug\c-sharp-demo.pdb

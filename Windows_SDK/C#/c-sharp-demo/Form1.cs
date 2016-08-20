@@ -29,12 +29,18 @@ namespace c_sharp_demo
 
         public delegate void DataCallBack(string pUsbData, ref Test test);
 
-        [DllImport("usbDevModule.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("usbDevModule.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool _extern_openSpecUsbDevByPid(string[] str, int nSize, DataCallBack ps);
 
-        [DllImport("usbDevModule.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("usbDevModule.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool _extern_CloseUsbDev();
+
+
+        // 新增设备状态消息回调
+        public delegate DevStatusCallBack DevStatusCallBack(int nDevstatus, IntPtr context);
+        [DllImport("usbDevModule.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern DevStatusCallBack _extern_setDevStatusHandler(DevStatusCallBack statusCallback, IntPtr pContext);
 
         /*[UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.ThisCall)]
         private delegate bool fun_handler([In] IntPtr @this, [In] char[][] p, [In] int nSize, [In] IntPtr ptr);
@@ -223,6 +229,81 @@ namespace c_sharp_demo
         {
             this.textBox1.SelectionStart = this.textBox1.Text.Length; //Set the current caret position at the end
             this.textBox1.ScrollToCaret(); //Now scroll it automatically
+        }
+
+
+        private DevStatusCallBack m_devStatusCallback = null;
+        private static DevStatusCallBack devStatus_Callback(int nDevStatus, IntPtr context)
+        {
+            sMIntStatus = nDevStatus;
+            mDevStatusEvent.Set();
+            return null;
+        }
+
+        private bool m_bLabelTRuning = true;
+        private Thread labelthread = null;
+        private static int sMIntStatus = 0;
+        private void updateLabelTextValue()
+        {
+            while (m_bLabelTRuning)
+            {
+
+                mDevStatusEvent.WaitOne();
+                if (m_bLabelTRuning)
+                {
+                    string strLabelStatus = "";
+                    if (sMIntStatus == 1)
+                    {
+                        strLabelStatus = "有设备插入";
+                    }
+                    else
+                    {
+                        strLabelStatus = "有设备拔出";
+                    }
+                    this.setLabelText(strLabelStatus);
+                }
+            }
+        }
+
+        // 注册设备回调
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (m_devStatusCallback != null)
+            {
+                return;
+            }
+
+            this.labelthread = new Thread(new ThreadStart(this.updateLabelTextValue));
+            this.labelthread.Start();
+
+            m_devStatusCallback = new DevStatusCallBack(devStatus_Callback);
+            IntPtr p = new IntPtr(0);
+            _extern_setDevStatusHandler(m_devStatusCallback, p);
+        }
+
+        private static AutoResetEvent mDevStatusEvent = new AutoResetEvent(false);
+        delegate void SetLabelTextCallBack(string strDevStatus);
+        private void setLabelText(string strText)
+        {
+            //try
+            //{
+                if (this.label1.InvokeRequired)
+                {
+                    while (!this.label1.IsHandleCreated)
+                    {
+                        if (this.label1.Disposing || this.label1.IsDisposed)
+                        {
+                            return;
+                        }
+                    }
+                    SetLabelTextCallBack d = new SetLabelTextCallBack(setLabelText);
+                    this.label1.Invoke(d, new object[] { strText });
+                }
+                else
+                {
+                    this.label1.Text = strText;
+                }
+           // }
         }
     }
 }
