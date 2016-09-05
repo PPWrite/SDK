@@ -17,10 +17,7 @@ public class RobotPenApplication extends PenApplication{
     public void onCreate() {
         super.onCreate();
         instance = this;
-        QiniuConfig.ACCESS_KEY = "i2hg6Yvl2mo86rEdgdgifL8eKAjHTVeWbXp9ZAa4";
-        QiniuConfig.SECRET_KEY = "ZQ6H3fFzcRPNeLwQIkVLyZCFYxhuRW4Ct5E1Zjld";
-        AliyunConfig.ACCESS_KEY = "J38gvBvILH6wsgTZ";
-        AliyunConfig.SECRET_KEY = "Qkz9X8ZwtRkWAihbgTlDJ8jNb5vnKr";
+      
     }
 
     public static RobotPenApplication getInstance() {
