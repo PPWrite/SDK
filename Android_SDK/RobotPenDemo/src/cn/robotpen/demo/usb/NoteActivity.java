@@ -202,7 +202,7 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 	}
 	
 	@Override
-	public void onCanvasSizeChanged(int arg0, int arg1) {
+	public void onCanvasSizeChanged(int arg0, int arg1, SceneType sceneType) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -215,6 +215,5 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 				mProgressDialog.dismiss();
 			mProgressDialog = null;
 		}
-	}
-	
+	}	
 }

@@ -229,8 +229,8 @@ public class GetAxesActivity extends Activity {
 			sceneType1.setText(String.valueOf(point.getSceneType()));
 			sceneWidth.setText(String.valueOf(point.getWidth(mPenService.getSceneType())));
 			sceneHeight.setText(String.valueOf(point.getHeight(mPenService.getSceneType())));
-			sceneOffsetX.setText(String.valueOf(point.getSceneX()));
-			sceneOffsetY.setText(String.valueOf(point.getSceneY()));
+			sceneOffsetX.setText(String.valueOf(point.getOffsetX()));
+			sceneOffsetY.setText(String.valueOf(point.getOffsetY()));
 		}
 
 		@Override

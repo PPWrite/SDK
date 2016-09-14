@@ -501,7 +501,7 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	}
 
 	@Override
-	public void onCanvasSizeChanged(int w, int h) {
+	public void onCanvasSizeChanged(int w, int h, SceneType sceneType) {
 		// TODO Auto-generated method stub
 		mImageRecordModule.setInputSize(w, h);
 	}
