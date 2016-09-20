@@ -126,8 +126,10 @@ public class GetAxesActivity extends Activity {
 				// TODO Auto-generated method stub
 				switch (position) {
 				case 0:
-					if (null != mPenService)
+					if (null != mPenService){
 						mPenService.setSceneType(SceneType.INCH_101);
+					    mPenService.setIsPressure(true);
+					}
 					break;
 				case 1:
 					if (null != mPenService)
@@ -161,6 +163,7 @@ public class GetAxesActivity extends Activity {
 		if (mPenService != null) {
 			dismissProgressDialog();
 			mPenService.setSceneType(SceneType.INCH_101);// 设置场景值，用于坐标转化
+			mPenService.setIsPressure(true);//允许获取压感值
 			// 如果要弹出确认则必须设置连接监听
 			mPenService.setOnConnectStateListener(onConnectStateListener);
 			mPenService.setOnPointChangeListener(onPointChangeListener);

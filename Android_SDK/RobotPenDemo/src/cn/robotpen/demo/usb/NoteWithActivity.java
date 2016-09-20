@@ -36,6 +36,7 @@ import cn.robotpen.model.interfaces.Listeners.OnConnectStateListener;
 import cn.robotpen.model.symbol.ConnectState;
 import cn.robotpen.model.symbol.RecordState;
 import cn.robotpen.model.symbol.SceneType;
+import cn.robotpen.utils.LogUtil;
 
 public class NoteWithActivity extends Activity implements CanvasManageInterface, ImageRecordInterface {
 	private PenService mPenService;
@@ -68,6 +69,8 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	private final String IMAGE_TYPE = "image/*";
 	private static final int SELECT_PICTURE = 1001;
 	private static final int SELECT_BG = 1002;
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +128,7 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 		mPenService = RobotPenApplication.getInstance().getPenService();
 		if (mPenService != null) {
 			// 如果要弹出确认则必须设置连接监听
-			mPenService.setSceneType(SceneType.INCH_101);// 设置场景值，用于坐标转化
+			mPenService.setSceneType(SceneType.INCH_101);
 			mPenService.setOnConnectStateListener(onConnectStateListener);
 			mPenService.scanDevice(null);
 			dismissProgressDialog();
@@ -503,6 +506,7 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	@Override
 	public void onCanvasSizeChanged(int w, int h, SceneType sceneType) {
 		// TODO Auto-generated method stub
-		mImageRecordModule.setInputSize(w, h);
+			mImageRecordModule.setInputSize(w,h);
+		
 	}
 }

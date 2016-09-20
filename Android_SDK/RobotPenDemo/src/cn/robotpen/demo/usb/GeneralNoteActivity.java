@@ -106,11 +106,15 @@ public class GeneralNoteActivity extends Activity implements CanvasManageInterfa
 		// TODO Auto-generated method stub
 		// 断开设备
 		if (mPenService != null) {
-			RobotPenApplication.getInstance().unBindPenService();
+			mPenService.setOnConnectStateListener(null);
+            mPenService.setOnUploadFirmwareCallback(null);
+            mPenService.setOnReceiveDataListener(null);
+            mPenService.setOnPointChangeListener(null);
 		}
+		RobotPenApplication.getInstance().unBindPenService();
 		super.onStop();
 	}
-
+	
 	/*
 	 * 此处一定要确保笔服务是启动的
 	 */
@@ -125,7 +129,8 @@ public class GeneralNoteActivity extends Activity implements CanvasManageInterfa
 		mPenService = RobotPenApplication.getInstance().getPenService();
 		if (mPenService != null) {
 			// 如果要弹出确认则必须设置连接监听
-			mPenService.setSceneType(SceneType.INCH_101_horizontal);// 设置场景值，用于坐标转化
+			//mPenService.setSceneType(SceneType.INCH_101_horizontal);// 设置场景值，用于坐标转化
+			mPenService.setIsHorizontal(true);
 			mPenService.setOnConnectStateListener(onConnectStateListener);
 			mPenService.scanDevice(null);
 			dismissProgressDialog();
