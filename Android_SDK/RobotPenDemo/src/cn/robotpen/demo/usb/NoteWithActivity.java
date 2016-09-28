@@ -424,7 +424,7 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	@Override
 	public Uri getBgPhoto() {
 		// TODO Auto-generated method stub
-		return mBgUri;
+		return null;
 	}
 
 	/*
@@ -508,5 +508,11 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 		// TODO Auto-generated method stub
 			mImageRecordModule.setInputSize(w,h);
 		
+	}
+
+	@Override
+	public String getNoteKey() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

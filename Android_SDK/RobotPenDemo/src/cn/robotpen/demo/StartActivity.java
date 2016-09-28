@@ -130,8 +130,7 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 						mContext.startActivity(intent);
 						break;
 					case 2:// 画布功能
-						//intent = new Intent(mContext, NoteWithActivity.class);
-						intent = new Intent(mContext, GeneralNoteActivity.class);
+						intent = new Intent(mContext, NoteWithActivity.class);
 						mContext.startActivity(intent);
 						break;
 					case 3:// 画布综合

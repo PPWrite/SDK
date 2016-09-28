@@ -57,6 +57,19 @@
             android:screenOrientation="landscape" >
         </activity>
         
+         <activity android:name="cn.robotpen.demo.usb.One"
+             android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+         <activity android:name="cn.robotpen.demo.usb.Two"
+             android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+         <activity android:name="cn.robotpen.demo.usb.Three"
+             android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        
         <!-- 注册服务 -->
         <service
             android:name="cn.robotpen.core.services.SmartPenService"

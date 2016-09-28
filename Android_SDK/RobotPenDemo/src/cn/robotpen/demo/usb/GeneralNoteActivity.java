@@ -68,6 +68,7 @@ public class GeneralNoteActivity extends Activity implements CanvasManageInterfa
 	private Uri mInsertPhotoUri;
 	public static final String TMP_CAMERA_IMAGE_NAME = "tmp_camera_img.jpg";
 	private ImageRecordModule mImageRecordModule;
+	private String mNoteKey;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -522,5 +523,11 @@ public class GeneralNoteActivity extends Activity implements CanvasManageInterfa
 	public void onCanvasSizeChanged(int w, int h, SceneType sceneType) {
 		// TODO Auto-generated method stub
 		mImageRecordModule.setInputSize(w, h);
+	}
+
+	@Override
+	public String getNoteKey() {
+		// TODO Auto-generated method stub
+		return mNoteKey;
 	}
 }

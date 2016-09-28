@@ -32,6 +32,7 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 	private String mUserId;
 	private RelativeLayout lineWindow;
 	private MultipleCanvasView mPenCanvasView;
+	private String mNoteKey;
 	private Handler mHandler = new Handler();
 
 	private ScaleType scaleType;
@@ -46,6 +47,8 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 		lineWindow = (RelativeLayout) findViewById(R.id.lineWindow);
 		// 启动USB服务
 		RobotPenApplication.getInstance().bindPenService();
+		// 设置白板标示为随机数
+		mNoteKey = String.valueOf(Math.random()*1000);
 	}
 
 	@Override
@@ -215,5 +218,11 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 				mProgressDialog.dismiss();
 			mProgressDialog = null;
 		}
+	}
+
+	@Override
+	public String getNoteKey() {
+		// TODO Auto-generated method stub
+		return mNoteKey;
 	}	
 }
