@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="RobotpenDb">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/RobotpenDb.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

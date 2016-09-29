@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="qiniu-android-sdk-7.2.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/qiniu-android-sdk-7.2.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

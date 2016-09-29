@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/deviceInfo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:layout_margin ="5dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/deviceBut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/holo_blue_dark"
+            android:text="如果设备是在本页面启动之前连入的，则需要点击手动执行扫描设备" >
+        </Button>
+        <TextView
+            android:id="@+id/deviceStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp" >
+        <Spinner
+            android:id="@+id/sceneType"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </Spinner>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/penInfo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="原始数据展示" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/isRouteTxt"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="笔的状态:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/isRoute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/isRouteTxt"
+            android:layout_toRightOf="@+id/isRouteTxt" 
+            android:text="0"/>
+
+        <TextView
+            android:id="@+id/pressureTxt"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/isRouteTxt"
+            android:layout_below="@+id/isRouteTxt"
+            android:text="笔的压力:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/pressure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/pressureTxt"
+            android:layout_toRightOf="@+id/pressureTxt" 
+            android:text="0"/>
+
+        <TextView
+            android:id="@+id/originalXTxt"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/isRouteTxt"
+            android:layout_below="@+id/pressureTxt"
+            android:text="X坐标:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/originalX"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/originalXTxt"
+            android:layout_toRightOf="@+id/originalXTxt" 
+            android:text="0"/>
+
+        <TextView
+            android:id="@+id/originalYTxt"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/originalXTxt"
+            android:layout_below="@+id/originalXTxt"
+            android:text="Y坐标:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/originalY"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/originalYTxt"
+            android:layout_toRightOf="@+id/originalYTxt" 
+            android:text="0"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/deviceInfo2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="设备数据展示" >
+        </TextView>
+        
+          <TextView
+            android:id="@+id/sceneTypeTxt"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="设备类型:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/sceneType1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/sceneTypeTxt"
+            android:layout_toRightOf="@+id/sceneTypeTxt" 
+            android:text="0"/>
+
+        <TextView
+            android:id="@+id/sceneWidthTxt"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/sceneTypeTxt"
+            android:layout_below="@+id/sceneTypeTxt"
+            android:text="设备宽度:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/sceneWidth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/sceneWidthTxt"
+            android:layout_toRightOf="@+id/sceneWidthTxt" 
+            android:text="0"/>
+
+        <TextView
+            android:id="@+id/sceneHeightTxt"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/sceneWidthTxt"
+            android:layout_below="@+id/sceneWidthTxt"
+            android:text="设备高度:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/sceneHeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/sceneHeightTxt"
+            android:layout_toRightOf="@+id/sceneHeightTxt" 
+            android:text="0"/>
+
+        <TextView
+            android:id="@+id/sceneOffsetXTXT"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/sceneHeightTxt"
+            android:layout_below="@+id/sceneHeightTxt"
+            android:text="X轴偏移："
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/sceneOffsetX"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/sceneOffsetXTXT"
+            android:layout_toRightOf="@+id/sceneOffsetXTXT" 
+            android:text="0"/>
+        <TextView
+            android:id="@+id/sceneOffsetYTXT"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/sceneOffsetXTXT"
+            android:layout_below="@+id/sceneOffsetXTXT"
+            android:text="Y轴偏移："
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/sceneOffsetY"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/sceneOffsetYTXT"
+            android:layout_toRightOf="@+id/sceneOffsetYTXT" 
+            android:text="0"/>
+        
+    </RelativeLayout>
+
+</LinearLayout>
