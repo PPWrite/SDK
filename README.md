@@ -1,9 +1,10 @@
 ## [写写](http://www.robotpen.cn)
 > 不只是输入更是真正的书写 &nbsp; &nbsp; &nbsp;
 ***
+
 ######针对本产品的配套硬件设备提供了iOS、Android、Windows多种平台不同的SDK支持
 ######针对开发中的使用现做出如下约定：
-#####  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 1、产品类型：
+##### 1、产品类型：
 * P1款产品: 仅支持Micro USB数据线/USB OTG数据线连接方式。
 * P7款产品: 支持Micro USB数据线/USB OTG数据线连接方式，同时支持蓝牙连接方式。
 * Elite款产品: 支持Micro USB数据线/USB OTG数据线连接方式，同时支持蓝牙连接方式并支持笔记离线存储。
