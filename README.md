@@ -1,6 +1,5 @@
 ## [写写](http://www.robotpen.cn)
-> 不只是输入更是真正的书写 &nbsp; &nbsp; &nbsp;
-***
+
 ######针对本产品的配套硬件设备提供了iOS、Android、Windows多种平台不同的SDK支持
 ######针对开发中的使用现做出如下约定：
 #####  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 1、产品类型：
