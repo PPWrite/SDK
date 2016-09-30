@@ -24,7 +24,6 @@ import cn.robotpen.demo.RobotPenApplication;
 import cn.robotpen.demo.utils.ResUtils;
 import cn.robotpen.file.services.FileManageService;
 import cn.robotpen.model.DeviceObject;
-import cn.robotpen.model.symbol.DeviceType;
 import cn.robotpen.model.symbol.Keys;
 import cn.robotpen.model.symbol.SceneType;
 import cn.robotpen.utils.LogUtil;

@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -43,6 +44,12 @@ public class BleListActivity extends Ant {
         mPageItem = new PageItem();
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    }
 
     @Override
     public void penSvrInitComplete() {
