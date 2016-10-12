@@ -1,11 +1,5 @@
 package cn.robotpen.demo.usb;
 
-import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -22,6 +16,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
+
+import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import cn.robotpen.core.module.ImageRecordModule;
 import cn.robotpen.core.module.ImageRecordModule.ImageRecordInterface;
 import cn.robotpen.core.services.PenService;
@@ -36,7 +37,6 @@ import cn.robotpen.model.interfaces.Listeners.OnConnectStateListener;
 import cn.robotpen.model.symbol.ConnectState;
 import cn.robotpen.model.symbol.RecordState;
 import cn.robotpen.model.symbol.SceneType;
-import cn.robotpen.utils.LogUtil;
 
 public class NoteWithActivity extends Activity implements CanvasManageInterface, ImageRecordInterface {
 	private PenService mPenService;
@@ -373,8 +373,8 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 	}
 
 	@Override
-	public String getCurrUserId() {
-		return mUserId;
+	public long getCurrUserId() {
+		return 0;
 	}
 
 	@Override

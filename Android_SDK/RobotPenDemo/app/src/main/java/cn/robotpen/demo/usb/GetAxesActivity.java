@@ -1,8 +1,5 @@
 package cn.robotpen.demo.usb;
 
-import java.util.HashMap;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -16,6 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.List;
+
 import cn.robotpen.core.services.PenService;
 import cn.robotpen.demo.R;
 import cn.robotpen.demo.RobotPenApplication;
@@ -239,6 +240,11 @@ public class GetAxesActivity extends Activity {
 		@Override
 		public void change(List<PointObject> arg0) {
 			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onButClick(int i) {
 
 		}
 	};

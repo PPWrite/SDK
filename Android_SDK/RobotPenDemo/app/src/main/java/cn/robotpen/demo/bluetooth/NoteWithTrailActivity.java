@@ -34,7 +34,7 @@ public class NoteWithTrailActivity extends Ant implements View.OnClickListener,M
     private PageItem mPageItem;
     private MultipleCanvasView mPenCanvasView;
 
-    private String mUserId = "0";//不要设置为null
+    private Long mUserId = 0L;//不要设置为null
     private ImageView.ScaleType mScaleType;
     private String mNoteKey;
     private PenServiceReceiver mPenServiceReceiver;
@@ -110,7 +110,6 @@ public class NoteWithTrailActivity extends Ant implements View.OnClickListener,M
             }, 500);
         }
     }
-
     @Override
     public void onClick(View v) {
         Intent intent;
@@ -228,9 +227,10 @@ public class NoteWithTrailActivity extends Ant implements View.OnClickListener,M
     }
 
     @Override
-    public String getCurrUserId() {
-        return mUserId;
+    public long getCurrUserId() {
+        return 0;
     }
+
 
     @Override
     public String getNoteKey() {

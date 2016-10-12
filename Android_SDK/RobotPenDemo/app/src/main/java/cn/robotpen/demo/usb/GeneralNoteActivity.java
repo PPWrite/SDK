@@ -1,10 +1,5 @@
 package cn.robotpen.demo.usb;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -20,13 +15,16 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import cn.robotpen.core.module.ImageRecordModule;
 import cn.robotpen.core.module.ImageRecordModule.ImageRecordInterface;
@@ -412,8 +410,8 @@ public class GeneralNoteActivity extends Activity implements CanvasManageInterfa
 	}
 
 	@Override
-	public String getCurrUserId() {
-		return "";
+	public long getCurrUserId() {
+		return 0;
 	}
 
 	@Override

@@ -30,6 +30,7 @@
         android:name="android.hardware.usb.host"
         android:required="true" />
 
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".RobotPenApplication"
@@ -86,7 +87,8 @@
 
         <activity android:name=".bluetooth.BleListActivity" />
         <activity android:name=".bluetooth.NoteWithTrailActivity" />
-        <activity android:name=".bluetooth.TrailManageActivity"></activity>
+        <activity android:name=".bluetooth.TrailManageActivity" />
+        <activity android:name=".multiple.ChangeTypeActivity"></activity>
     </application>
 
 </manifest>

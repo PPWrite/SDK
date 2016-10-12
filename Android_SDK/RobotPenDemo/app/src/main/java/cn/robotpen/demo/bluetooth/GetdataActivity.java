@@ -19,7 +19,6 @@ import cn.robotpen.demo.RobotPenApplication;
 import cn.robotpen.model.DeviceObject;
 import cn.robotpen.model.PointObject;
 import cn.robotpen.model.interfaces.Listeners;
-import cn.robotpen.model.symbol.ConnectState;
 import cn.robotpen.model.symbol.Keys;
 import cn.robotpen.model.symbol.SceneType;
 
@@ -103,6 +102,16 @@ public class GetdataActivity extends Ant implements View.OnClickListener{
         @Override
         public void change(List<PointObject> arg0) {
             // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onButClick(int i) {
+            if(i==1){
+                Toast.makeText(GetdataActivity.this,"单击",Toast.LENGTH_SHORT).show();
+            }else if (i==2){
+                Toast.makeText(GetdataActivity.this,"双击",Toast.LENGTH_SHORT).show();
+            }
 
         }
     };

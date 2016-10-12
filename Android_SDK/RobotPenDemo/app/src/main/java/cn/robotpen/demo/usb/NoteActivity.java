@@ -1,16 +1,12 @@
 package cn.robotpen.demo.usb;
 
-import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import cn.robotpen.core.services.PenService;
@@ -20,9 +16,7 @@ import cn.robotpen.core.views.MultipleCanvasView.PenModel;
 import cn.robotpen.demo.R;
 import cn.robotpen.demo.RobotPenApplication;
 import cn.robotpen.file.services.FileManageService;
-import cn.robotpen.model.DeviceObject;
 import cn.robotpen.model.interfaces.Listeners.OnConnectStateListener;
-import cn.robotpen.model.interfaces.Listeners.OnScanDeviceListener;
 import cn.robotpen.model.symbol.ConnectState;
 import cn.robotpen.model.symbol.SceneType;
 
@@ -150,8 +144,8 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 	}
 
 	@Override
-	public String getCurrUserId() {
-		return mUserId;
+	public long getCurrUserId() {
+		return 0;
 	}
 
 	@Override

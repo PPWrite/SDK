@@ -1,21 +1,11 @@
 package cn.robotpen.demo;
 
-import java.util.HashMap;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.WindowManager;
+
 import cn.robotpen.core.services.PenService;
-import cn.robotpen.demo.R;
-import cn.robotpen.demo.RobotPenApplication;
-import cn.robotpen.demo.usb.GetAxesActivity;
-import cn.robotpen.model.DeviceObject;
-import cn.robotpen.model.interfaces.Listeners.OnConnectStateListener;
-import cn.robotpen.model.interfaces.Listeners.OnScanDeviceListener;
-import cn.robotpen.model.symbol.ConnectState;
-import cn.robotpen.model.symbol.SceneType;
 
 public abstract class Ant extends Activity{
 	public static final String TAG = Ant.class.getSimpleName();
@@ -98,7 +88,6 @@ public abstract class Ant extends Activity{
 			mPenService.setOnUploadFirmwareCallback(null);
 			mPenService.setOnReceiveDataListener(null);
 			mPenService.setOnPointChangeListener(null);
-			mPenService.setOnTrailsClientConnectListener(null);
 		}
 		RobotPenApplication.getInstance().unBindPenService();
 	}
