@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="crasheye">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/libs/crasheye.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

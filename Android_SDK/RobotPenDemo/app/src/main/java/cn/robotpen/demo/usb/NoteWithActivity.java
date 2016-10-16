@@ -87,7 +87,7 @@ public class NoteWithActivity extends Activity implements CanvasManageInterface,
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
+		mPenService = RobotPenApplication.getInstance().getPenService();
 		if (mPenService == null) {
 			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
 			// 启动笔服务

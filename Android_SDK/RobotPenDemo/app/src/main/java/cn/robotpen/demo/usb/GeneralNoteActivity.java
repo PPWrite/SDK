@@ -84,7 +84,7 @@ public class GeneralNoteActivity extends Activity implements CanvasManageInterfa
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
+		mPenService = RobotPenApplication.getInstance().getPenService();
 		if (mPenService == null) {
 			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
 			// 启动笔服务
@@ -102,7 +102,6 @@ public class GeneralNoteActivity extends Activity implements CanvasManageInterfa
 
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		// 断开设备
 		if (mPenService != null) {
 			mPenService.setOnConnectStateListener(null);
@@ -154,18 +153,10 @@ public class GeneralNoteActivity extends Activity implements CanvasManageInterfa
 			if (arg1 == ConnectState.CONNECTED) {
 				Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pan_ic_down);
 				penStatusImg.setImageBitmap(bitmap);
-				// if (bitmap != null && !bitmap.isRecycled())
-				// {
-				// bitmap.recycle();
-				// }
 				penStatusImg.setClickable(false);
 			} else {
 				Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pan_ic_up);
 				penStatusImg.setImageBitmap(bitmap);
-				// if (bitmap != null && !bitmap.isRecycled())
-				// {
-				// bitmap.recycle();
-				// }
 				penStatusImg.setClickable(true);
 			}
 		}
@@ -220,23 +211,32 @@ public class GeneralNoteActivity extends Activity implements CanvasManageInterfa
 	}
 
 	void initCanvas() {
-		mPenCanvasView = new MultipleCanvasView(GeneralNoteActivity.this, this);
-		lineWindow.addView(mPenCanvasView);
-		mPenCanvasView.setPenIcon(R.drawable.ic_pen);
-		mPenCanvasView.refresh();
-		penWeightB.setText("笔粗细" + "_" + mPenWeight);
-		penColorB.setText("笔颜色" + "_" + mPenColor);
-		// 先判断文件夹是否创建
-		if (ResUtils.isDirectory(ResUtils.DIR_NAME_BUFFER) && ResUtils.isDirectory(ResUtils.DIR_NAME_PHOTO)
-				&& ResUtils.isDirectory(ResUtils.DIR_NAME_VIDEO) && ResUtils.isDirectory(ResUtils.DIR_NAME_DATA)) {
-			// 获取压缩级别
-			int level = RobotPenApplication.getInstance().getRecordLevel();
-			// 初始化录制工具
-			mImageRecordModule = new ImageRecordModule(GeneralNoteActivity.this);
-			mImageRecordModule.setSavePhotoDir(ResUtils.getSavePath(ResUtils.DIR_NAME_PHOTO));
-			mImageRecordModule.setSaveVideoDir(ResUtils.getSavePath(ResUtils.DIR_NAME_VIDEO));
-			mImageRecordModule.setRecordLevel(level);
-			mImageRecordModule.initImageRecord();
+		if(mPenCanvasView==null){
+			mPenCanvasView = new MultipleCanvasView(GeneralNoteActivity.this, this);
+			lineWindow.addView(mPenCanvasView);
+			mPenCanvasView.setPenIcon(R.drawable.ic_pen);
+			mPenCanvasView.refresh();
+			penWeightB.setText("笔粗细" + "_" + mPenWeight);
+			penColorB.setText("笔颜色" + "_" + mPenColor);
+			// 先判断文件夹是否创建
+			if (ResUtils.isDirectory(ResUtils.DIR_NAME_BUFFER) && ResUtils.isDirectory(ResUtils.DIR_NAME_PHOTO)
+					&& ResUtils.isDirectory(ResUtils.DIR_NAME_VIDEO) && ResUtils.isDirectory(ResUtils.DIR_NAME_DATA)) {
+				// 获取压缩级别
+				int level = RobotPenApplication.getInstance().getRecordLevel();
+				// 初始化录制工具
+				mImageRecordModule = new ImageRecordModule(GeneralNoteActivity.this);
+				mImageRecordModule.setSavePhotoDir(ResUtils.getSavePath(ResUtils.DIR_NAME_PHOTO));
+				mImageRecordModule.setSaveVideoDir(ResUtils.getSavePath(ResUtils.DIR_NAME_VIDEO));
+				mImageRecordModule.setRecordLevel(level);
+				mImageRecordModule.initImageRecord();
+			}
+		}else{
+			// 判断是否设置了背景图片
+			if (mInsertPhotoUri != null) {
+				mPenCanvasView.insertPhoto(mInsertPhotoUri);
+				mInsertPhotoUri = null;
+			}
+			mPenCanvasView.refresh();
 		}
 	}
 

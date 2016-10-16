@@ -70,8 +70,8 @@ public class GetAxesActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
+		mPenService = RobotPenApplication.getInstance().getPenService();
 		if (mPenService == null) {
 			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
 			// 启动笔服务

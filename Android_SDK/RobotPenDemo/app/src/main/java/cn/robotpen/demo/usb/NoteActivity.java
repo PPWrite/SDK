@@ -16,6 +16,7 @@ import cn.robotpen.core.views.MultipleCanvasView.PenModel;
 import cn.robotpen.demo.R;
 import cn.robotpen.demo.RobotPenApplication;
 import cn.robotpen.file.services.FileManageService;
+import cn.robotpen.model.TrailsObject;
 import cn.robotpen.model.interfaces.Listeners.OnConnectStateListener;
 import cn.robotpen.model.symbol.ConnectState;
 import cn.robotpen.model.symbol.SceneType;
@@ -23,13 +24,10 @@ import cn.robotpen.model.symbol.SceneType;
 public class NoteActivity extends Activity implements CanvasManageInterface {
 	private PenService mPenService;
 	private ProgressDialog mProgressDialog;
-	private String mUserId;
 	private RelativeLayout lineWindow;
 	private MultipleCanvasView mPenCanvasView;
-	private String mNoteKey;
 	private Handler mHandler = new Handler();
 
-	private ScaleType scaleType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +39,12 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 		lineWindow = (RelativeLayout) findViewById(R.id.lineWindow);
 		// 启动USB服务
 		RobotPenApplication.getInstance().bindPenService();
-		// 设置白板标示为随机数
-		mNoteKey = String.valueOf(Math.random()*1000);
-	}
-
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
 	}
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
+		mPenService = RobotPenApplication.getInstance().getPenService();
 		if (mPenService == null) {
 			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.service_usb_start), true);
 			// 启动笔服务
@@ -65,24 +55,12 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 	}
 
 	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-	}
-
-	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		super.onStop();
 		// 断开设备
 		if (mPenService != null) {
 			RobotPenApplication.getInstance().unBindPenService();
 		}
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 
 	/*
@@ -99,7 +77,7 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 		mPenService = RobotPenApplication.getInstance().getPenService();
 		if (mPenService != null) {
 			// 如果要弹出确认则必须设置连接监听
-			mPenService.setSceneType(SceneType.INCH_101);// 设置场景值，用于坐标转化
+			mPenService.setSceneType(SceneType.A4);// 设置场景值，用于坐标转化
 			mPenService.setOnConnectStateListener(onConnectStateListener);
 			mPenService.scanDevice(null);
 			dismissProgressDialog(); //此处写法要求必须连接设备才可以使用画布
@@ -124,9 +102,6 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 		@Override
 		public void stateChange(String arg0, ConnectState arg1) {
 			if (arg1 == ConnectState.CONNECTED) {
-//				dismissProgressDialog(); //此处写法要求必须连接设备才可以使用画布
-//				mPenCanvasView.setPenIcon(R.drawable.ic_pen);
-//				mPenCanvasView.refresh();// 通过XML创建的画布在获取到笔服务后必须重新刷新一次
 			}
 		}
 	};
@@ -177,7 +152,7 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 	@Override
 	public ScaleType getBgScaleType() {
 		// TODO Auto-generated method stub
-		return scaleType;
+		return ScaleType.CENTER;
 	}
 
 	@Override
@@ -201,6 +176,7 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 	@Override
 	public void onCanvasSizeChanged(int arg0, int arg1, SceneType sceneType) {
 		// TODO Auto-generated method stub
+
 		
 	}
 	/**
@@ -217,6 +193,6 @@ public class NoteActivity extends Activity implements CanvasManageInterface {
 	@Override
 	public String getNoteKey() {
 		// TODO Auto-generated method stub
-		return mNoteKey;
+		return TrailsObject.KEY_NOTEKEY_TMP;
 	}	
 }
