@@ -1,8 +1,0 @@
-D:\c-sharp-demo\c-sharp-demo\bin\Release\c-sharp-demo.exe
-D:\c-sharp-demo\c-sharp-demo\bin\Release\c-sharp-demo.pdb
-D:\c-sharp-demo\c-sharp-demo\obj\x86\Release\c_sharp_demo.Form1.resources
-D:\c-sharp-demo\c-sharp-demo\obj\x86\Release\c_sharp_demo.Properties.Resources.resources
-D:\c-sharp-demo\c-sharp-demo\obj\x86\Release\c-sharp-demo.csproj.GenerateResource.Cache
-D:\c-sharp-demo\c-sharp-demo\obj\x86\Release\c-sharp-demo.exe
-D:\c-sharp-demo\c-sharp-demo\obj\x86\Release\c-sharp-demo.pdb
-D:\c-sharp-demo\c-sharp-demo\bin\Release\c-sharp-demo.exe.config

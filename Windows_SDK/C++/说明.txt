@@ -1,2 +1,0 @@
-当前dll版本对外提供两个接口分别为createObj与deleteObj,
-createObj获取usb操作接口指针，deleteObj释放资源。
