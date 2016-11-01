@@ -198,6 +198,8 @@ BEGIN_MESSAGE_MAP(CUSBHelperDlg, CDialogEx)
 	ON_WM_DESTROY()
 	ON_WM_DEVICECHANGE()					//--by zlp 2016/9/27
 	ON_WM_ERASEBKGND()
+	ON_WM_TIMER()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -256,8 +258,11 @@ BOOL CUSBHelperDlg::OnInitDialog()
 	GetDlgItem(IDC_BUTTON_SND_SCAN)->EnableWindow(false);
 	GetDlgItem(IDC_BUTTON_CONNECT)->EnableWindow(false);
 	GetDlgItem(IDC_BUTTON_CLS_CONNECT)->EnableWindow(false);
+
+	SetTimer(0,100,NULL);
 	/*insertScanDevice(1, (unsigned char*)"num100");
 	insertScanDevice(2, (unsigned char*)"num200");//*/			//--by zlp 2016/9/26
+	OnBnClickedButton3Open();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -742,7 +747,7 @@ void CUSBHelperDlg::moveCursor(CPoint& pos)
 {
 	//CPoint
 	::ClientToScreen(GetDlgItem(IDC_STATIC_CANVAS)->GetSafeHwnd(), &pos);
-	::SetCursorPos(pos.x, pos.y);
+	//::SetCursorPos(pos.x, pos.y);
 }
 
 double nCompress = (double)(14335 / 868);
@@ -1754,9 +1759,23 @@ void CUSBHelperDlg::OnMouseMove(UINT nFlags, CPoint point)
 		//MessageBox(_T("yes"));
 		if(bIsPress)
 			onDrawing(point1);
-		/*if(m_mousePressed)
-		doTrack(point1);//*/
+	}//*/
+
+	/*if(bIsPress)
+	{
+	if (rect.PtInRect(point1))  // 点是否在该矩形区域中
+	{
+	if(m_bDrawing)
+	onDrawing(point1);
+	else
+	onbegin(point1);
 	}
+	else
+	{
+	if(m_bDrawing)
+	endTrack();
+	}
+	}//*/
 
 	CDialogEx::OnMouseMove(nFlags, point);
 }
@@ -2020,6 +2039,7 @@ void CUSBHelperDlg::OnBnClickedButtonConnect()
 void CUSBHelperDlg::OnBnClickedButtonClrCanvas()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	SetBkColor();
 	m_listItems.clear();
 	Invalidate();
 }
@@ -2265,37 +2285,6 @@ void CUSBHelperDlg::doDrawingBezier(const CPoint& pos)
 	DeleteObject(pdc->m_hDC);
 }
 
-void CUSBHelperDlg::RedrawBk()
-{
-	CWnd* pWnd = FromHandle(this->m_hWnd);//GetDlgItem(IDC_STATIC_CANVAS);
-	CRect rc; // 定义一个矩形区域变量
-	pWnd->GetClientRect(rc);
-	int nWidth = rc.Width();
-	int nHeight = rc.Height();
-
-	CDC *pDC = pWnd->GetDC(); // 定义设备上下文
-	CDC MemDC; // 定义一个内存显示设备对象
-	CBitmap MemBitmap; // 定义一个位图对象
-
-	//建立与屏幕显示兼容的内存显示设备
-	MemDC.CreateCompatibleDC(pDC);
-	//建立一个与屏幕显示兼容的位图，位图的大小可选用窗口客户区的大小
-	MemBitmap.CreateCompatibleBitmap(pDC,nWidth,nHeight);
-	//将位图选入到内存显示设备中，只有选入了位图的内存显示设备才有地方绘图，画到指定的位图上
-	CBitmap *pOldBit = MemDC.SelectObject(&MemBitmap);
-	//先用背景色将位图清除干净，否则是黑色。这里用的是白色作为背景
-	MemDC.FillSolidRect(0,0,nWidth,nHeight,RGB(240,240,240));
-
-	//将内存中的图拷贝到屏幕上进行显示
-	pDC->BitBlt(0,0,nWidth,nHeight,&MemDC,0,0,SRCCOPY);
-
-	//绘图完成后的清理
-	MemDC.SelectObject(pOldBit);
-	MemBitmap.DeleteObject();
-
-	DeleteObject(pDC->m_hDC);//*/
-}
-
 void CUSBHelperDlg::RedrawMem()
 {
 	//RedrawBk();
@@ -2316,7 +2305,7 @@ void CUSBHelperDlg::RedrawMem()
 	//将位图选入到内存显示设备中，只有选入了位图的内存显示设备才有地方绘图，画到指定的位图上
 	CBitmap *pOldBit = MemDC.SelectObject(&MemBitmap);
 	//先用背景色将位图清除干净，否则是黑色。这里用的是白色作为背景
-	MemDC.FillSolidRect(0,0,nWidth,nHeight,RGB(240,240,240));
+	MemDC.FillSolidRect(0,0,nWidth,nHeight,RGB(255,255,255));
 
 	Graphics graphics(MemDC.GetSafeHdc());
 	graphics.SetSmoothingMode(SmoothingModeAntiAlias);
@@ -2338,9 +2327,10 @@ void CUSBHelperDlg::RedrawMem()
 		pointSize[0].Y = it->beginPonit.y;
 		int nCount = 1;
 		CPoint m_lastPoint = it->beginPonit;
+
 		for (std::list<CPoint>::iterator its = it->lstPoint.begin(); its != it->lstPoint.end(); ++its)
 		{
-			int width = 3;
+			int width = 0;//zlp set width 0
 			CPoint pt;
 			pt.x = its->x;
 			pt.y = its->y;
@@ -2357,13 +2347,30 @@ void CUSBHelperDlg::RedrawMem()
 		for(int i=3;i<nCount;i++)
 		{
 			graphics.DrawBezier(&pen,pointSize[i-3],pointSize[i-2],pointSize[i-1],pointSize[i]);
-			/*std::vector<CPoint> cs(2);
-			calculateCurveControlPoints(m_lastPoints[i-3], m_lastPoints[i-2], m_lastPoints[i-1], cs);
-			CPoint c2 = cs[1];
-			calculateCurveControlPoints(m_lastPoints[i-2], m_lastPoints[i-1], m_lastPoints[i], cs);
-			CPoint c3 = cs[0];
-			drawBezier(m_lastPoints[i-3], c2, c3, m_lastPoints[i-1]);//*/
+			//std::vector<CPoint> cs(2);
+			//calculateCurveControlPoints(m_lastPoints[i-3], m_lastPoints[i-2], m_lastPoints[i-1], cs);
+			//CPoint c2 = cs[1];
+			//calculateCurveControlPoints(m_lastPoints[i-2], m_lastPoints[i-1], m_lastPoints[i], cs);
+			//CPoint c3 = cs[0];
+			//drawBezier(m_lastPoints[i-3], c2, c3, m_lastPoints[i-1]);
+		}//*/
+
+		/*if (nCount > 3) 
+		{
+			for(int i=3;i<nCount;i++)
+			{
+				graphics.DrawBezier(&pen,m_lastPoints[i-3].x,m_lastPoints[i-3].y,m_lastPoints[i-2].x,m_lastPoints[i-2].y,m_lastPoints[i-1].x,m_lastPoints[i-1].y, m_lastPoints[i].x,m_lastPoints[i].y);
+			}
 		}
+		else if(nCount == 2)
+		{
+			graphics.DrawLine(&pen,m_lastPoints[0].x,m_lastPoints[0].y,m_lastPoints[1].x,m_lastPoints[1].y);
+		}
+		else if(nCount == 3)
+		{
+			graphics.DrawLine(&pen,m_lastPoints[0].x,m_lastPoints[0].y,m_lastPoints[1].x,m_lastPoints[1].y);
+			graphics.DrawLine(&pen,m_lastPoints[1].x,m_lastPoints[1].y,m_lastPoints[2].x,m_lastPoints[2].y);
+		}//*/
 
 		//graphics.DrawLines(&pen, pointSize, nSize);
 		delete [] pointSize;
@@ -2392,4 +2399,33 @@ BOOL CUSBHelperDlg::OnEraseBkgnd(CDC* pDC)
 	return TRUE;
 
 	return CDialogEx::OnEraseBkgnd(pDC);
+}
+
+void CUSBHelperDlg::SetBkColor()
+{
+	CRect rect;
+	GetClientRect(rect);  
+	CDC* pDC = this->GetDC();
+	pDC->FillSolidRect(rect,RGB(240,240,240));   
+}
+
+
+void CUSBHelperDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	this->OnBnClickedButtonClrCanvas();
+	KillTimer(0);
+
+	CDialogEx::OnTimer(nIDEvent);
+}
+
+
+void CUSBHelperDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	this->SetBkColor();
+
+	// TODO: 在此处添加消息处理程序代码
 }

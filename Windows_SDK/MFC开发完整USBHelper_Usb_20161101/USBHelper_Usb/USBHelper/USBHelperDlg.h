@@ -163,9 +163,11 @@ private:
 	std::vector<CPoint> m_lastPoints;
 	void doDrawingBezier(const CPoint& pos);
 	void Redraw();
-	void RedrawBk();
 	void RedrawMem();
 	bool bIsPress;
+	void SetBkColor();
 public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };
