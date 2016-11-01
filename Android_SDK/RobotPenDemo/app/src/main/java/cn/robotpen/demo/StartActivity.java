@@ -15,13 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.robotpen.demo.bluetooth.GetdataActivity;
-import cn.robotpen.demo.bluetooth.NoteWithTrailActivity;
-import cn.robotpen.demo.multiple.ChangeTypeActivity;
-import cn.robotpen.demo.usb.GeneralNoteActivity;
 import cn.robotpen.demo.usb.GetAxesActivity;
-import cn.robotpen.demo.usb.NoteActivity;
-import cn.robotpen.demo.usb.NoteWithActivity;
 import cn.robotpen.demo.utils.ResUtils;
 
 /**
@@ -128,14 +122,14 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
                 switch (g) {
                     case 0:// 蓝牙
                         switch (c) {
-                            case 0:// 笔迹
-                                intent = new Intent(mContext, GetdataActivity.class);
-                                mContext.startActivity(intent);
-                                break;
-                            case 1:// 画布
-                                intent = new Intent(mContext, NoteWithTrailActivity.class);
-                                mContext.startActivity(intent);
-                                break;
+//                            case 0:// 笔迹
+//                                intent = new Intent(mContext, GetdataActivity.class);
+//                                mContext.startActivity(intent);
+//                                break;
+//                            case 1:// 画布
+//                                intent = new Intent(mContext, NoteWithTrailActivity.class);
+//                                mContext.startActivity(intent);
+//                                break;
                             default:
                                 break;
                         }
@@ -146,18 +140,18 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
                                 intent = new Intent(mContext, GetAxesActivity.class);
                                 mContext.startActivity(intent);
                                 break;
-                            case 1:// 单画布
-                                intent = new Intent(mContext, NoteActivity.class);
-                                mContext.startActivity(intent);
-                                break;
-                            case 2:// 画布功能展示
-                                intent = new Intent(mContext, NoteWithActivity.class);
-                                mContext.startActivity(intent);
-                                break;
-                            case 3:// 画布综合展示
-                                intent = new Intent(mContext, GeneralNoteActivity.class);
-                                mContext.startActivity(intent);
-                                break;
+//                            case 1:// 单画布
+//                                intent = new Intent(mContext, NoteActivity.class);
+//                                mContext.startActivity(intent);
+//                                break;
+//                            case 2:// 画布功能展示
+//                                intent = new Intent(mContext, NoteWithActivity.class);
+//                                mContext.startActivity(intent);
+//                                break;
+//                            case 3:// 画布综合展示
+//                                intent = new Intent(mContext, GeneralNoteActivity.class);
+//                                mContext.startActivity(intent);
+//                                break;
                             default:
                                 break;
                         }
@@ -165,10 +159,10 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
                         break;
                     case 2:// 综合
                         switch (c) {
-                            case 0:// 蓝牙/usb切换
-                                intent = new Intent(mContext, ChangeTypeActivity.class);
-                                mContext.startActivity(intent);
-                                break;
+//                            case 0:// 蓝牙/usb切换
+//                                intent = new Intent(mContext, ChangeTypeActivity.class);
+//                                mContext.startActivity(intent);
+//                                break;
                             default:
                                 break;
                         }

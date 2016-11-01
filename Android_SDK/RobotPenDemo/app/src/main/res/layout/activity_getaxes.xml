@@ -19,7 +19,7 @@
             android:layout_marginTop="10dp"
             android:layout_alignParentTop="true"
             android:background="@android:color/holo_blue_dark"
-            android:text="如果设备是在本页面启动之前连入的，则需要点击手动执行扫描设备" >
+            android:text="手动执行扫描，本页面未设置自动连接，如果是启动之前连入设备，则需要点击此按钮" >
         </Button>
         <TextView
             android:id="@+id/deviceStatus"
