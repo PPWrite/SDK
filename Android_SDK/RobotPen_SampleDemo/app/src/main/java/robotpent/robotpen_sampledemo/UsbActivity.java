@@ -10,10 +10,10 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.robotpen.core.PenManage;
+import cn.robotpen.core.services.UsbPenService;
 import cn.robotpen.model.PointObject;
 import cn.robotpen.model.interfaces.Listeners;
 import cn.robotpen.model.symbol.ConnectState;
-import cn.robotpen.model.symbol.Keys;
 import cn.robotpen.model.symbol.SceneType;
 
 public class UsbActivity extends Activity {
@@ -47,14 +47,40 @@ public class UsbActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usb);
         ButterKnife.bind(this);
-        mPenManage = new PenManage(this);
-        mPenManage.setServiceType(this, Keys.APP_USB_SERVICE_NAME);
+        mPenManage = new PenManage(this, UsbPenService.TAG); //这样新建服务会记住连接方式
+        mPenManage.setScanTime(2000);
         mPenManage.setSceneObject(SceneType.P1); //如果是横屏使用则设置为P1_H
         mPenManage.setOnConnectStateListener(onConnectStateListener);
         mPenManage.setOnPointChangeListener(onPointChangeListener);
         mHandler = new Handler();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //mPenManage  = new PenManage(this, SmartPenService.TAG); //此种方式创建的PenManage对象将记住服务类型，USB连接推荐此种创建方式
+       if(null==mPenManage){
+           mPenManage = new PenManage(this, UsbPenService.TAG); //这样新建服务会记住连接方式
+           mPenManage.setScanTime(2000);
+           mPenManage.setSceneObject(SceneType.P1); //如果是横屏使用则设置为P1_H
+           //mPenManage.setOnConnectStateListener(onConnectStateListener);//set过一次后不需要再设置
+           mPenManage.scanDevice(null);
+           mPenManage.setOnPointChangeListener(onPointChangeListener);
+       }else{
+           mPenManage.scanDevice(null);
+       }
+    }
+
+
+
+
+
+    @Override
+    protected void onStop() {
+        if (mPenManage != null)
+            mPenManage.shutdown(); //退出Activity时将服务释放，方便其他地方继续使用
+        super.onStop();
+    }
     /*
         * 此处监听是为了弹出授权
         */
