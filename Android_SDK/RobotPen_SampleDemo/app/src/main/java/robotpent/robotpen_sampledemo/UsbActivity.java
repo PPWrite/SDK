@@ -58,32 +58,37 @@ public class UsbActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        //mPenManage  = new PenManage(this, SmartPenService.TAG); //此种方式创建的PenManage对象将记住服务类型，USB连接推荐此种创建方式
        if(null==mPenManage){
            mPenManage = new PenManage(this, UsbPenService.TAG); //这样新建服务会记住连接方式
-           mPenManage.setScanTime(2000);
+           mPenManage.setScanTime(2000);//此种方式创建的PenManage对象将记住服务类型，USB连接推荐此种创建方式
            mPenManage.setSceneObject(SceneType.P1); //如果是横屏使用则设置为P1_H
-           //mPenManage.setOnConnectStateListener(onConnectStateListener);//set过一次后不需要再设置
+           //mPenManage.setOnConnectStateListener(onConnectStateListener);//set过一次后不需要再设置 ,不set就会出现授权框
            mPenManage.scanDevice(null);
            mPenManage.setOnPointChangeListener(onPointChangeListener);
        }else{
            mPenManage.scanDevice(null);
+           mPenManage.setOnPointChangeListener(onPointChangeListener);
        }
     }
 
 
-
-
-
     @Override
     protected void onStop() {
-        if (mPenManage != null)
-            mPenManage.shutdown(); //退出Activity时将服务释放，方便其他地方继续使用
         super.onStop();
+        if (mPenManage != null)
+            mPenManage.disconnectDevice();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPenManage != null)
+             mPenManage.shutdown(); //退出Activity时将服务释放，方便其他地方继续使用
+    }
+
     /*
-        * 此处监听是为了弹出授权
-        */
+            * 此处监听是为了弹出授权
+            */
     private Listeners.OnConnectStateListener onConnectStateListener = new Listeners.OnConnectStateListener() {
         @Override
         public void stateChange(String arg0, ConnectState arg1) {
