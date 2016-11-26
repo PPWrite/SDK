@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="RobotpenFile">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/libs/RobotpenFile.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
