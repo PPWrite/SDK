@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "PenHeader.h"
-@class PenDevice;
-@class PenPoint;
-@class TralisModel;
-@class NoteModel;
+#import "TralisModel.h"
+#import "NoteModel.h"
+#import <CoreBluetooth/CoreBluetooth.h>
+#import "PenDevice.h"
+#import "PenPoint.h"
 
 
 @protocol RobotPenDelegate <NSObject>
@@ -102,9 +103,8 @@
  */
 + (RobotPenManager *)sharePenManager;
 
-//检查设备是否连接
-- (BOOL)checkDeviceConnect;
-//
+
+
 ////获取当前链接的设备
 - (PenDevice *)getConnectDevice;
 //
@@ -128,15 +128,12 @@
 - (NSDictionary *)getDeviceVersion;
 
 
-
-
 /**
  获取设备类型
 
  @return <#return value description#>
  */
 - (DeviceType)getConnectDeviceType;
-
 
 
 /**
@@ -155,15 +152,13 @@
 -(void)stopScanDevice;
 
 
+//检查设备是否连接
+- (void)checkDeviceConnect;
 
 /**
- 设置自动连接
- 
- @param isOpen <#isOpen description#>
+ 取消配对
  */
-- (void)setAutoConnet:(int)isOpen;
-
-
+- (void)deleteConnect;
 
 
 
