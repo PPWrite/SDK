@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#BFBFBF"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_vertical" >
+
+    <TextView
+        android:id="@+id/usbstatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:text="未连接设备！"/>
+
+    <Button
+        android:id="@+id/usb_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="如果连接不上，或者进入页面前就连接设备了就刷新一下"/>
+
+</LinearLayout>

@@ -10,9 +10,10 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.robotpen.core.PenManage;
+import cn.robotpen.core.services.PenService;
 import cn.robotpen.core.services.UsbPenService;
 import cn.robotpen.model.PointObject;
-import cn.robotpen.model.interfaces.Listeners;
+import cn.robotpen.model.entity.SettingEntity;
 import cn.robotpen.model.symbol.ConnectState;
 import cn.robotpen.model.symbol.SceneType;
 
@@ -41,12 +42,17 @@ public class UsbActivity extends Activity {
     LinearLayout activityUsb;
     private PenManage mPenManage;
     private Handler mHandler;
+    private SettingEntity settingEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usb);
         ButterKnife.bind(this);
+        settingEntity = new SettingEntity(this);
+        //设置压感
+        settingEntity.setPressure(true);
+
         mPenManage = new PenManage(this, UsbPenService.TAG); //这样新建服务会记住连接方式
         mPenManage.setScanTime(2000);
         mPenManage.setSceneObject(SceneType.P1); //如果是横屏使用则设置为P1_H
@@ -89,12 +95,12 @@ public class UsbActivity extends Activity {
     /*
             * 此处监听是为了弹出授权
             */
-    private Listeners.OnConnectStateListener onConnectStateListener = new Listeners.OnConnectStateListener() {
+    private PenService.OnConnectStateListener onConnectStateListener = new PenService.OnConnectStateListener() {
         @Override
         public void stateChange(String arg0, ConnectState arg1) {
             if (arg1 == ConnectState.CONNECTED) {
                 Toast.makeText(UsbActivity.this, "设备已连接且连接成功！", Toast.LENGTH_SHORT).show();
-                Toast.makeText(UsbActivity.this, "是否设置了压感！" + mPenManage.getIsPressure(UsbActivity.this), Toast.LENGTH_SHORT).show();
+                Toast.makeText(UsbActivity.this, "是否设置了压感！" + settingEntity.isPressure(), Toast.LENGTH_SHORT).show();
                 connectDeviceType.setText(mPenManage.getConnectDeviceType().name());
             } else if (arg1 == ConnectState.DISCONNECTED) {
                 Toast.makeText(UsbActivity.this, "设备已断开", Toast.LENGTH_SHORT).show();
@@ -104,7 +110,7 @@ public class UsbActivity extends Activity {
     /*
         * 通过监听方式完成业务处理 这里接收笔的信息建议通过监听，通过广播方式也是可以的，但是广播方式效率较低
         */
-    private Listeners.OnPointChangeListener onPointChangeListener = new Listeners.OnPointChangeListener() {
+    private PenService.OnPointChangeListener onPointChangeListener = new PenService.OnPointChangeListener() {
 
         @Override
         public void change(final PointObject point) {

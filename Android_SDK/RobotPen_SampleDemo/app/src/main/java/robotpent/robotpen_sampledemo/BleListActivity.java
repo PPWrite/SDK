@@ -19,9 +19,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.robotpen.core.PenManage;
+import cn.robotpen.core.services.PenService;
 import cn.robotpen.core.services.SmartPenService;
 import cn.robotpen.model.entity.DeviceEntity;
-import cn.robotpen.model.interfaces.Listeners;
 import cn.robotpen.model.symbol.ConnectState;
 import cn.robotpen.model.symbol.Keys;
 import robotpent.robotpen_sampledemo.adapter.PenAdapter;
@@ -90,7 +90,7 @@ public class BleListActivity extends Activity {
         }
     }
 
-    private Listeners.OnScanDeviceListener onScanDeviceListener = new Listeners.OnScanDeviceListener() {
+    private PenService.OnScanDeviceListener onScanDeviceListener = new PenService.OnScanDeviceListener() {
         @Override
         public void find(DeviceEntity device) {
             mPenAdapter.addItem(device);
@@ -117,7 +117,7 @@ public class BleListActivity extends Activity {
         }
     };
 
-    private Listeners.OnConnectStateListener onConnectStateListener = new Listeners.OnConnectStateListener() {
+    private PenService.OnConnectStateListener onConnectStateListener = new PenService.OnConnectStateListener() {
         @Override
         public void stateChange(String address, ConnectState state) {
             switch (state) {
@@ -129,9 +129,6 @@ public class BleListActivity extends Activity {
                         scanBut.setVisibility(View.GONE);
                         disconnectBut.setVisibility(View.VISIBLE);
                         mPenManage.saveLastDevice(BleListActivity.this,device);
-                        //mPenManage.setSceneObject(SceneType.P7);
-                       // mPenManage.setOnPointChangeListener(onPointChangeListener);
-                        //mPenManage.startService();
                     }
                     break;
                 default: //另外有连接中、连接错误等多个状态可以判断使用
@@ -139,41 +136,4 @@ public class BleListActivity extends Activity {
             }
         }
     };
-
-//    private Listeners.OnPointChangeListener onPointChangeListener = new Listeners.OnPointChangeListener() {
-//
-//        @Override
-//        public void change(final PointObject point) {
-//            // 设置看坐标中的各个字段
-////            connectSenceType.setText(point.getSceneType().name());
-////            connectDeviceSize.setText(point.getWidth()+"/"+point.getHeight());
-////            penBattery.setText(String.valueOf(point.battery.getValue()));
-////            penIsRoute.setText(String.valueOf(point.isRoute));
-////            penWeight.setText(String.valueOf(point.weight));
-////            penColor.setText(String.valueOf(point.color));
-////            penPress.setText(point.pressure+"/"+point.pressureValue);
-////            penOriginal.setText(point.originalX+"/"+point.originalY);
-////            connectOffest.setText(point.getOffsetX()+"/"+point.getOffsetY());
-//            //Toast.makeText(BleListActivity.this,point.pressureValue+"",Toast.LENGTH_SHORT).show();
-//
-//            mHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    statusText.setText("压力值: "+point.pressureValue);
-//                }
-//            });
-//
-//        }
-//
-//        @Override
-//        public void onButClick(int i) {
-//
-//        }
-//    };
-
-
-
-
-
-
 }

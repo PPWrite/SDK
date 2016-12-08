@@ -7,6 +7,7 @@
 * jar:项目中需要使用的必要的jar。
 * jniLibs:项目中需要使用的so文件。(如果是使用上报的坐标数据，无需导入此包文件)
 * RobotPen_SampleDemo:仅上报点坐标数据的demo，适合不需要画布只使用电磁笔产品的用户。
+* RobotPenDemo:使用简单示例逐步完善中。
 
 
 

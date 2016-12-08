@@ -17,10 +17,10 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.robotpen.core.PenManage;
+import cn.robotpen.core.services.PenService;
 import cn.robotpen.core.services.SmartPenService;
 import cn.robotpen.model.PointObject;
 import cn.robotpen.model.entity.DeviceEntity;
-import cn.robotpen.model.interfaces.Listeners;
 import cn.robotpen.model.symbol.ConnectState;
 import cn.robotpen.model.symbol.Keys;
 import cn.robotpen.model.symbol.SceneType;
@@ -105,7 +105,7 @@ public class BleActivity extends Activity {
             mPenManage.shutdown(); //退出Activity时将服务释放，方便其他地方继续使用
         super.onPause();
     }
-    private Listeners.OnPointChangeListener onPointChangeListener = new Listeners.OnPointChangeListener() {
+    private PenService.OnPointChangeListener onPointChangeListener = new PenService.OnPointChangeListener() {
 
         @Override
         public void change(final PointObject point) {
@@ -131,7 +131,7 @@ public class BleActivity extends Activity {
         }
     };
 
-    Listeners.OnConnectStateListener connectStateListener = new Listeners.OnConnectStateListener() {
+    PenService.OnConnectStateListener connectStateListener = new PenService.OnConnectStateListener() {
         @Override
         public void stateChange(String s, ConnectState connectState) {
             switch (connectState) {
@@ -143,7 +143,7 @@ public class BleActivity extends Activity {
                     }
                     mPenManage.setSceneObject(SceneType.P7);
                     mPenManage.setOnPointChangeListener(onPointChangeListener);
-                    mPenManage.startService();
+                   // mPenManage.startService();
                     break;
                 default: //另外有连接中、连接错误等多个状态可以判断使用
                     break;
@@ -152,7 +152,7 @@ public class BleActivity extends Activity {
         }
     };
 
-    Listeners.OnScanDeviceListener onScanDeviceListener = new Listeners.OnScanDeviceListener() {
+    PenService.OnScanDeviceListener onScanDeviceListener = new PenService.OnScanDeviceListener() {
         @Override
         public void find(DeviceEntity deviceObject) {
             DeviceEntity lastDevice = mPenManage.getLastDevice(BleActivity.this);
