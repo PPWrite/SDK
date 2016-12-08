@@ -66,6 +66,7 @@
     if (isConnect == NO) {
         sender.selected = YES;
 //        [[RobotPenManager sharePenManager] scanDevice];
+         [self.deviceArray removeAllObjects];
         [[RobotPenManager sharePenManager] scanDevice:self];
         
     } else{
@@ -93,6 +94,7 @@
 }
 
 -(void)getBufferDevice:(PenDevice *)device{
+
     [self.deviceArray addObject:device];
     [self.tableView reloadData];
 }

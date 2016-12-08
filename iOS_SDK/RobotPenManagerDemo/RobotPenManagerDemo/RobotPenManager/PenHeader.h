@@ -1,11 +1,17 @@
 
+
+
+
+
+
+
 #ifdef DEBUG
 
-#define RobotBLELog(fmt, ...) NSLog((@"RobotBLE Log :   %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define RobotLog(fmt, ...) NSLog((@"RobotBLE Log :   %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 
 #else
 
-#define RobotBLELog(...)
+#define RobotLog(...)
 
 #endif
 
