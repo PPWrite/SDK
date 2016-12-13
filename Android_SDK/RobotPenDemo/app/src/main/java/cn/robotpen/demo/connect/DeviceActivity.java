@@ -46,16 +46,6 @@ public class DeviceActivity extends ActivityGroup {
         setContentView(R.layout.activity_my_device);
         ButterKnife.bind(this);
 
-        // mTabHost.setup();
-        // mTabHost.setup(this.getLocalActivityManager());
-
-        // mTabHost.addTab(mTabHost.newTabSpec(UsbPenService.TAG)
-        // .setIndicator("USB连接").setContent(R.id.linearLayout));
-        // mTabHost.addTab(mTabHost.newTabSpec(SmartPenService.TAG)
-        //       .setIndicator("蓝牙连接").setContent(R.id.linearLayout2));
-
-        //pagerAdapter.setPageData(pagerData);
-//        mViewPager.setAdapter(pagerAdapter);
 
         gotoUsb.setOnClickListener(new View.OnClickListener() {
             @Override
