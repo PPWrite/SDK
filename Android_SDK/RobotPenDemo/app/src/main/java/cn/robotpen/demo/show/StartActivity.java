@@ -44,10 +44,11 @@ public class StartActivity extends ExpandableListActivity {
 class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context mContext = null;
-    private String[] group = {"单画布演示", "多画布+离线笔记演示", "综合演示示例"};
+    private String[] group = {"单画布演示", "多画布+离线笔记演示"};
+           // , "综合演示示例"};
     private String[] single = {"> 单画布", "> 画布的常用功能"};
     private String[] multi = {"> 多画布", "> 离线笔记功能", "> 多画布常用功能"};
-    private String[] together = {"> 画布综合演示"};
+   // private String[] together = {"> 画布综合演示"};
     //,"> P2P交互功能演示","> 多画布功能演示","> 综合示例演示"};
     private List<String> groupList = null;
     private List<List<String>> itemList = null;
@@ -72,12 +73,12 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
             item2.add(multi[i]);
         }
         List<String> item3 = new ArrayList<String>();
-        for (int i = 0; i < together.length; i++) {
-            item3.add(together[i]);
-        }
+//        for (int i = 0; i < together.length; i++) {
+//            item3.add(together[i]);
+//        }
         itemList.add(item1);
         itemList.add(item2);
-        itemList.add(item3);
+       // itemList.add(item3);
     }
 
     public boolean areAllItemsEnabled() {
@@ -107,9 +108,9 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
         // 设置文本视图的相关属性
         AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 100);
         text.setLayoutParams(lp);
-        text.setTextSize(20);
+        text.setTextSize(22);
         text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-        text.setPadding(100, 0, 0, 0);
+        text.setPadding(110, 0, 0, 0);
         text.setText(name);
         text.setOnClickListener(new View.OnClickListener() {
             Intent intent;
@@ -125,8 +126,8 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
                                 mContext.startActivity(intent);
                                 break;
                             case 1:// 画布的常用功能
-//                                intent = new Intent(mContext, NoteWithTrailActivity.class);
-//                                mContext.startActivity(intent);
+                                intent = new Intent(mContext, SingleWithMethodActivity.class);
+                                mContext.startActivity(intent);
                                 break;
                             default:
                                 break;
@@ -135,16 +136,16 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
                     case 1:// 多画布
                         switch (c) {
                             case 0:// 多画布
-//                                intent = new Intent(mContext, GetAxesActivity.class);
-//                                mContext.startActivity(intent);
+                                intent = new Intent(mContext, MulityCanvasActivity.class);
+                                mContext.startActivity(intent);
                                 break;
                             case 1:// 离线笔记功能
-//                                intent = new Intent(mContext, NoteActivity.class);
-//                                mContext.startActivity(intent);
+                                intent = new Intent(mContext, NoteActivity.class);
+                                mContext.startActivity(intent);
                                 break;
                             case 2:// 多画布常用功能
-//                                intent = new Intent(mContext, NoteWithActivity.class);
-//                                mContext.startActivity(intent);
+                                intent = new Intent(mContext, MulityWithMethodActivity.class);
+                                mContext.startActivity(intent);
                                 break;
                             default:
                                 break;

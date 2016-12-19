@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="robotpen_sdk-unspecified">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/RobotPenDemo/robotpen_sdk/unspecified/res" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/RobotPenDemo/robotpen_sdk/unspecified/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

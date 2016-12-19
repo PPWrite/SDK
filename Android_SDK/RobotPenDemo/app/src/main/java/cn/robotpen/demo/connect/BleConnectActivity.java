@@ -81,7 +81,6 @@ public class BleConnectActivity extends Activity {
                 mPenManage.stopScanDevice();
                 DeviceEntity device = mPenAdapter.getItem(arg2);
                 connectDevice(device.getAddress());//定向连接设备
-                // mPenManage.connectDevice(onConnectStateListener, device.getAddress());//定向连接设备
             }
         });
     }
@@ -89,7 +88,6 @@ public class BleConnectActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        //mPenManage  = new PenManage(this, SmartPenService.TAG); //此种方式创建的PenManage对象将记住服务类型
         CheckDevice();
     }
 
@@ -106,13 +104,12 @@ public class BleConnectActivity extends Activity {
         if (mPenManage != null)
             mPenManage.shutdown(); //退出Activity时将服务释放，方便其他地方继续使用
     }
-
-
     /*
      * 检测设备连接
      */
     private void CheckDevice() {
         if (null == mPenManage) {
+            PenManage.setServiceType(BleConnectActivity.this, SmartPenService.TAG);//这样新建服务会记住连接方式
             mPenManage = new PenManage(this, SmartPenService.TAG); //这样新建服务会记住连接方式
             mPenManage.setScanTime(5000);
             mPenManage.scanDevice(onScanDeviceListener);

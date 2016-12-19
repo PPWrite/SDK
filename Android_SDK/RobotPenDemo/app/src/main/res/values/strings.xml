@@ -24,4 +24,8 @@
     <string name="title_activity_single_canvas">singleCanvasActivity</string>
     <string name="title_activity_usbconnect">USBConnectActivity</string>
     <string name="title_activity_ble_connect">BleConnectActivity</string>
+    <string name="title_activity_single_with_trail">SingleWithTrailActivity</string>
+    <string name="title_activity_mulity_canvas">MulityCanvasActivity</string>
+    <string name="title_activity_mulity_with_method">MulityWithMethodActivity</string>
+    <string name="title_activity_note">NoteActivity</string>
 </resources>

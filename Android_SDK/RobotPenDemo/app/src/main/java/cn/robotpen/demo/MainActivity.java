@@ -10,8 +10,10 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.robotpen.core.PenManage;
+import cn.robotpen.core.services.UsbPenService;
 import cn.robotpen.demo.connect.DeviceActivity;
 import cn.robotpen.demo.show.StartActivity;
+import cn.robotpen.model.entity.DeviceEntity;
 
 public class MainActivity extends Activity {
 
@@ -60,16 +62,24 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(null==mPenManage){
-            mPenManage = new PenManage(MainActivity.this);
+        CheckDevice();
+    }
+
+    /*
+    * 检测设备连接
+    */
+    private void CheckDevice(){
+        if (null == mPenManage) {
+            mPenManage = new PenManage(this, UsbPenService.TAG); //这样新建服务会记住连接方式
         }
-        if(null!=mPenManage.getConnectDevice()){
-            mainConnectStatus.setText("已连接设备：");
-            mainConnectDevice.setText(mPenManage.getConnectDevice().getName());
+        DeviceEntity device =  mPenManage.getLastDevice(MainActivity.this);
+        if(device!=null){
+            mainConnectStatus.setText("已连接设备："+device.getName()+"。 ");
+            mainConnectDevice.setText("类型为："+device.getDeviceType().name());
         }else {
             mainConnectStatus.setText("未连接设备！");
-            mainConnectDevice.setText("暂无设备连接");
+            mainConnectDevice.setText("");
         }
-
     }
+
 }

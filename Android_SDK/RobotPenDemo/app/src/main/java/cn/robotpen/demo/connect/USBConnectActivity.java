@@ -26,7 +26,8 @@ public class USBConnectActivity extends Activity {
     Button usbBtn;
     @BindView(R.id.activity_main)
     LinearLayout activityMain;
-    private PenManage mPenManage;
+
+    PenManage mPenManage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,7 @@ public class USBConnectActivity extends Activity {
       */
     private void CheckDevice(){
         if (null == mPenManage) {
+            PenManage.setServiceType(USBConnectActivity.this, UsbPenService.TAG);//这样新建服务会记住连接方式
             mPenManage = new PenManage(this, UsbPenService.TAG); //这样新建服务会记住连接方式
             mPenManage.setScanTime(2000);
             mPenManage.scanDevice(null);
@@ -86,6 +88,7 @@ public class USBConnectActivity extends Activity {
                     SceneType sceneType = SceneType.getSceneType(false,dp);//根据设备型号获取场景模式 falsew为竖屏
                     mPenManage.setSceneObject(sceneType);
                     usbstatus.setText("已连接："+device_name+"。 "+"类型为："+dp.name());
+                    mPenManage.saveLastDevice(USBConnectActivity.this, device);
                 }
             } else if (arg1 == ConnectState.DISCONNECTED) {
                     usbstatus.setText("已断开连接!");

@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':robotpen_sdk'

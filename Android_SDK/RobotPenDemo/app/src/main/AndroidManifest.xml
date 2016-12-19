@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="18"
-        android:targetSdkVersion="23" />
+        android:targetSdkVersion="22" />
 
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -47,23 +47,12 @@
             </intent-filter>
         </activity>
 
-        <!-- Usb模式 -->
-        <activity
-            android:name=".show.NoteActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
-        <!-- 横屏 -->
-
-
         <!-- 注册服务 -->
         <service
             android:name="cn.robotpen.core.services.UsbPenService"
             android:enabled="true" />
         <service
             android:name="cn.robotpen.core.services.SmartPenService"
-            android:enabled="true" />
-        <service
-            android:name="cn.robotpen.file.services.FileManageService"
             android:enabled="true" />
 
         <activity android:name=".show.StartActivity" />
@@ -76,11 +65,19 @@
             android:label="@string/title_activity_usbconnect" />
         <activity
             android:name=".connect.BleConnectActivity"
-            android:label="@string/title_activity_ble_connect"></activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:label="@string/title_activity_ble_connect" />
+        <activity
+            android:name=".show.SingleWithMethodActivity"
+            android:label="@string/title_activity_single_with_trail" />
+        <activity
+            android:name=".show.MulityCanvasActivity"
+            android:label="@string/title_activity_mulity_canvas" />
+        <activity
+            android:name=".show.MulityWithMethodActivity"
+            android:label="@string/title_activity_mulity_with_method" />
+        <activity
+            android:name=".show.NoteActivity"
+            android:label="@string/title_activity_note"></activity>
     </application>
 
 </manifest>
