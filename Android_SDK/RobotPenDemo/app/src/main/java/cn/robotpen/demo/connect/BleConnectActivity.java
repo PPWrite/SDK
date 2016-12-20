@@ -197,18 +197,7 @@ public class BleConnectActivity extends Activity {
         public void stateChange(String address, ConnectState state) {
             switch (state) {
                 case PEN_INIT_COMPLETE: //蓝牙连接成功
-                    //检查是否已连接设备
-                    DeviceEntity device = mPenManage.getConnectDevice();
-                    if (device != null) {
-                        statusText.setText("已连接设备: " + device.getName());
-                        scanBut.setVisibility(View.GONE);
-                        disconnectBut.setVisibility(View.VISIBLE);
-                        mPenManage.saveLastDevice(BleConnectActivity.this, device);
-                        mPenManage.getDeviceVersion(); //获取版本号的同时会存储设备类型
-                        DeviceType dp = device.getDeviceType();
-                        SceneType sceneType = SceneType.getSceneType(false, dp);//根据设备型号获取场景模式 false为竖屏
-                        mPenManage.setSceneObject(sceneType);
-                    }
+                    mPenManage.getDeviceVersion(); //获取版本号的同时会存储设备类型
                     break;
                 default: //另外有连接中、连接错误等多个状态可以判断使用
                     break;
@@ -219,6 +208,22 @@ public class BleConnectActivity extends Activity {
     private OnReceiveDataHandler onReceiveDataHandler = new OnReceiveDataHandler() {
         @Override
         public void version(int hw, int sw) {
+            mHandler.postDelayed(new Runnable() {
+                 @Override
+                 public void run() {
+                     //检查是否已连接设备
+                     DeviceEntity device = mPenManage.getConnectDevice();
+                     if (device != null) {
+                         statusText.setText("已连接设备: " + device.getName());
+                         scanBut.setVisibility(View.GONE);
+                         disconnectBut.setVisibility(View.VISIBLE);
+                         DeviceType dp = device.getDeviceType();
+                         SceneType sceneType = SceneType.getSceneType(false, dp);//根据设备型号获取场景模式 false为竖屏
+                         mPenManage.setSceneObject(sceneType);
+                     }
+                 }
+             }, 1000
+            );
             mFirmwareVer = sw;
             String url = mPenManage.getFirmwareInfoUrl() + "?t=" + System.currentTimeMillis();
             if (!TextUtils.isEmpty(url)) {
