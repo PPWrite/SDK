@@ -75,7 +75,7 @@ public class DeviceActivity extends ActivityGroup {
         }
        DeviceEntity device =  mPenManage.getLastDevice(DeviceActivity.this);
         if(device!=null){
-            devicesStatus.setText("已连接："+device.getName()+"。 "+"类型为："+device.getDeviceType().name());
+            devicesStatus.setText("上次连接设备："+device.getName()+"。 "+"类型为："+device.getDeviceType().name());
         }else{
             devicesStatus.setText("未连接设备！");
         }

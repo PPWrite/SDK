@@ -25,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.robotpen.core.PenManage;
+import cn.robotpen.core.module.NoteManageModule;
 import cn.robotpen.core.services.PenService;
 import cn.robotpen.core.services.SmartPenService;
 import cn.robotpen.core.widget.PenDrawView;
@@ -98,6 +99,7 @@ public class SingleWithMethodActivity extends Activity
     Uri mInsertPhotoUri = null;
     Uri mBgUri = null;
     int butFlag = 0;
+    NoteManageModule mNoteManageModule;
 
 
     @Override
@@ -106,6 +108,7 @@ public class SingleWithMethodActivity extends Activity
         setContentView(R.layout.activity_single_withmethod);
         ButterKnife.bind(this);
         mHandler = new Handler();
+        mNoteManageModule = new NoteManageModule(this);
         initView();
     }
 
@@ -456,6 +459,7 @@ public class SingleWithMethodActivity extends Activity
                     //如果是，那么将临时笔记另存，并标识设备类型
                     mNoteKey = DeviceType.toDeviceType(recordBoardView.getNoteEntity().getDeviceType()).getDeviceIdent()
                             + FileUtils.getDateFormatName("yyyyMMdd_HHmmss");
+                    mNoteManageModule.tmpSaveToNote(mNoteKey,getCurrUserId(), ResUtils.DIR_NAME_DATA);
                     //刷新当前临时笔记
                     recordBoardView.refresh();
                 } else {

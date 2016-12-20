@@ -21,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.robotpen.core.PenManage;
+import cn.robotpen.core.module.NoteManageModule;
 import cn.robotpen.core.services.PenService;
 import cn.robotpen.core.services.SmartPenService;
 import cn.robotpen.core.widget.PenDrawView;
@@ -28,6 +29,7 @@ import cn.robotpen.core.widget.WhiteBoardView;
 import cn.robotpen.demo.R;
 import cn.robotpen.demo.RobotPenApplication;
 import cn.robotpen.demo.connect.DeviceActivity;
+import cn.robotpen.demo.utils.ResUtils;
 import cn.robotpen.model.entity.DeviceEntity;
 import cn.robotpen.model.entity.NoteEntity;
 import cn.robotpen.model.symbol.ConnectState;
@@ -49,8 +51,10 @@ public class SingleCanvasActivity extends Activity implements WhiteBoardView.Can
     PenDrawView.PenModel mPenModel = PenDrawView.PenModel.Pen;
     String mNoteKey = NoteEntity.KEY_NOTEKEY_TMP;
     final static String KEY_NOTEKEY = "NoteKey";
-    private ProgressDialog mProgressDialog;
-    private Handler mHandler;
+    ProgressDialog mProgressDialog;
+    Handler mHandler;
+    NoteManageModule mNoteManageModule;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,7 @@ public class SingleCanvasActivity extends Activity implements WhiteBoardView.Can
         setContentView(R.layout.activity_single_canvas);
         ButterKnife.bind(this);
         mHandler = new Handler();
+        mNoteManageModule = new NoteManageModule(this);
         initView();
     }
 
@@ -258,6 +263,7 @@ public class SingleCanvasActivity extends Activity implements WhiteBoardView.Can
                     //如果是，那么将临时笔记另存，并标识设备类型
                     mNoteKey = DeviceType.toDeviceType(whiteBoardView.getNoteEntity().getDeviceType()).getDeviceIdent()
                             + FileUtils.getDateFormatName("yyyyMMdd_HHmmss");
+                    mNoteManageModule.tmpSaveToNote(mNoteKey,getCurrUserId(), ResUtils.DIR_NAME_DATA);
                     //刷新当前临时笔记
                     whiteBoardView.refresh();
                 } else {

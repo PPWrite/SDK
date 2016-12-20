@@ -13,7 +13,6 @@ import cn.robotpen.demo.R;
 import cn.robotpen.model.entity.DeviceEntity;
 
 public class PenAdapter extends BaseAdapter {
-	public final static String TAG = PenAdapter.class.getSimpleName();
 
 	private Context mContext;
 	private LayoutInflater inflater;

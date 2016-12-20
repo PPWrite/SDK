@@ -45,7 +45,7 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context mContext = null;
     private String[] group = {"单画布演示", "多画布+离线笔记演示"};
-           // , "综合演示示例"};
+            //, "综合演示示例"};
     private String[] single = {"> 单画布", "> 画布的常用功能"};
     private String[] multi = {"> 多画布", "> 离线笔记功能", "> 多画布常用功能"};
    // private String[] together = {"> 画布综合演示"};
@@ -72,7 +72,7 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
         for (int i = 0; i < multi.length; i++) {
             item2.add(multi[i]);
         }
-        List<String> item3 = new ArrayList<String>();
+//        List<String> item3 = new ArrayList<String>();
 //        for (int i = 0; i < together.length; i++) {
 //            item3.add(together[i]);
 //        }
@@ -160,7 +160,6 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
                             default:
                                 break;
                         }
-
                         break;
                     default:
 

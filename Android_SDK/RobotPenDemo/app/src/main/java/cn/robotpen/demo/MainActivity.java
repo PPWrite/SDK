@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
         }
         DeviceEntity device =  mPenManage.getLastDevice(MainActivity.this);
         if(device!=null){
-            mainConnectStatus.setText("已连接设备："+device.getName()+"。 ");
+            mainConnectStatus.setText("上次连接设备："+device.getName()+"。 ");
             mainConnectDevice.setText("类型为："+device.getDeviceType().name());
         }else {
             mainConnectStatus.setText("未连接设备！");
