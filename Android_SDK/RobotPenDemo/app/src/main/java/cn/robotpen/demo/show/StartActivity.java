@@ -81,6 +81,7 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 //        for (int i = 0; i < together.length; i++) {
 //            item3.add(together[i]);
 //        }
+        itemList.add(item0);
         itemList.add(item1);
         itemList.add(item2);
        // itemList.add(item3);
