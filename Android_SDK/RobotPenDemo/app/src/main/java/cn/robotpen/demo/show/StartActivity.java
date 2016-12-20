@@ -44,8 +44,9 @@ public class StartActivity extends ExpandableListActivity {
 class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context mContext = null;
-    private String[] group = {"单画布演示", "多画布+离线笔记演示"};
+    private String[] group = {"点坐标演示","单画布演示", "多画布+离线笔记演示"};
             //, "综合演示示例"};
+            private String[] point = {"> 点坐标"};
     private String[] single = {"> 单画布", "> 画布的常用功能"};
     private String[] multi = {"> 多画布", "> 离线笔记功能", "> 多画布常用功能"};
    // private String[] together = {"> 画布综合演示"};
@@ -63,6 +64,10 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
     private void initData() {
         for (int i = 0; i < group.length; i++) {
             groupList.add(group[i]);
+        }
+        List<String> item0 = new ArrayList<String>();
+        for (int i = 0; i < point.length; i++) {
+            item0.add(point[i]);
         }
         List<String> item1 = new ArrayList<String>();
         for (int i = 0; i < single.length; i++) {
@@ -119,7 +124,15 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 switch (g) {
-                    case 0:// 单画布
+                    case 0:// 点坐标
+                        switch (c) {
+                            case 0:// 点坐标
+                                intent = new Intent(mContext, ShowPointActivity.class);
+                                mContext.startActivity(intent);
+                                break;
+                        }
+                        break;
+                    case 1:// 单画布
                         switch (c) {
                             case 0:// 单画布
                                 intent = new Intent(mContext, SingleCanvasActivity.class);
@@ -133,7 +146,7 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
                                 break;
                         }
                         break;
-                    case 1:// 多画布
+                    case 2:// 多画布
                         switch (c) {
                             case 0:// 多画布
                                 intent = new Intent(mContext, MulityCanvasActivity.class);
@@ -151,7 +164,7 @@ class IdeasExpandableListAdapter extends BaseExpandableListAdapter {
                                 break;
                         }
                         break;
-                    case 2:// 综合
+                    case 3:// 综合
                         switch (c) {
                             case 0:// 蓝牙/usb切换
 //                                intent = new Intent(mContext, ChangeTypeActivity.class);

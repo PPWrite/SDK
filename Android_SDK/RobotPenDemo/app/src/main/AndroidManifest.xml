@@ -77,7 +77,10 @@
             android:label="@string/title_activity_mulity_with_method" />
         <activity
             android:name=".show.NoteActivity"
-            android:label="@string/title_activity_note"></activity>
+            android:label="@string/title_activity_note" />
+        <activity
+            android:name=".show.ShowPointActivity"
+            android:label="@string/title_activity_show_point"></activity>
     </application>
 
 </manifest>

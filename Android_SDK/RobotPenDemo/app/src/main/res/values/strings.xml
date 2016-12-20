@@ -28,4 +28,5 @@
     <string name="title_activity_mulity_canvas">MulityCanvasActivity</string>
     <string name="title_activity_mulity_with_method">MulityWithMethodActivity</string>
     <string name="title_activity_note">NoteActivity</string>
+    <string name="title_activity_show_point">ShowPointActivity</string>
 </resources>
