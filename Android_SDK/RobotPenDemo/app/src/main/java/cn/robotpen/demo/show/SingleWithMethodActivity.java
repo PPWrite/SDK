@@ -156,7 +156,6 @@ public class SingleWithMethodActivity extends Activity
         //检查是否有需要插入的图片uri
         if (null != mInsertPhotoUri) {
             recordBoardView.insertPhoto(mInsertPhotoUri);
-            recordBoardView.startPhotoEdit(true); //设置图片可以编辑状态
             mInsertPhotoUri = null;
         }
         if(null != mBgUri){
@@ -246,6 +245,7 @@ public class SingleWithMethodActivity extends Activity
                 break;
             case R.id.innerbgBut:
                 recordBoardView.setDataSaveDir(ResUtils.getSavePath(ResUtils.DIR_NAME_DATA));
+                recordBoardView.startPhotoEdit(true); //设置图片可以编辑状态
                 Intent intent2 = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(Intent.createChooser(intent2, "选择背景"), SELECT_BG);
                 break;
@@ -529,9 +529,9 @@ public class SingleWithMethodActivity extends Activity
 
     @Override
     public boolean onRecordTimeChange(Date date) {
-        String time = mTimeShowformat.format(date);
-        recordBut.setText("暂停" + time);
-        return true;
+       // String time = mTimeShowformat.format(date);
+        //recordBut.setText("暂停" + time);
+        return false;//自动显示时间
     }
 
 
