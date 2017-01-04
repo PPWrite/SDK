@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -64,7 +63,7 @@ public class BleConnectActivity extends Activity {
     private Handler mHandler;
     private AsyncHttpClient mHttpClient;
     private int mFirmwareVer;
-    int  stateFlag = 0;
+    //int  stateFlag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,31 +106,31 @@ public class BleConnectActivity extends Activity {
             mPenManage.shutdown(); //退出Activity时将服务释放，方便其他地方继续使用
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        boolean returnFlag = false;
-        if (keyCode == KeyEvent.KEYCODE_BACK ) {
-            if(stateFlag == 1){
-                returnFlag = true;
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle("提示");
-                alert.setMessage("正在连接设备，禁止退出！");
-                alert.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                alert.setCancelable(false);
-                alert.show();
-            }
-        }
-        if(!returnFlag){
-            return super.onKeyDown(keyCode, event);
-        }else{
-            return false;
-        }
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        boolean returnFlag = false;
+//        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+//            if(stateFlag == 1){
+//                returnFlag = true;
+//                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+//                alert.setTitle("提示");
+//                alert.setMessage("正在连接设备，禁止退出！");
+//                alert.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//                alert.setCancelable(false);
+//                alert.show();
+//            }
+//        }
+//        if(!returnFlag){
+//            return super.onKeyDown(keyCode, event);
+//        }else{
+//            return false;
+//        }
+//    }
 
 
     /*
@@ -227,13 +226,14 @@ public class BleConnectActivity extends Activity {
         public void stateChange(String address, ConnectState state) {
                 switch (state) {
                     case CONNECTING:
-                        stateFlag = 1;
-                case PEN_INIT_COMPLETE: //蓝牙连接成功
-                    stateFlag = 0;
-                    mPenManage.getDeviceVersion(); //获取版本号的同时会存储设备类型
+                        //stateFlag = 1;
+                        break;
+                    case PEN_INIT_COMPLETE: //蓝牙连接成功
+                        //stateFlag = 0;
+                        mPenManage.getDeviceVersion(); //获取版本号的同时会存储设备类型
                     break;
                 default: //另外有连接中、连接错误等多个状态可以判断使用
-                    stateFlag = 0;
+                        //stateFlag = 0;
                     break;
             }
         }
