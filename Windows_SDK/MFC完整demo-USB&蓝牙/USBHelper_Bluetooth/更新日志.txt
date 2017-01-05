@@ -1,0 +1,2 @@
+2016/10/15 增加mcu何bluetooth升级功能，升级文件放在Firmware目录下，
+	   文件名称含义参考：dongle设备升级说明.xlsx
