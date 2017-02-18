@@ -11,6 +11,7 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 
 @interface PenDevice : NSObject
+
 @property (nonatomic, assign) DeviceType deviceType;//设备类型
 
 @property (retain, nonatomic) CBPeripheral *peripheral;

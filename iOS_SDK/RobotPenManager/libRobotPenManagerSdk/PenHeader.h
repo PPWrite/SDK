@@ -1,10 +1,4 @@
 
-
-
-
-
-
-
 #ifdef DEBUG
 
 #define RobotLog(fmt, ...) NSLog((@"RobotBLE Log :   %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
@@ -46,6 +40,8 @@ typedef enum {
     
 }OTAState;
 
+
+
 //同步笔记状态
 typedef enum {
     SYNC_ERROR,
@@ -69,7 +65,9 @@ typedef enum {
     
     Elite_Plus ,
     
-    RobotPen_P1
+    RobotPen_P1 ,
+    
+    Elite_Plus_New ,
     
 } DeviceType;
 
@@ -114,7 +112,13 @@ typedef enum {
 }DeviceState;
 
 
-
+typedef enum{
+    DeviceEvent_CLick = 0,
+    DeviceEvent_Double_CLick ,
+    DeviceEvent_Front ,
+    DeviceEvent_Next ,
+    DeviceEvent_NewPage
+}DeviceEventType;
 
 
 

@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "PenHeader.h"
-#import "TralisModel.h"
-#import "NoteModel.h"
+#import "Trails.h"
+#import "Note.h"
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "PenDevice.h"
 #import "PenPoint.h"
@@ -70,8 +70,8 @@
 /**
  获取笔记数据
  */
-- (void)getSyncData:(TralisModel *)trails;
-- (void)getSyncNote:(NoteModel *)note;
+- (void)getSyncData:(Trails *)trails;
+- (void)getSyncNote:(Note *)note;
 
 
 /**
@@ -81,7 +81,6 @@
 - (void)getStorageNum:(int)num;
 
 
-@required
 
 /**
  发现设备
@@ -89,6 +88,11 @@
  @param device <#device description#>
  */
 - (void)getBufferDevice:(PenDevice *)device;
+
+
+
+//设备点击事件
+- (void)getDeviceEvent:(DeviceEventType)Type;
 
 
 
@@ -153,7 +157,11 @@
 
 
 //检查设备是否连接
-- (void)checkDeviceConnect;
+- (BOOL)checkDeviceConnect;
+
+//检查设备是否连接 -- 自动链接
+- (void)AutoCheckDeviceConnect;
+
 
 /**
  取消配对
@@ -188,9 +196,8 @@
 -(void)stopSyncNote;
 
 
-
-
-
+//发送页码信息
+- (void)SendPage:(int)Current :(int)Totla;
 
 
 
