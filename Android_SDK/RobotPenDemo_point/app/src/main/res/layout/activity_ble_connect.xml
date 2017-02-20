@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="未连接设备！"
+            android:textSize="18sp" />
+        <Button
+            android:id="@+id/deviceUpdate"
+            style="?android:attr/buttonStyleSmall"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设备升级" />
+        <Button
+            android:id="@+id/deviceSync"
+            style="?android:attr/buttonStyleSmall"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="同步笔记" />
+        <LinearLayout
+            android:id="@+id/listFrame"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <ListView
+                android:id="@+id/listview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:cacheColorHint="#66bbbbbb"
+                android:divider="#66bbbbbb"
+                android:dividerHeight="1dip"
+                android:fastScrollEnabled="true"
+                android:listSelector="#ffcccccc"
+                android:scrollbarStyle="outsideInset"
+                android:scrollbars="horizontal|vertical">
+            </ListView>
+            <Button
+                android:id="@+id/scanBut"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="扫描设备" />
+            <Button
+                android:id="@+id/disconnectBut"
+                style="?android:attr/buttonStyleSmall"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="断开设备" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

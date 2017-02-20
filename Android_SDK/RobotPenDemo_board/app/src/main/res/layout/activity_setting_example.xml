@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <RelativeLayout
+        android:id="@+id/viewWindow"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#ffffdddd" >
+        <cn.robotpen.core.widget.RecordBoardView
+            android:id="@+id/recordBoardView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/saveScreenBut"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="2dp"
+            android:clickable="false"
+            android:text="截屏" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#808080" />
+
+        <Button
+            android:id="@+id/recordBut"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="4dp"
+            android:text="录制" />
+        <Button
+            android:id="@+id/recordStopBut"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="2dp"
+            android:background="@android:color/darker_gray"
+            android:clickable="false"
+            android:text="停止" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/delPageBut"
+            android:layout_width="98dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="2dp"
+            android:clickable="false"
+            android:text="删当前页" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#808080" />
+
+        <Button
+            android:id="@+id/gotoProBut"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="4dp"
+            android:text="上一页" />
+        <Button
+            android:id="@+id/gotoNextBut"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="2dp"
+            android:clickable="false"
+            android:text="上一页" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+        <Button
+            android:id="@+id/cleanScreenBut"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:clickable="false"
+            android:text="清画布" />
+
+        <Button
+            android:id="@+id/choseScreen"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:clickable="false"
+            android:text="竖屏" />
+        <Button
+            android:id="@+id/choseLevel"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:clickable="false"
+            android:text="录像质量" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#808080" />
+
+        <Button
+            android:id="@+id/addNote"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:clickable="false"
+            android:text="新建笔记" />
+
+        <Button
+            android:id="@+id/choseNote"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:clickable="false"
+            android:text="选择笔记" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#808080" />
+
+
+    </LinearLayout>
+</RelativeLayout>
