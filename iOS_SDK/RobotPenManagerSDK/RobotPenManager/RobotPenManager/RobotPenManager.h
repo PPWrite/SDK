@@ -2,14 +2,15 @@
 //  RobotPenManager.h
 //  RobotPenManager
 //
-//  Created by JMS on 2016/11/15.
+//  Created by chong gao on 2016/11/15.
 //  Copyright © 2016年 Robot.cn. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "PenHeader.h"
-#import "Trails.h"
-#import "Note.h"
+#import "RobotNote.h"
+#import "RobotTrailBlock.h"
+#import "RobotTrails.h"
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "PenDevice.h"
 #import "PenPoint.h"
@@ -70,8 +71,8 @@
 /**
  获取笔记数据
  */
-- (void)getSyncData:(Trails *)trails;
-- (void)getSyncNote:(Note *)note;
+- (void)getSyncData:(RobotTrails *)trails;
+- (void)getSyncNote:(RobotNote *)note;
 
 
 /**
@@ -157,14 +158,7 @@
 
 
 //检查设备是否连接
-- (BOOL)checkDeviceConnect;
-
-//检查是否有配对过的设备
-- (BOOL)checkIsHaveMatch;
-
-//检查设备是否连接 -- 自动链接
-- (void)AutoCheckDeviceConnect;
-
+- (void)checkDeviceConnect;
 
 /**
  取消配对

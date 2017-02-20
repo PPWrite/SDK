@@ -2,7 +2,7 @@
 //  PenDevice.h
 //  RobotPenManager
 //
-//  Created by JMS on 2016/11/15.
+//  Created by chong gao on 2016/11/15.
 //  Copyright © 2016年 Robot.cn. All rights reserved.
 //
 

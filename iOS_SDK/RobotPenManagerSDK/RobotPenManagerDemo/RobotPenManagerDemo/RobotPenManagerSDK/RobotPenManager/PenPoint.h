@@ -2,7 +2,7 @@
 //  PenPoint.h
 //  
 //
-//  Created by JMS on 2016/11/16.
+//  Created by chong gao on 2016/11/16.
 //
 //
 
