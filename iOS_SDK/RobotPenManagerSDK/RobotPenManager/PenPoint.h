@@ -34,12 +34,12 @@
 
 /**
  获取显示场景点坐标
-
+ 
  @param sceneWidth 场景宽
  @param sceneHeight 场景高
- @param isVer 场景是否竖屏
+ @param isHorizontal 场景是否竖屏
  @return
  */
-- (CGPoint)getScenePointWith :(float)sceneWidth :(float)sceneHeight :(BOOL)isVer;
+- (CGPoint)getScenePointWith :(float)sceneWidth :(float)sceneHeight :(BOOL)isHorizontal;
 
 @end
