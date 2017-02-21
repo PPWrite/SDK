@@ -158,7 +158,13 @@
 
 
 //检查设备是否连接
-- (void)checkDeviceConnect;
+- (BOOL)checkDeviceConnect;
+
+//检查是否有配对过的设备
+- (BOOL)checkIsHaveMatch;
+
+//检查设备是否连接 -- 自动链接
+- (void)AutoCheckDeviceConnect;
 
 /**
  取消配对
