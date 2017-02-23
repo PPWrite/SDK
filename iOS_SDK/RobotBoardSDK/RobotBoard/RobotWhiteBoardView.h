@@ -34,10 +34,6 @@
 
 @optional
 
-- (void)GetWhiteBoardState:(NSDictionary *)StateInfo;// 获取白板状态信息
-- (void)GetVideoRecordState:(NSDictionary *)StateInfo; // 获取视频录制状态信息
-//- (void)GetEndPercent:(int)percent; // 获取停止录制百分比
-- (void)GetVideoTime:(float)Seconds; //获取录制时间
 
 @end
 

@@ -91,6 +91,11 @@ static int interval_Board = 10;
     return _NoteTitle;
 }
 
+
+-(void)getPointInfo:(PenPoint *)point{
+    //    NSLog(@"%hd %hd",point.originalX,point.originalY);
+    [self.WhiteBoardView drawLine:point];
+}
 #pragma mark 白板相关
 /**
  白板创建
@@ -105,38 +110,40 @@ static int interval_Board = 10;
 }
 - (void)setWB{
     
-    
     [self.WhiteBoardView setDeviceType: DeviceTypes];
     [self.WhiteBoardView setIsHorizontal:isHorizontal];
-    
+
     [self.WhiteBoardView setDrawAreaFrame:CGRectMake(interval_Board , interval_Board , ScreenWidth - 2 * interval_Board,ScreenHeight - 2 * interval_Board - 64)];
 
-    
     [self.WhiteBoardView RefreshAll];
     
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    //笔服务
     [[RobotPenManager sharePenManager] setPenDelegate:self];
     PenDevice *device = [[RobotPenManager sharePenManager] getConnectDevice];
     DeviceTypes = device.deviceType;
+    //数据库
     [RobotSqlManager checkRobotSqlManager];
     if (![RobotSqlManager checkNoteWithNoteKey:@"WB"]) {
         [self BuildTempNote];
     }
+    
+    //白板信息
      _NoteKey = @"WB";
     _NoteTitle = @"白板";
     _PenColor = [UIColor redColor];
     _PenWidth = 1;
     [self.WhiteBoardView SetDrawType:0];
-    
-    
-   
-    
+
     [self setWB];
 
 
 }
+
+
+
 -(void)BuildTempNote
 {
     [RobotSqlManager checkRobotSqlManager];
@@ -157,10 +164,7 @@ static int interval_Board = 10;
 }
 
 
--(void)getPointInfo:(PenPoint *)point{
-//    NSLog(@"%hd %hd",point.originalX,point.originalY);
-    [self.WhiteBoardView drawLine:point];
-}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

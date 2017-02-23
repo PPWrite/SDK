@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C05E71191E5E893B004836D0 /* libRobotBoard_Micro.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C05E71081E5E893B004836D0 /* libRobotBoard_Micro.a */; };
+		C05E711B1E5EBE79004836D0 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C05E711A1E5EBE79004836D0 /* ImageIO.framework */; };
 		C07C08141E5BCB3800D290A7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C07C08131E5BCB3800D290A7 /* main.m */; };
 		C07C08171E5BCB3800D290A7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C07C08161E5BCB3800D290A7 /* AppDelegate.m */; };
 		C07C081A1E5BCB3800D290A7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C07C08191E5BCB3800D290A7 /* ViewController.m */; };
@@ -50,6 +51,8 @@
 		C05E71161E5E893B004836D0 /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
 		C05E71171E5E893B004836D0 /* VideoImageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoImageModel.h; sourceTree = "<group>"; };
 		C05E71181E5E893B004836D0 /* WhiteBoardHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhiteBoardHeader.h; sourceTree = "<group>"; };
+		C05E711A1E5EBE79004836D0 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		C05E711C1E5EBEA1004836D0 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		C07C080F1E5BCB3800D290A7 /* RobotBoardSDKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RobotBoardSDKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C07C08131E5BCB3800D290A7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C07C08151E5BCB3800D290A7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -93,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C05E711B1E5EBE79004836D0 /* ImageIO.framework in Frameworks */,
 				C07C0AC91E5C216700D290A7 /* libsqlite3.tbd in Frameworks */,
 				C0D9C9BC1E5D8EEC008D0093 /* Foundation.framework in Frameworks */,
 				C0D9C9BB1E5D8B2F008D0093 /* CoreText.framework in Frameworks */,
@@ -230,6 +234,8 @@
 		C07C0AB81E5C1EF800D290A7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C05E711C1E5EBEA1004836D0 /* CoreMedia.framework */,
+				C05E711A1E5EBE79004836D0 /* ImageIO.framework */,
 				C0D9C9BA1E5D8B2F008D0093 /* CoreText.framework */,
 				C0D9C9B81E5D8B27008D0093 /* CoreTelephony.framework */,
 				C0D9C9B61E5D8AC9008D0093 /* AudioToolbox.framework */,

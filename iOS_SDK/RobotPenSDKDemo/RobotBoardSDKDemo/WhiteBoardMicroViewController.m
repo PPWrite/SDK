@@ -10,12 +10,14 @@
 #import "RobotWhiteBoard_MicroView.h"
 #import "Header.h"
 #import "RobotSqlManager.h"
+#import "Video.h"
 static int interval_Board = 10;
 @interface WhiteBoardMicroViewController ()<WhiteBoardViewDelegate,RobotPenDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
     BOOL isRecord;
     BOOL isHorizontal; //是否横屏
     DeviceType DeviceTypes;//设备类型
+    NSURL *videoPathUrl;
     
 }
 @property (nonatomic, strong) RobotWhiteBoard_MicroView *WhiteBoardView;
@@ -61,7 +63,32 @@ static int interval_Board = 10;
 
 - (IBAction)VideoAddressClicked:(id)sender
 {
-    NSLog(@"lalala");
+    [RobotSqlManager GetVideoListWithPage:0 Success:^(id responseObject) {
+        
+        NSArray *videoPathArray = [NSArray arrayWithArray:[responseObject objectForKey:@"Data"]];
+       
+        if (videoPathArray.count >0) {
+            Video *models = [videoPathArray objectAtIndex:0];
+            videoPathUrl = [NSURL fileURLWithPath:[RobotSqlManager GetVideoPathWithNameKey:models.NameKey]];
+
+        }
+           } Failure:^(NSError *error) {
+        NSLog(@"error %@",error);
+    }];
+    
+    if (videoPathUrl) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"视频地址"
+                                                                                 message:[NSString stringWithFormat:@"%@",videoPathUrl]
+                                                                          preferredStyle:UIAlertControllerStyleAlert ];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:cancelAction];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:alertController animated:YES completion:nil];
+        });
+
+    }
+   
 }
 
 
@@ -93,34 +120,7 @@ static int interval_Board = 10;
     }
     
 }
-//- (IBAction)shipindizhi:(id)sender {
-//    [RobotSqlManager GetVideoListWithPage:0 Success:^(id responseObject) {
-//        
-//        
-//        if (self.videoPathArray.count>0) {
-//            [self.videoPathArray removeAllObjects];
-//        }
-//        [self.videoPathArray addObjectsFromArray: [responseObject objectForKey:@"Data"]];
-//        NSLog(@" shipin %@",self.videoPathArray);
-//        Video *model = [self.videoPathArray objectAtIndex:0];
-//        _videoPathUrl = [NSURL fileURLWithPath:[SqlManager GetVideoPathWithNameKey:model.NameKey]];
-//    } Failure:^(NSError *error) {
-//        NSLog(@"error %@",error);
-//    }];
-//    
-//    
-//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"视频地址"
-//                                                                             message:[NSString stringWithFormat:@"%@",_videoPathUrl]
-//                                                                      preferredStyle:UIAlertControllerStyleAlert ];
-//    
-//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil];
-//    [alertController addAction:cancelAction];
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self presentViewController:alertController animated:YES completion:nil];
-//    });
-//    
-//}
-//
+
 
 
 - (IBAction)FrontPageClicked:(id)sender {
@@ -230,7 +230,7 @@ static int interval_Board = 10;
 
 //截图
 - (IBAction)ScreenshotsClicked:(id)sender {
-    UIImage *image = [self.WhiteBoardView saveSnapshot];
+    [self.WhiteBoardView saveSnapshot];
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"图片地址"
                                                                              message:[NSString stringWithFormat:@"已保存到相册"]
                                                                       preferredStyle:UIAlertControllerStyleAlert ];
@@ -359,31 +359,28 @@ static int interval_Board = 10;
     
     [self.WhiteBoardView setDeviceType: DeviceTypes];
     [self.WhiteBoardView setIsHorizontal:isHorizontal];
-    
     [self.WhiteBoardView setDrawAreaFrame:CGRectMake(interval_Board , interval_Board , self.WBBView.frame.size.width - 2 * interval_Board,self.WBBView.frame.size.height - 2 * interval_Board)];
-    
-    
     [self.WhiteBoardView RefreshAll];
     
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    //笔服务
     [[RobotPenManager sharePenManager] setPenDelegate:self];
     PenDevice *device = [[RobotPenManager sharePenManager] getConnectDevice];
     DeviceTypes = device.deviceType;
+    //数据库
     [RobotSqlManager checkRobotSqlManager];
     if (![RobotSqlManager checkNoteWithNoteKey:@"WBMicro"]) {
         [self BuildTempNote];
     }
+    
+    //白板
     _NoteKey = @"WBMicro";
     _NoteTitle = @"录制白板";
     _PenColor = [UIColor redColor];
     _PenWidth = 1;
     [self.WhiteBoardView SetDrawType:0];
-    
-    
-    
-    
     [self setWB];
     
     
