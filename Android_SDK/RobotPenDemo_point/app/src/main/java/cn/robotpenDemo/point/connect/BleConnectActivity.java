@@ -31,6 +31,7 @@ import com.codingmaster.slib.S;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
@@ -69,7 +70,7 @@ public class BleConnectActivity extends RobotPenActivity {
 
 
     private PenAdapter mPenAdapter;
-    SharedPreferences lastSp;
+    //    SharedPreferences lastSp;
     SharedPreferences pairedSp;
     ProgressDialog mProgressDialog;
     RobotDevice mRobotDevice;//连接上的设备
@@ -99,6 +100,8 @@ public class BleConnectActivity extends RobotPenActivity {
      * 当有扫描结果时的回调
      */
     RobotScannerCompat robotScannerCompat;
+    RobotScanCallback scanCallback;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +110,7 @@ public class BleConnectActivity extends RobotPenActivity {
         ButterKnife.bind(this);
         mPenAdapter = new PenAdapter(BleConnectActivity.this);
         //获取存储存储
-        lastSp = this.getSharedPreferences(SP_LAST_PAIRED, MODE_PRIVATE);
+//        lastSp = this.getSharedPreferences(SP_LAST_PAIRED, MODE_PRIVATE);
         pairedSp = this.getSharedPreferences(SP_PAIRED_DEVICE, MODE_PRIVATE);
 
         listview.setAdapter(mPenAdapter);
@@ -129,26 +132,22 @@ public class BleConnectActivity extends RobotPenActivity {
                 }
             }
         });
-        robotScannerCompat = new RobotScannerCompat(new RobotScanCallback() {
-            @Override
-            public void onResult(BluetoothDevice bluetoothDevice, int i, boolean b) {
-                S.i("--" + bluetoothDevice.toString());
-                DeviceEntity device = new DeviceEntity(bluetoothDevice);
-                mPenAdapter.addItem(device);
-                mPenAdapter.notifyDataSetChanged();
-            }
+        scanCallback = new MyScanCallback(this);
+        robotScannerCompat = new RobotScannerCompat(scanCallback);
+    }
 
-            @Override
-            public void onFailed(int i) {
-                S.i(i);
-            }
-        });
+    public void addRobotDevice2list(BluetoothDevice bluetoothDevice) {
+        DeviceEntity device = new DeviceEntity(bluetoothDevice);
+        mPenAdapter.addItem(device);
+        mPenAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         stopScan();
+        robotScannerCompat = null;
+        scanCallback = null;
+        super.onDestroy();
     }
 
     @OnClick({R.id.scanBut, R.id.disconnectBut, R.id.deviceSync, R.id.deviceUpdate})
@@ -252,12 +251,12 @@ public class BleConnectActivity extends RobotPenActivity {
                 }
             } else {
                 //获取上次连接设备
-                if (!pairedSp.getString(SP_PAIRED_KEY, "").isEmpty()) {
-                    //已经连接过蓝牙设备 从pairedSp中获取
-                    String laseDeviceAddress = pairedSp.getString(SP_PAIRED_KEY, "");
-                    getPenService().connectDevice(laseDeviceAddress);
-                    showProgress("正在检测上次连接的设备");
-                }
+//                if (!pairedSp.getString(SP_PAIRED_KEY, "").isEmpty()) {
+//                    //已经连接过蓝牙设备 从pairedSp中获取
+//                    String laseDeviceAddress = pairedSp.getString(SP_PAIRED_KEY, "");
+//                    getPenService().connectDevice(laseDeviceAddress);
+//                    showProgress("正在检测上次连接的设备");
+//                }
             }
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -288,14 +287,14 @@ public class BleConnectActivity extends RobotPenActivity {
      * @param addr
      */
     private void saveConnectInfo(RobotDevice device, String name, String addr) {
-        SharedPreferences.Editor edit = lastSp.edit().clear();
+//        SharedPreferences.Editor edit = lastSp.edit().clear();
         if (!TextUtils.isEmpty(addr)) {
             pairedSp.edit()
                     .putString(SP_PAIRED_KEY, addr)
                     .apply();
-            edit.putString(String.valueOf(device.getDeviceType()), addr);
+//            edit.putString(String.valueOf(device.getDeviceType()), addr);
         }
-        edit.apply();
+//        edit.apply();
     }
     /**--------------
      * 笔迹同步部分
@@ -571,5 +570,23 @@ public class BleConnectActivity extends RobotPenActivity {
     @Override
     public void onPenServiceError(String s) {
 
+    }
+
+    static class MyScanCallback extends RobotScanCallback {
+        BleConnectActivity act;
+
+        public MyScanCallback(BleConnectActivity a) {
+            act = new WeakReference<>(a).get();
+        }
+
+        @Override
+        public void onResult(BluetoothDevice bluetoothDevice, int i, boolean b) {
+            act.addRobotDevice2list(bluetoothDevice);
+        }
+
+        @Override
+        public void onFailed(int i) {
+
+        }
     }
 }
