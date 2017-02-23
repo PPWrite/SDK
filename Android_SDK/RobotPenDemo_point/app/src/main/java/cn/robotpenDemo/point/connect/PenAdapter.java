@@ -39,7 +39,7 @@ public class PenAdapter extends BaseAdapter {
 
     public void addItem(DeviceEntity item) {
         String macAddr = item.getAddress();
-        if (dataCache.get(macAddr) != null) {
+        if (dataCache.get(macAddr) == null) {
             mPenDevices.add(item);
             notifyDataSetChanged();
         }
@@ -58,7 +58,7 @@ public class PenAdapter extends BaseAdapter {
         if (convertView != null) {
             pageItem = (PageItem) convertView.getTag();
         } else {
-            convertView = LayoutInflater.from(convertView.getContext()).inflate(R.layout.pen_adapter_item, null);
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.pen_adapter_item, null);
             pageItem = new PageItem(convertView);
             convertView.setTag(pageItem);
         }

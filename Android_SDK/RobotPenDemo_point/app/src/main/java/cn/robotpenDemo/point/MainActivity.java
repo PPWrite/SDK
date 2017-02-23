@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.codingmaster.slib.S;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.robotpen.model.DevicePoint;
@@ -47,6 +49,7 @@ public class MainActivity extends RobotPenActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        S.init(true,1,"PP_WRITER");
         //屏幕常亮控制
         MainActivity.this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mHandler = new Handler();

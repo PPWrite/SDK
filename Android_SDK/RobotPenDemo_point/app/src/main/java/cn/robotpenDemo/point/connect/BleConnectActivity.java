@@ -5,20 +5,15 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanSettings;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.ParcelUuid;
 import android.os.RemoteException;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -31,13 +26,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codingmaster.slib.S;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -49,6 +44,7 @@ import cn.robotpen.pen.callback.RobotPenActivity;
 import cn.robotpen.pen.model.RemoteState;
 import cn.robotpen.pen.model.RobotDevice;
 import cn.robotpen.pen.scan.RobotScanCallback;
+import cn.robotpen.pen.scan.RobotScannerCompat;
 import cn.robotpenDemo.point.R;
 
 
@@ -75,7 +71,6 @@ public class BleConnectActivity extends RobotPenActivity {
     private PenAdapter mPenAdapter;
     SharedPreferences lastSp;
     SharedPreferences pairedSp;
-    BluetoothAdapter mBluetoothAdapter;
     ProgressDialog mProgressDialog;
     RobotDevice mRobotDevice;//连接上的设备
     String mNewVersion; //从网络获取的最新版本号
@@ -100,6 +95,10 @@ public class BleConnectActivity extends RobotPenActivity {
     public static final int FAILURE = 2;
     public static final int UPDATESUCCESS = 3;
     public static final int UPDATEFAILURE = 4;
+    /**
+     * 当有扫描结果时的回调
+     */
+    RobotScannerCompat robotScannerCompat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +106,6 @@ public class BleConnectActivity extends RobotPenActivity {
         setContentView(R.layout.activity_ble_connect);
         ButterKnife.bind(this);
         mPenAdapter = new PenAdapter(BleConnectActivity.this);
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         //获取存储存储
         lastSp = this.getSharedPreferences(SP_LAST_PAIRED, MODE_PRIVATE);
         pairedSp = this.getSharedPreferences(SP_PAIRED_DEVICE, MODE_PRIVATE);
@@ -129,6 +127,20 @@ public class BleConnectActivity extends RobotPenActivity {
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        robotScannerCompat = new RobotScannerCompat(new RobotScanCallback() {
+            @Override
+            public void onResult(BluetoothDevice bluetoothDevice, int i, boolean b) {
+                S.i("--" + bluetoothDevice.toString());
+                DeviceEntity device = new DeviceEntity(bluetoothDevice);
+                mPenAdapter.addItem(device);
+                mPenAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailed(int i) {
+                S.i(i);
             }
         });
     }
@@ -173,8 +185,6 @@ public class BleConnectActivity extends RobotPenActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 0xb) {
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            //checkPermission();
         }
     }
 
@@ -194,6 +204,7 @@ public class BleConnectActivity extends RobotPenActivity {
      * ACCESS_COARSE_LOCATION 必须校验
      */
     public void checkPermission() {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, "对不起，您的设备不支持蓝牙,即将退出", Toast.LENGTH_SHORT).show();
             finish();
@@ -206,6 +217,7 @@ public class BleConnectActivity extends RobotPenActivity {
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mPenAdapter.clearItems();
             mPenAdapter.notifyDataSetChanged();
+            S.i("");
             startScan();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
@@ -217,6 +229,7 @@ public class BleConnectActivity extends RobotPenActivity {
      */
     public void onServiceConnected(ComponentName name, IBinder service) {
         super.onServiceConnected(name, service);
+        S.i("");
         checkDevice();//检测设备如果连接过则自动连接
     }
 
@@ -251,62 +264,20 @@ public class BleConnectActivity extends RobotPenActivity {
         }
     }
 
-    /**
-     * 当有扫描结果时的回调
-     */
-    RobotScanCallback robotScanCallback = new RobotScanCallback() {
-        @Override
-        public void onResult(BluetoothDevice bluetoothDevice, int i, boolean b) {
-            DeviceEntity device = new DeviceEntity(bluetoothDevice);
-            mPenAdapter.addItem(device);
-            mPenAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void onFailed(int i) {
-
-        }
-    };
 
     /**
      * 开始扫描Ble设备--带过滤
      */
     public void startScan() {
-        Object callback = robotScanCallback.getScanCallback();
-        if (callback == null) {
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ScanSettings settings = new ScanSettings.Builder()
-                    .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                    .build();
-            List<ScanFilter> filters = new ArrayList<>();
-            ScanFilter filter = new ScanFilter.Builder()
-                    .setServiceUuid(new ParcelUuid(SERVICE_UUID))
-                    .build();
-            filters.add(filter);
-            mBluetoothAdapter.getBluetoothLeScanner()
-                    .startScan(filters, settings, (ScanCallback) callback);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            mBluetoothAdapter.startLeScan(
-                    null,//new UUID[]{SERVICE_UUID},
-                    (BluetoothAdapter.LeScanCallback) callback);
-        }
+        S.i("");
+        robotScannerCompat.startScan();
     }
 
     /**
      * 停止扫描Ble设备
      */
     public void stopScan() {
-        Object callback = robotScanCallback.getScanCallback();
-        if (callback == null) {
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mBluetoothAdapter.getBluetoothLeScanner().stopScan((ScanCallback) callback);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            mBluetoothAdapter.stopLeScan((BluetoothAdapter.LeScanCallback) callback);
-        }
+        robotScannerCompat.stopScan();
     }
 
     /**
