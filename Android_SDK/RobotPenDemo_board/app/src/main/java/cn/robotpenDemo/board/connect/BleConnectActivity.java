@@ -339,7 +339,7 @@ public class BleConnectActivity extends BaseConnectPenServiceActivity<RemoteCall
     /**
      * 当有扫描结果时的回调
      */
-    RobotScanCallback robotScanCallback = new RobotScanCallback(this) {
+    RobotScanCallback robotScanCallback = new RobotScanCallback() {
         @Override
         public void onResult(BluetoothDevice bluetoothDevice, int i, boolean b) {
             DeviceEntity device = new DeviceEntity(bluetoothDevice);
