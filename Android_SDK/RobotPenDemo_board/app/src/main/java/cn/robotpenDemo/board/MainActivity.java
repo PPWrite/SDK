@@ -17,13 +17,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.robotpen.pen.callback.RobotPenActivity;
 import cn.robotpenDemo.board.common.ResUtils;
 import cn.robotpenDemo.board.connect.BleConnectActivity;
 import cn.robotpenDemo.board.show.RecordBoardActivity;
 import cn.robotpenDemo.board.show.WhiteBoardActivity;
 import cn.robotpenDemo.board.show.WhiteBoardWithMethodActivity;
 
-public class MainActivity extends Activity {
+public class MainActivity extends RobotPenActivity {
+
     @BindView(R.id.list)
     ListView list;
     @BindView(R.id.ble_Button)
@@ -84,4 +86,15 @@ public class MainActivity extends Activity {
             }
         }
     };
+
+    @Override
+    public void onStateChanged(int i, String s) {
+
+    }
+
+    @Override
+    public void onPenServiceError(String s) {
+
+    }
+
 }

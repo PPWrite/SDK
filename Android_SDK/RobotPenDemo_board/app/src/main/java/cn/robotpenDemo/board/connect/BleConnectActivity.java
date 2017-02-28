@@ -46,6 +46,7 @@ import butterknife.OnClick;
 import cn.robotpen.model.entity.DeviceEntity;
 import cn.robotpen.model.symbol.DeviceType;
 import cn.robotpen.pen.callback.RemoteCallback;
+import cn.robotpen.pen.callback.RobotPenActivity;
 import cn.robotpen.pen.model.RemoteState;
 import cn.robotpen.pen.model.RobotDevice;
 import cn.robotpen.pen.scan.RobotScanCallback;
@@ -53,7 +54,8 @@ import cn.robotpenDemo.board.R;
 import cn.robotpenDemo.board.common.BaseConnectPenServiceActivity;
 
 
-public class BleConnectActivity extends BaseConnectPenServiceActivity<RemoteCallback> {
+public class BleConnectActivity extends RobotPenActivity{
+
 
     private final UUID SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
 
@@ -177,100 +179,6 @@ public class BleConnectActivity extends BaseConnectPenServiceActivity<RemoteCall
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             //checkPermission();
         }
-    }
-
-    @Override
-    protected RemoteCallback initPenServiceCallback() {
-        /**
-         * 如果没有升级需求的话 也可以通过 RemoteConnectionCallback 来获取设备的各种状态变化
-         */
-        return new RemoteCallback(this) {
-            @Override
-            public void onStateChanged(int i, String address) {
-                switch (i) {
-                    case RemoteState.STATE_CONNECTED:
-                        break;
-                    case RemoteState.STATE_CONNECTING:
-                        break;
-                    case RemoteState.STATE_DISCONNECTED: //设备断开
-                        closeProgress();
-                        statusText.setText("未连接设备！");
-                        scanBut.setVisibility(View.VISIBLE);
-                        disconnectBut.setVisibility(View.GONE);
-                        break;
-                    case RemoteState.STATE_DEVICE_INFO: //设备连接成功状态
-                        try {
-                            RobotDevice robotDevice = robotService.getConnectedDevice();
-                            if (null != robotDevice) {
-                                closeProgress();
-                                mRobotDevice = robotDevice;
-                                if (robotDevice.getDeviceVersion() > 0) {//针对固件bug进行解决 STATE_DEVICE_INFO 返回两次首次无设备信息第二次会上报设备信息
-                                    statusText.setText("已连接设备: " + robotDevice.getProductName());
-                                    if (robotDevice.getDeviceVersion() == DeviceType.P1.getValue()) { //如果连接上的是usb设备
-                                        Toast.makeText(BleConnectActivity.this, "请先断开USB设备再进行蓝牙设备连接", Toast.LENGTH_SHORT).show();
-                                        scanBut.setVisibility(View.GONE);
-                                        disconnectBut.setVisibility(View.GONE);
-                                    } else {//如果连接的是蓝牙设备
-                                        saveConnectInfo(robotDevice, robotDevice.getName(), robotDevice.getAddress());
-                                        scanBut.setVisibility(View.GONE);
-                                        disconnectBut.setVisibility(View.VISIBLE);
-                                        //如果有离线笔记则同步离线笔记
-                                        //checkStorageNoteNum(robotDevice);
-                                        if(robotDevice.getOfflineNoteNum()>0){
-                                            deviceSync.setVisibility(View.VISIBLE);
-                                        }else
-                                            deviceSync.setVisibility(View.GONE);
-                                        //进行版本升级
-                                        checkDeviceVersion(robotDevice);
-                                    }
-                                }
-                            }
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    case RemoteState.STATE_ENTER_SYNC_MODE_SUCCESS://笔记同步成功
-                        deviceSync.setVisibility(View.GONE);
-                        Toast.makeText(BleConnectActivity.this, "笔记同步成功", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-
-            }
-            @Override
-            public void onOffLineNoteHeadReceived(String s) {
-
-            }
-            @Override
-            public void onSyncProgress(String s, int i, int i1) {
-
-            }
-            @Override
-            public void onOffLineNoteSyncFinished(String s, byte[] bytes) {
-
-            }
-            @Override
-            public void onPenServiceError(String s) {
-
-            }
-            @Override
-            public void onPenPositionChanged(int i, int i1, int i2, int i3, byte b) {
-
-            }
-            @Override
-            public void onRobotKeyEvent(int i) {
-
-            }
-            @Override
-            public void onUpdateFirmwareFinished() {
-                deviceUpdate.setVisibility(View.GONE);
-                Toast.makeText(BleConnectActivity.this, "固件升级完毕", Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onUpdateFirmwareProgress(int i, int i1) {
-            }
-        };
     }
 
     /**--------------
@@ -623,5 +531,62 @@ public class BleConnectActivity extends BaseConnectPenServiceActivity<RemoteCall
                 mProgressDialog.dismiss();
             mProgressDialog = null;
         }
+    }
+
+    @Override
+    public void onStateChanged(int i, String s) {
+        switch (i) {
+            case RemoteState.STATE_CONNECTED:
+                break;
+            case RemoteState.STATE_CONNECTING:
+                break;
+            case RemoteState.STATE_DISCONNECTED: //设备断开
+                closeProgress();
+                statusText.setText("未连接设备！");
+                scanBut.setVisibility(View.VISIBLE);
+                disconnectBut.setVisibility(View.GONE);
+                break;
+            case RemoteState.STATE_DEVICE_INFO: //设备连接成功状态
+                try {
+                    RobotDevice robotDevice = robotService.getConnectedDevice();
+                    if (null != robotDevice) {
+                        closeProgress();
+                        mRobotDevice = robotDevice;
+                        if (robotDevice.getDeviceVersion() > 0) {//针对固件bug进行解决 STATE_DEVICE_INFO 返回两次首次无设备信息第二次会上报设备信息
+                            statusText.setText("已连接设备: " + robotDevice.getProductName());
+                            if (robotDevice.getDeviceVersion() == DeviceType.P1.getValue()) { //如果连接上的是usb设备
+                                Toast.makeText(BleConnectActivity.this, "请先断开USB设备再进行蓝牙设备连接", Toast.LENGTH_SHORT).show();
+                                scanBut.setVisibility(View.GONE);
+                                disconnectBut.setVisibility(View.GONE);
+                            } else {//如果连接的是蓝牙设备
+                                saveConnectInfo(robotDevice, robotDevice.getName(), robotDevice.getAddress());
+                                scanBut.setVisibility(View.GONE);
+                                disconnectBut.setVisibility(View.VISIBLE);
+                                //如果有离线笔记则同步离线笔记
+                                //checkStorageNoteNum(robotDevice);
+                                if(robotDevice.getOfflineNoteNum()>0){
+                                    deviceSync.setVisibility(View.VISIBLE);
+                                }else
+                                    deviceSync.setVisibility(View.GONE);
+                                //进行版本升级
+                                checkDeviceVersion(robotDevice);
+                            }
+                        }
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case RemoteState.STATE_ENTER_SYNC_MODE_SUCCESS://笔记同步成功
+                deviceSync.setVisibility(View.GONE);
+                Toast.makeText(BleConnectActivity.this, "笔记同步成功", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+    }
+
+    @Override
+    public void onPenServiceError(String s) {
+
     }
 }

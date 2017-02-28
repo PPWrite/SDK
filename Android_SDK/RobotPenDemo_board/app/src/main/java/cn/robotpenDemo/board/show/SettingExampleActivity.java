@@ -27,6 +27,7 @@ import cn.robotpen.model.entity.note.NoteEntity;
 import cn.robotpen.model.symbol.DeviceType;
 import cn.robotpen.model.symbol.RecordState;
 import cn.robotpen.pen.callback.PenPositionAndEventCallback;
+import cn.robotpen.pen.callback.RobotPenActivity;
 import cn.robotpen.pen.model.RemoteState;
 import cn.robotpen.pen.model.RobotDevice;
 import cn.robotpenDemo.board.MyApplication;
@@ -34,7 +35,7 @@ import cn.robotpenDemo.board.R;
 import cn.robotpenDemo.board.common.BaseConnectPenServiceActivity;
 import cn.robotpenDemo.board.common.ResUtils;
 
-public class SettingExampleActivity extends BaseConnectPenServiceActivity<PenPositionAndEventCallback>
+public class SettingExampleActivity extends RobotPenActivity
         implements WhiteBoardView.CanvasManageInterface,
         RecordBoardView.RecordManageListener {
 
@@ -235,42 +236,6 @@ public class SettingExampleActivity extends BaseConnectPenServiceActivity<PenPos
     }
 
 
-    /**
-     * 服务连接成功后需要注册的信息
-     *
-     * @return
-     */
-    @Override
-    protected PenPositionAndEventCallback initPenServiceCallback() {
-        return new PenPositionAndEventCallback(this) {
-            @Override
-            public void onStateChanged(int i, String s) {
-                switch (i) {
-                    case RemoteState.STATE_CONNECTED:
-                        break;
-                    case RemoteState.STATE_DEVICE_INFO: //当出现设备切换时获取到新设备信息后执行的
-                        //whiteBoardView.initDrawArea();
-                        checkDeviceConn();
-                        //checkScene();
-                        break;
-                    case RemoteState.STATE_DISCONNECTED://设备断开
-                        break;
-                }
-            }
-
-            @Override
-            public void onPenPositionChanged(int deviceType, int x, int y, int presure, byte state) {
-                DevicePoint p = DevicePoint.obtain(deviceType, x, y, presure, state);
-                recordBoardView.drawLine(p);//白板的绘制必须手动执行
-            }
-
-            @Override
-            public void onRobotKeyEvent(int i) {
-
-            }
-        };
-    }
-
     @Override
     public DeviceType getDeviceType() {
         return mDeDeviceType;
@@ -390,5 +355,31 @@ public class SettingExampleActivity extends BaseConnectPenServiceActivity<PenPos
     @Override
     public boolean onRecordTimeChange(Date date) {
         return false;
+    }
+
+    @Override
+    public void onStateChanged(int i, String s) {
+        switch (i) {
+            case RemoteState.STATE_CONNECTED:
+                break;
+            case RemoteState.STATE_DEVICE_INFO: //当出现设备切换时获取到新设备信息后执行的
+                //whiteBoardView.initDrawArea();
+                checkDeviceConn();
+                break;
+            case RemoteState.STATE_DISCONNECTED://设备断开
+                break;
+        }
+    }
+
+    @Override
+    public void onPenServiceError(String s) {
+
+    }
+
+    @Override
+    public void onPenPositionChanged(int deviceType, int x, int y, int presure, byte state) {
+        super.onPenPositionChanged(deviceType, x, y, presure, state);
+        DevicePoint p = DevicePoint.obtain(deviceType, x, y, presure, state);
+        recordBoardView.drawLine(p);
     }
 }
