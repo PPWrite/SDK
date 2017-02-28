@@ -120,7 +120,7 @@ public class SettingExampleActivity extends BaseConnectPenServiceActivity<PenPos
             try {
                 RobotDevice device = robotService.getConnectedDevice();
                 if (device != null) {
-                    DeviceType type = DeviceType.toDeviceType(device.getDeviceType());
+                    DeviceType type = DeviceType.toDeviceType(device.getDeviceVersion());
                     //判断当前设备与笔记设备是否一致
                     if (recordBoardView.getFrameSizeObject().getDeviceType() != type) {
                         mDeDeviceType = type;

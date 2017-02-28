@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.ActivityCompat;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import cn.robotpen.model.db.DBConfig;
 import cn.robotpen.model.db.DaoMaster;
 import cn.robotpen.model.db.DaoSession;
@@ -29,6 +31,12 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+/*
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+                       return;
+        }
+        LeakCanary.install(this);*/
+
         instance = this;
         robotPenService = new RobotPenServiceImpl(this.getBaseContext());
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED

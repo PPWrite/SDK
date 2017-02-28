@@ -183,6 +183,6 @@
             android:layout_marginTop="2dp"
             android:layout_marginLeft="2dp"
             android:clickable="false"
-            android:text="上一页" />
+            android:text="下一页" />
     </LinearLayout>
 </RelativeLayout>

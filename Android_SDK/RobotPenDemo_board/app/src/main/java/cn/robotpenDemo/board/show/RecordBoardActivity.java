@@ -136,7 +136,7 @@ public class RecordBoardActivity extends BaseConnectPenServiceActivity<PenPositi
             try {
                 RobotDevice device = robotService.getConnectedDevice();
                 if (device != null) {
-                    DeviceType type = DeviceType.toDeviceType(device.getDeviceType());
+                    DeviceType type = DeviceType.toDeviceType(device.getDeviceVersion());
                     //判断当前设备与笔记设备是否一致
                     if (recordBoardView.getFrameSizeObject().getDeviceType() != type) {
                         mDeDeviceType = type;
@@ -228,11 +228,13 @@ public class RecordBoardActivity extends BaseConnectPenServiceActivity<PenPositi
                 }
                 break;
             case R.id.recordStopBut:
-                butFlag = 0;// 可以暂停
-                recordBut.setText("录制");
-                v.setBackgroundColor(Color.GRAY);
-                ((Button) v).setClickable(false);
-                recordBoardView.endRecord();
+                if(butFlag==1||butFlag==2) {// 防止直接点击崩溃
+                    butFlag = 0;// 可以暂停
+                    recordBut.setText("录制");
+                    v.setBackgroundColor(Color.GRAY);
+                    ((Button) v).setClickable(false);
+                    recordBoardView.endRecord();
+                }
                 break;
         }
     }

@@ -1,5 +1,6 @@
 package cn.robotpenDemo.board.show;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.graphics.Color;
@@ -9,6 +10,8 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.view.View;
 import android.widget.Button;
+
+import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +43,7 @@ public class WhiteBoardActivity extends BaseConnectPenServiceActivity<PenPositio
     String mNoteKey = NoteEntity.KEY_NOTEKEY_TMP;
     ProgressDialog mProgressDialog;
     Handler mHandler;
-
+    private WeakReference<Activity> weakReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +84,7 @@ public class WhiteBoardActivity extends BaseConnectPenServiceActivity<PenPositio
             try {
                 RobotDevice device = robotService.getConnectedDevice();
                 if (device != null) {
-                    DeviceType type = DeviceType.toDeviceType(device.getDeviceType());
+                    DeviceType type = DeviceType.toDeviceType(device.getDeviceVersion());
                     //判断当前设备与笔记设备是否一致
                     if (whiteBoardView.getFrameSizeObject().getDeviceType() != type) {
                         mDeDeviceType = type;
@@ -103,12 +106,14 @@ public class WhiteBoardActivity extends BaseConnectPenServiceActivity<PenPositio
                 break;
         }
     }
+
+
     /**
      * 服务连接成功后需要注册的信息
      * @return
      */
     @Override
-    protected PenPositionAndEventCallback initPenServiceCallback() {
+    protected PenPositionAndEventCallback initPenServiceCallback(){
         return new PenPositionAndEventCallback(this) {
             @Override
             public void onStateChanged(int i, String s) {

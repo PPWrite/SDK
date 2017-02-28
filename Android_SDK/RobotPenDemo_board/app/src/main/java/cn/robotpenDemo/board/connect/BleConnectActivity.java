@@ -204,9 +204,9 @@ public class BleConnectActivity extends BaseConnectPenServiceActivity<RemoteCall
                             if (null != robotDevice) {
                                 closeProgress();
                                 mRobotDevice = robotDevice;
-                                if (robotDevice.getDeviceType() > 0) {//针对固件bug进行解决 STATE_DEVICE_INFO 返回两次首次无设备信息第二次会上报设备信息
+                                if (robotDevice.getDeviceVersion() > 0) {//针对固件bug进行解决 STATE_DEVICE_INFO 返回两次首次无设备信息第二次会上报设备信息
                                     statusText.setText("已连接设备: " + robotDevice.getProductName());
-                                    if (robotDevice.getDeviceType() == DeviceType.P1.getValue()) { //如果连接上的是usb设备
+                                    if (robotDevice.getDeviceVersion() == DeviceType.P1.getValue()) { //如果连接上的是usb设备
                                         Toast.makeText(BleConnectActivity.this, "请先断开USB设备再进行蓝牙设备连接", Toast.LENGTH_SHORT).show();
                                         scanBut.setVisibility(View.GONE);
                                         disconnectBut.setVisibility(View.GONE);
@@ -316,7 +316,7 @@ public class BleConnectActivity extends BaseConnectPenServiceActivity<RemoteCall
             RobotDevice robotDevice = robotService.getConnectedDevice(); //获取目前连接的设备
             if (robotDevice != null) {//已连接设备
                 statusText.setText("已连接设备: " + robotDevice.getProductName());
-                if (robotDevice.getDeviceType() == DeviceType.P1.getValue()) { //已连接设备
+                if (robotDevice.getDeviceVersion() == DeviceType.P1.getValue()) { //已连接设备
                     Toast.makeText(this, "请先断开USB设备再进行蓝牙设备连接", Toast.LENGTH_SHORT).show();
                     scanBut.setVisibility(View.GONE);
                 } else {
@@ -405,7 +405,7 @@ public class BleConnectActivity extends BaseConnectPenServiceActivity<RemoteCall
             pairedSp.edit()
                     .putString(SP_PAIRED_KEY, addr)
                     .apply();
-            edit.putString(String.valueOf(device.getDeviceType()), addr);
+            edit.putString(String.valueOf(device.getDeviceVersion()), addr);
         }
         edit.apply();
     }
