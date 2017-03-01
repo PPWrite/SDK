@@ -27,6 +27,7 @@ import cn.robotpen.model.entity.note.NoteEntity;
 import cn.robotpen.model.symbol.DeviceType;
 import cn.robotpen.model.symbol.RecordState;
 import cn.robotpen.pen.callback.PenPositionAndEventCallback;
+import cn.robotpen.pen.callback.RobotPenActivity;
 import cn.robotpen.pen.model.RemoteState;
 import cn.robotpen.pen.model.RobotDevice;
 import cn.robotpenDemo.board.MyApplication;
@@ -34,7 +35,9 @@ import cn.robotpenDemo.board.R;
 import cn.robotpenDemo.board.common.BaseConnectPenServiceActivity;
 import cn.robotpenDemo.board.common.ResUtils;
 
-public class RecordBoardActivity extends BaseConnectPenServiceActivity<PenPositionAndEventCallback>
+import static cn.robotpenDemo.board.R.id.whiteBoardView;
+
+public class RecordBoardActivity extends RobotPenActivity
         implements WhiteBoardView.CanvasManageInterface,
         RecordBoardView.RecordManageListener {
 
@@ -136,7 +139,7 @@ public class RecordBoardActivity extends BaseConnectPenServiceActivity<PenPositi
             try {
                 RobotDevice device = robotService.getConnectedDevice();
                 if (device != null) {
-                    DeviceType type = DeviceType.toDeviceType(device.getDeviceType());
+                    DeviceType type = DeviceType.toDeviceType(device.getDeviceVersion());
                     //判断当前设备与笔记设备是否一致
                     if (recordBoardView.getFrameSizeObject().getDeviceType() != type) {
                         mDeDeviceType = type;
@@ -228,50 +231,17 @@ public class RecordBoardActivity extends BaseConnectPenServiceActivity<PenPositi
                 }
                 break;
             case R.id.recordStopBut:
-                butFlag = 0;// 可以暂停
-                recordBut.setText("录制");
-                v.setBackgroundColor(Color.GRAY);
-                ((Button) v).setClickable(false);
-                recordBoardView.endRecord();
+                if(butFlag==1||butFlag==2) {// 防止直接点击崩溃
+                    butFlag = 0;// 可以暂停
+                    recordBut.setText("录制");
+                    v.setBackgroundColor(Color.GRAY);
+                    ((Button) v).setClickable(false);
+                    recordBoardView.endRecord();
+                }
                 break;
         }
     }
 
-
-    /**
-     * 服务连接成功后需要注册的信息
-     *
-     * @return
-     */
-    @Override
-    protected PenPositionAndEventCallback initPenServiceCallback() {
-        return new PenPositionAndEventCallback(this) {
-            @Override
-            public void onStateChanged(int i, String s) {
-                switch (i) {
-                    case RemoteState.STATE_CONNECTED:
-                        break;
-                    case RemoteState.STATE_DEVICE_INFO: //当出现设备切换时获取到新设备信息后执行的
-                        //whiteBoardView.initDrawArea();
-                        checkDeviceConn();
-                        break;
-                    case RemoteState.STATE_DISCONNECTED://设备断开
-                        break;
-                }
-            }
-
-            @Override
-            public void onPenPositionChanged(int deviceType, int x, int y, int presure, byte state) {
-                DevicePoint p = DevicePoint.obtain(deviceType, x, y, presure, state);
-                recordBoardView.drawLine(p);//白板的绘制必须手动执行
-            }
-
-            @Override
-            public void onRobotKeyEvent(int i) {
-
-            }
-        };
-    }
 
     @Override
     public DeviceType getDeviceType() {
@@ -393,4 +363,31 @@ public class RecordBoardActivity extends BaseConnectPenServiceActivity<PenPositi
     public boolean onRecordTimeChange(Date date) {
         return false;
     }
+
+    @Override
+    public void onStateChanged(int i, String s) {
+        switch (i) {
+            case RemoteState.STATE_CONNECTED:
+                break;
+            case RemoteState.STATE_DEVICE_INFO: //当出现设备切换时获取到新设备信息后执行的
+                //whiteBoardView.initDrawArea();
+                checkDeviceConn();
+                break;
+            case RemoteState.STATE_DISCONNECTED://设备断开
+                break;
+        }
+    }
+
+    @Override
+    public void onPenServiceError(String s) {
+
+    }
+
+    @Override
+    public void onPenPositionChanged(int deviceType, int x, int y, int presure, byte state) {
+        super.onPenPositionChanged(deviceType, x, y, presure, state);
+        DevicePoint p = DevicePoint.obtain(deviceType, x, y, presure, state);
+        recordBoardView.drawLine(p);
+    }
+
 }

@@ -1,5 +1,6 @@
 package cn.robotpenDemo.board.show;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.graphics.Color;
@@ -10,6 +11,8 @@ import android.os.RemoteException;
 import android.view.View;
 import android.widget.Button;
 
+import java.lang.ref.WeakReference;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -18,14 +21,15 @@ import cn.robotpen.model.DevicePoint;
 import cn.robotpen.model.entity.note.NoteEntity;
 import cn.robotpen.model.symbol.DeviceType;
 import cn.robotpen.pen.callback.PenPositionAndEventCallback;
+import cn.robotpen.pen.callback.RobotPenActivity;
 import cn.robotpen.pen.model.RemoteState;
 import cn.robotpen.pen.model.RobotDevice;
 import cn.robotpenDemo.board.MyApplication;
 import cn.robotpenDemo.board.R;
 import cn.robotpenDemo.board.common.BaseConnectPenServiceActivity;
 
-public class WhiteBoardActivity extends BaseConnectPenServiceActivity<PenPositionAndEventCallback>
-        implements WhiteBoardView.CanvasManageInterface {
+public class WhiteBoardActivity extends RobotPenActivity
+        implements WhiteBoardView.CanvasManageInterface {//BaseConnectPenServiceActivity<PenPositionAndEventCallback>
 
     @BindView(R.id.clearnScreen)
     Button clearnScreen;
@@ -40,7 +44,7 @@ public class WhiteBoardActivity extends BaseConnectPenServiceActivity<PenPositio
     String mNoteKey = NoteEntity.KEY_NOTEKEY_TMP;
     ProgressDialog mProgressDialog;
     Handler mHandler;
-
+    private WeakReference<Activity> weakReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +85,7 @@ public class WhiteBoardActivity extends BaseConnectPenServiceActivity<PenPositio
             try {
                 RobotDevice device = robotService.getConnectedDevice();
                 if (device != null) {
-                    DeviceType type = DeviceType.toDeviceType(device.getDeviceType());
+                    DeviceType type = DeviceType.toDeviceType(device.getDeviceVersion());
                     //判断当前设备与笔记设备是否一致
                     if (whiteBoardView.getFrameSizeObject().getDeviceType() != type) {
                         mDeDeviceType = type;
@@ -103,38 +107,7 @@ public class WhiteBoardActivity extends BaseConnectPenServiceActivity<PenPositio
                 break;
         }
     }
-    /**
-     * 服务连接成功后需要注册的信息
-     * @return
-     */
-    @Override
-    protected PenPositionAndEventCallback initPenServiceCallback() {
-        return new PenPositionAndEventCallback(this) {
-            @Override
-            public void onStateChanged(int i, String s) {
-                switch (i) {
-                    case RemoteState.STATE_CONNECTED:
-                        break;
-                    case RemoteState.STATE_DEVICE_INFO: //当出现设备切换时获取到新设备信息后执行的
-                        //whiteBoardView.initDrawArea();
-                        checkDeviceConn();
-                        break;
-                    case RemoteState.STATE_DISCONNECTED://设备断开
-                        break;
-                }
-            }
 
-            @Override
-            public void onPenPositionChanged(int deviceType, int x, int y, int presure, byte state) {
-                DevicePoint p = DevicePoint.obtain(deviceType, x, y, presure, state);
-                whiteBoardView.drawLine(p);//白板的绘制必须手动执行
-            }
-            @Override
-            public void onRobotKeyEvent(int i) {
-
-            }
-        };
-    }
 
     @Override
     public DeviceType getDeviceType() {
@@ -199,5 +172,33 @@ public class WhiteBoardActivity extends BaseConnectPenServiceActivity<PenPositio
     @Override
     public boolean onMessage(String s, Object o) {
         return false;
+    }
+
+
+
+    @Override
+    public void onStateChanged(int i, String s) {
+        switch (i) {
+            case RemoteState.STATE_CONNECTED:
+                break;
+            case RemoteState.STATE_DEVICE_INFO: //当出现设备切换时获取到新设备信息后执行的
+                //whiteBoardView.initDrawArea();
+                checkDeviceConn();
+                break;
+            case RemoteState.STATE_DISCONNECTED://设备断开
+                break;
+        }
+    }
+
+    @Override
+    public void onPenServiceError(String s) {
+
+    }
+
+    @Override
+    public void onPenPositionChanged(int deviceType, int x, int y, int presure, byte state) {
+        super.onPenPositionChanged(deviceType, x, y, presure, state);
+        DevicePoint p = DevicePoint.obtain(deviceType, x, y, presure, state);
+        whiteBoardView.drawLine(p);//白板的绘制必须手动执行
     }
 }
