@@ -166,6 +166,7 @@
 
 
     <LinearLayout
+        android:id="@+id/mainconnect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -175,5 +176,35 @@
             android:layout_height="wrap_content"
             android:text="蓝牙方式连接" />
     </LinearLayout>
+
+<!--    <LinearLayout
+        android:id="@+id/maintwoconnect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/mac_et"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:hint="蓝牙MAC"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:id="@+id/connectBle"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="连接" />
+        <Button
+            android:layout_marginRight="10dp"
+            android:id="@+id/disconnectBle"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="断开" />
+    </LinearLayout>-->
+
 
 </LinearLayout>

@@ -124,8 +124,8 @@ public class BleConnectActivity extends RobotPenActivity{
                 DeviceEntity device = mPenAdapter.getItem(index);
                 String addr = device.getAddress();
                 try {
-                    if (robotService.getConnectedDevice() == null) {
-                        robotService.connectDevice(addr);//通过监听获取连接状态
+                    if (getPenServiceBinder().getConnectedDevice() == null) {
+                        getPenServiceBinder().connectDevice(addr);//通过监听获取连接状态
                     } else {
                         Toast.makeText(BleConnectActivity.this, "先断开当前设备", Toast.LENGTH_SHORT).show();
                     }
@@ -151,7 +151,7 @@ public class BleConnectActivity extends RobotPenActivity{
                 break;
             case R.id.disconnectBut:
                 try {
-                    robotService.disconnectDevice();
+                    getPenServiceBinder().disconnectDevice();
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -221,7 +221,7 @@ public class BleConnectActivity extends RobotPenActivity{
      **/
     private void checkDevice() {
         try {
-            RobotDevice robotDevice = robotService.getConnectedDevice(); //获取目前连接的设备
+            RobotDevice robotDevice = getPenServiceBinder().getConnectedDevice(); //获取目前连接的设备
             if (robotDevice != null) {//已连接设备
                 statusText.setText("已连接设备: " + robotDevice.getProductName());
                 if (robotDevice.getDeviceVersion() == DeviceType.P1.getValue()) { //已连接设备
@@ -236,7 +236,7 @@ public class BleConnectActivity extends RobotPenActivity{
                 if (!pairedSp.getString(SP_PAIRED_KEY, "").isEmpty()) {
                     //已经连接过蓝牙设备 从pairedSp中获取
                     String laseDeviceAddress = pairedSp.getString(SP_PAIRED_KEY, "");
-                    robotService.connectDevice(laseDeviceAddress);
+                    getPenServiceBinder().connectDevice(laseDeviceAddress);
                     showProgress("正在检测上次连接的设备");
                 }
             }
@@ -334,7 +334,7 @@ public class BleConnectActivity extends RobotPenActivity{
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     try {
-                        robotService.startSyncOffLineNote();
+                        getPenServiceBinder().startSyncOffLineNote();
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
@@ -375,10 +375,10 @@ public class BleConnectActivity extends RobotPenActivity{
                     Toast.makeText(BleConnectActivity.this, "网络请求失败",Toast.LENGTH_SHORT).show();
                     break;
                 case UPDATESUCCESS:
-                    if(robotService!=null){
+                    if(getPenServiceBinder()!=null){
                         byte[] newFirmwareVer = (byte[]) msg.obj;
                         try {
-                            robotService.startUpdateFirmware(mNewVersion,newFirmwareVer);
+                            getPenServiceBinder().startUpdateFirmware(mNewVersion,newFirmwareVer);
                             //升级结果可以通过RemoteCallback 进行展示
                             //此时注意观察设备为紫灯常亮，直到设备升级完毕将自动进行重启
                         } catch (RemoteException e) {
@@ -548,7 +548,7 @@ public class BleConnectActivity extends RobotPenActivity{
                 break;
             case RemoteState.STATE_DEVICE_INFO: //设备连接成功状态
                 try {
-                    RobotDevice robotDevice = robotService.getConnectedDevice();
+                    RobotDevice robotDevice = getPenServiceBinder().getConnectedDevice();
                     if (null != robotDevice) {
                         closeProgress();
                         mRobotDevice = robotDevice;

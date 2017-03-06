@@ -41,15 +41,17 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.robotpen.model.entity.DeviceEntity;
 import cn.robotpen.model.symbol.DeviceType;
+import cn.robotpen.pen.adapter.RobotPenAdapter;
 import cn.robotpen.pen.callback.RobotPenActivity;
 import cn.robotpen.pen.model.RemoteState;
 import cn.robotpen.pen.model.RobotDevice;
 import cn.robotpen.pen.scan.RobotScanCallback;
 import cn.robotpen.pen.scan.RobotScannerCompat;
+import cn.robotpenDemo.point.BaseTwoActivity;
 import cn.robotpenDemo.point.R;
 
 
-public class BleConnectActivity extends RobotPenActivity {
+public class BleConnectActivity extends RobotPenActivity{
 
     private final UUID SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
 
@@ -122,8 +124,8 @@ public class BleConnectActivity extends RobotPenActivity {
                 DeviceEntity device = mPenAdapter.getItem(index);
                 String addr = device.getAddress();
                 try {
-                    if (getPenService().getConnectedDevice() == null) {
-                        getPenService().connectDevice(addr);//通过监听获取连接状态
+                    if (getPenServiceBinder().getConnectedDevice() == null) {
+                        getPenServiceBinder().connectDevice(addr);//通过监听获取连接状态
                     } else {
                         Toast.makeText(BleConnectActivity.this, "先断开当前设备", Toast.LENGTH_SHORT).show();
                     }
@@ -146,7 +148,7 @@ public class BleConnectActivity extends RobotPenActivity {
     protected void onDestroy() {
         stopScan();
         robotScannerCompat = null;
-        scanCallback = null;
+//        scanCallback = null;
         super.onDestroy();
     }
 
@@ -158,7 +160,7 @@ public class BleConnectActivity extends RobotPenActivity {
                 break;
             case R.id.disconnectBut:
                 try {
-                    getPenService().disconnectDevice();
+                    getPenServiceBinder().disconnectDevice();
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -239,7 +241,7 @@ public class BleConnectActivity extends RobotPenActivity {
      **/
     private void checkDevice() {
         try {
-            RobotDevice robotDevice = getPenService().getConnectedDevice(); //获取目前连接的设备
+            RobotDevice robotDevice = getPenServiceBinder().getConnectedDevice(); //获取目前连接的设备
             if (robotDevice != null) {//已连接设备
                 statusText.setText("已连接设备: " + robotDevice.getProductName());
                 if (robotDevice.getDeviceVersion() == DeviceType.P1.getValue()) { //已连接设备
@@ -254,7 +256,7 @@ public class BleConnectActivity extends RobotPenActivity {
 //                if (!pairedSp.getString(SP_PAIRED_KEY, "").isEmpty()) {
 //                    //已经连接过蓝牙设备 从pairedSp中获取
 //                    String laseDeviceAddress = pairedSp.getString(SP_PAIRED_KEY, "");
-//                    getPenService().connectDevice(laseDeviceAddress);
+//                    getPenServiceBinder().connectDevice(laseDeviceAddress);
 //                    showProgress("正在检测上次连接的设备");
 //                }
             }
@@ -313,7 +315,7 @@ public class BleConnectActivity extends RobotPenActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     try {
-                        getPenService().startSyncOffLineNote();
+                        getPenServiceBinder().startSyncOffLineNote();
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
@@ -354,10 +356,10 @@ public class BleConnectActivity extends RobotPenActivity {
                     Toast.makeText(BleConnectActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
                     break;
                 case UPDATESUCCESS:
-                    if (getPenService() != null) {
+                    if (getPenServiceBinder() != null) {
                         byte[] newFirmwareVer = (byte[]) msg.obj;
                         try {
-                            getPenService().startUpdateFirmware(mNewVersion, newFirmwareVer);
+                            getPenServiceBinder().startUpdateFirmware(mNewVersion, newFirmwareVer);
                             //升级结果可以通过RemoteCallback 进行展示
                             //此时注意观察设备为紫灯常亮，直到设备升级完毕将自动进行重启
                         } catch (RemoteException e) {
@@ -531,7 +533,7 @@ public class BleConnectActivity extends RobotPenActivity {
                 break;
             case RemoteState.STATE_DEVICE_INFO: //设备连接成功状态
                 try {
-                    RobotDevice robotDevice = getPenService().getConnectedDevice();
+                    RobotDevice robotDevice = getPenServiceBinder().getConnectedDevice();
                     if (null != robotDevice) {
                         closeProgress();
                         mRobotDevice = robotDevice;
@@ -572,16 +574,20 @@ public class BleConnectActivity extends RobotPenActivity {
 
     }
 
+
     static class MyScanCallback extends RobotScanCallback {
-        BleConnectActivity act;
+        WeakReference<BleConnectActivity> act;
 
         public MyScanCallback(BleConnectActivity a) {
-            act = new WeakReference<>(a).get();
+            act = new WeakReference<BleConnectActivity>(a);
         }
 
         @Override
         public void onResult(BluetoothDevice bluetoothDevice, int i, boolean b) {
-            act.addRobotDevice2list(bluetoothDevice);
+            BleConnectActivity myact=act.get();
+            if(myact!=null) {
+                myact.addRobotDevice2list(bluetoothDevice);
+            }
         }
 
         @Override

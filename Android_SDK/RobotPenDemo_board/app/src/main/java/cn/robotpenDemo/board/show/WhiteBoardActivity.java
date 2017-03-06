@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -81,9 +82,9 @@ public class WhiteBoardActivity extends RobotPenActivity
     }
 
     public void checkDeviceConn() {
-        if (robotService != null) {
+        if (getPenServiceBinder() != null) {
             try {
-                RobotDevice device = robotService.getConnectedDevice();
+                RobotDevice device = getPenServiceBinder().getConnectedDevice();
                 if (device != null) {
                     DeviceType type = DeviceType.toDeviceType(device.getDeviceVersion());
                     //判断当前设备与笔记设备是否一致
