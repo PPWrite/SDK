@@ -97,7 +97,7 @@ public class WhiteBoardWithMethodActivity extends RobotPenActivity
     protected void onResume() {
         super.onResume();
         whiteBoardView.initDrawArea();
-        checkIntentInsertPhoto();
+
     }
 
     @Override
@@ -135,9 +135,9 @@ public class WhiteBoardWithMethodActivity extends RobotPenActivity
     }
 
     public void checkDeviceConn() {
-        if (robotService != null) {
+        if (getPenServiceBinder() != null) {
             try {
-                RobotDevice device = robotService.getConnectedDevice();
+                RobotDevice device = getPenServiceBinder().getConnectedDevice();
                 if (device != null) {
                     DeviceType type = DeviceType.toDeviceType(device.getDeviceVersion());
                     //判断当前设备与笔记设备是否一致
@@ -330,6 +330,9 @@ public class WhiteBoardWithMethodActivity extends RobotPenActivity
                 checkDeviceConn();
                 break;
             case ERROR_SCENE_TYPE: //横竖屏更换
+                break;
+            case TRAILS_COMPLETE:
+                checkIntentInsertPhoto();
                 break;
         }
         return true;

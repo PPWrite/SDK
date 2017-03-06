@@ -21,15 +21,23 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/AppTheme"
+        android:screenOrientation="portrait">
+        <activity android:name=".SelectMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".connect.BleConnectActivity"></activity>
+        <activity android:name=".connect.BleConnectActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".connect.BleConnectTwoActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".MainTwoActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

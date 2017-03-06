@@ -62,6 +62,7 @@ public class MainActivity extends RobotPenActivity {
         });
     }
 
+
     @Override
     public void onStateChanged(int i, String s) {
 

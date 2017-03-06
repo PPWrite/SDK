@@ -29,9 +29,10 @@
         <activity
             android:name=".show.WhiteBoardActivity"
             android:label="@string/title_activity_white_board"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            />
         <activity android:name=".show.RecordBoardActivity" />
-        <activity android:name=".connect.BleConnectActivity" />
+        <activity android:name=".connect.BleConnectActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".show.WhiteBoardWithMethodActivity" />
     </application>
 
