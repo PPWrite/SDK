@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.ActivityCompat;
 
+
 import cn.robotpen.model.db.DBConfig;
 import cn.robotpen.model.db.DaoMaster;
 import cn.robotpen.model.db.DaoSession;

@@ -43,8 +43,8 @@ public abstract class BaseConnectPenServiceActivity<T extends IRemoteRobotServic
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        penServiceCallback = initPenServiceCallback();
-        robotPenService = MyApplication.getInstance().getRobotPenService();
+        penServiceCallback = initPenServiceCallback(); // 链接状态改变 位置改变绘图
+        robotPenService = MyApplication.getInstance().getRobotPenService();// 接口 robotPenService 服务内部类
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
