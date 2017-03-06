@@ -29,7 +29,15 @@
 /**BLE ELITE PLUS纵向 高度**/
 #define VALUE_ELITE_PLUS_HEIGHT  15359.0f
 
+/**BLE ELITE 好写纵向 宽度**/
+#define VALUE_ELITE_XY_WIDTH  14300.0f
+/**BLE ELITE 好写纵向 高度**/
+#define VALUE_ELITE_XY_HEIGHT  7950.0f
 
+/**BLE ELITE PLUS J0 纵向 宽度**/
+#define VALUE_ELITE_PLUS_J0_WIDTH  14435.0f
+/**BLE ELITE PLUS J0 纵向 高度**/
+#define VALUE_ELITE_PLUS_J0_HEIGHT  8191.0f
 //OTA状态
 typedef enum {
     OTA_ERROR,
@@ -59,7 +67,7 @@ typedef enum {
     
     UnKnown = 0,
     
-    RobotPen_P7 ,
+    RobotPen_P7  = 1,
     
     Elite ,
     
@@ -68,6 +76,10 @@ typedef enum {
     RobotPen_P1 ,
     
     Elite_Plus_New ,
+    
+    Elite_XY = 7,
+    
+    Elite_Plus_J0,
     
 } DeviceType;
 

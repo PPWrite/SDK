@@ -32,6 +32,7 @@
  */
 - (CGPoint)getOriginalPoint;
 
+
 /**
  获取显示场景点坐标
  
@@ -41,5 +42,4 @@
  @return
  */
 - (CGPoint)getScenePointWith :(float)sceneWidth :(float)sceneHeight :(BOOL)isHorizontal;
-
 @end
