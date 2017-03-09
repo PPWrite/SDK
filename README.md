@@ -1,8 +1,13 @@
-﻿## [写写](http://www.robotpen.cn)
-> 不只是输入更是真正的书写 &nbsp; &nbsp; &nbsp;
+﻿## [罗博智慧笔SDK](http://www.robotpen.cn)
+> 不只是输入，更是真正的书写 &nbsp; &nbsp; &nbsp;
+> Android平台： [https://github.com/PPWrite/SDK_Android](https://github.com/PPWrite/SDK_Android)
+> iOS平台： [https://github.com/PPWrite/SDK_iOS](https://github.com/PPWrite/SDK_iOS)
+> Windows平台： [https://github.com/PPWrite/SDK_Win](https://github.com/PPWrite/SDK_Win)
+> 2.4G网关： [https://github.com/PPWrite/SDK_Nebula](https://github.com/PPWrite/SDK_Nebula)
+&nbsp; &nbsp;
+
 ***
 
-######针对本产品的配套硬件设备提供了iOS、Android、Windows多种平台不同的SDK支持
 ######针对开发中的使用现做出如下约定：
 ##### 1、产品类型：
 * P1款产品: A5尺寸，仅支持Micro USB数据线/USB OTG数据线连接方式，适用于PC和Android设备。
