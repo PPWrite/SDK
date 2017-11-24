@@ -5,7 +5,7 @@
 - <b>Android平台：</b>[https://github.com/PPWrite/SDK_Android](https://github.com/PPWrite/SDK_Android)
 - <b>iOS平台：</b>[https://github.com/PPWrite/SDK_iOS](https://github.com/PPWrite/SDK_iOS)
 - ~~Windows平台(已过时)：[https://github.com/PPWrite/SDK_Win](https://github.com/PPWrite/SDK_Win)~~
-- <b>2.4G网关：</b>[https://github.com/PPWrite/SDK_Nebula](https://github.com/PPWrite/SDK_Nebula)
+- <b>Windows平台&2.4G网关：</b>[https://github.com/PPWrite/SDK_Nebula](https://github.com/PPWrite/SDK_Nebula)
 &nbsp; &nbsp;
 
 ***
